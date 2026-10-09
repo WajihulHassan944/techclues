@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Page-wide behaviour that works on the server-rendered markup:
@@ -10,7 +11,10 @@ import { useEffect } from "react";
  *  - scroll parallax on photos inside `-inset-y-[N%]` wrappers (offset runs from -(N-2)% to +(N-2)%)
  */
 export default function SiteEffects() {
+  const pathname = usePathname();
   useEffect(() => {
+    // Re-attach for the new page after a client-side navigation; close any open dropdown.
+    document.querySelectorAll("[data-nav-panel]").forEach((p) => p.classList.add("hidden"));
     // Scroll reveal
     document.documentElement.classList.add("js-reveal");
     const io = new IntersectionObserver(
@@ -142,7 +146,7 @@ export default function SiteEffects() {
       document.documentElement.classList.remove("js-reveal");
       cleanups.forEach((fn) => fn());
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

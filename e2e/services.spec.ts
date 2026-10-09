@@ -3,7 +3,6 @@ import { test, expect, type Page } from "@playwright/test";
 const SERVICES = [
   ["MVPs & Custom Platforms", "mvp-development"],
   ["Prototype to Production", "prototype-to-production"],
-  ["AI Integration & Automation", "ai-enablement"],
   ["Web & Mobile Apps", "web-mobile-apps"],
   ["UI/UX & Prototyping", "ui-ux-design"],
   ["Low-Code / No-Code", "low-code-no-code"],
@@ -62,7 +61,7 @@ test.describe("services page", () => {
     }
   });
 
-  test("lists all nine services with numbers, links, inclusions and audience", async ({ page }) => {
+  test("lists all eight services with numbers, links, inclusions and audience", async ({ page }) => {
     await open(page);
     for (const [i, [name, slug]] of SERVICES.entries()) {
       const card = page.locator(`#${slug}`);

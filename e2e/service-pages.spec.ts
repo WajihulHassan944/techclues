@@ -145,6 +145,29 @@ const PAGES: Svc[] = [
     faqCount: 7,
     minImages: 4,
   },
+  {
+    slug: "ecommerce-marketplace-development",
+    title: "E-commerce & Marketplace Development UK | Vebryx",
+    kicker: "E-commerce and marketplace development",
+    headline: "An online shop or marketplace that's easy to buy from, and easy to run.",
+    serviceCard: "E-commerce & Marketplaces",
+    sections: sections("Shopify, WooCommerce or a custom build?"),
+    painPoints: [
+      "Your shop gets visitors, but too few of them buy.",
+      "Updating products, prices and stock takes far too long.",
+      "Your marketplace needs sellers, buyers and payouts working together.",
+    ],
+    pricing: ["Basic", "£1,000", "Growth", "£2,000", "Advanced", "£3,500"],
+    compareLabel: "Shopify, WooCommerce or a custom build?",
+    compare: ["Selling fast with little upkeep", "Shops already on WordPress", "Built in, to your rules"],
+    receive: ["Store or marketplace design", "Payments and checkout", "Admin training", "Launch and handover"],
+    tech: ["Shopify", "WooCommerce", "Stripe", "Xero"],
+    faqFirst: "How much does an online store or marketplace cost?",
+    faqOther: "Are you a Shopify Partner?",
+    faqOtherAnswer: "Vebryx is a Shopify Partner",
+    faqCount: 8,
+    minImages: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {
@@ -463,7 +486,7 @@ test.describe("service page: performance-marketing funnel", () => {
 
 test.describe("service page: web-mobile-apps interactions", () => {
   const SEC = 'section[aria-label="How your app is built"]';
-  const tab = (page: Page, name: string) => page.locator(SEC).getByRole("tab", { name });
+  const tab = (page: Page, name: string | RegExp) => page.locator(SEC).getByRole("tab", { name });
 
   async function openArch(page: Page) {
     await open(page, "web-mobile-apps");
@@ -523,5 +546,18 @@ test.describe("service page: web-mobile-apps interactions", () => {
     for (const p of ["£7,500", "£12,500", "£20,000"]) await expect(pr.locator("#pricing-panel-1")).toContainText(p);
     await pr.getByRole("tab", { name: "Web app" }).click();
     await expect(pr.locator("#pricing-panel-0")).toContainText("£15,000");
+  });
+});
+
+test.describe("service page: ecommerce-marketplace-development pricing", () => {
+  test("switches between online store and marketplace plans", async ({ page }) => {
+    await open(page, "ecommerce-marketplace-development");
+    const pr = page.locator("#pricing");
+    await pr.scrollIntoViewIfNeeded();
+    await expect(pr.locator("#pricing-panel-0")).toBeVisible();
+    await pr.getByRole("tab", { name: "Marketplace" }).click();
+    await expect(pr.locator("#pricing-panel-1")).toBeVisible();
+    await expect(pr.locator("#pricing-panel-0")).toBeHidden();
+    await expect(pr.locator("#pricing-panel-1")).toContainText("£5,000");
   });
 });

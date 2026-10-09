@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { createPortal } from "react-dom";
 
 type Item = { label: string; href: string; children?: { label: string; href: string }[] };
@@ -12,7 +13,6 @@ const ITEMS: Item[] = [
     children: [
       { label: "MVPs & Custom Platforms", href: "/services/mvp-development" },
       { label: "Prototype to Production", href: "/services/prototype-to-production" },
-      { label: "AI Integration & Automation", href: "/services/ai-enablement" },
       { label: "Web & Mobile Apps", href: "/services/web-mobile-apps" },
       { label: "UI/UX & Prototyping", href: "/services/ui-ux-design" },
       { label: "Low-Code / No-Code", href: "/services/low-code-no-code" },
@@ -69,6 +69,9 @@ export default function MobileMenu() {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [host, setHost] = useState<HTMLElement | null>(null);
+  const pathname = usePathname();
+
+  useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
     const header = document.querySelector<HTMLElement>("header");

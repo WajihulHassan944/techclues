@@ -148,4 +148,38 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Yes. We offer ongoing maintenance, monitoring and new feature development."
       }
   ],
+  "ecommerce-marketplace-development": [
+      {
+          "q": "How much does an online store or marketplace cost?",
+          "a": "An online store starts at £1,000 (Basic, on Shopify, WooCommerce or custom-built), with Growth from £2,000 and Advanced from £3,500. A marketplace starts from £5,000 (Launch), with Growth from £8,500 and Scale from £15,000. Your price is agreed before any work starts."
+      },
+      {
+          "q": "Are you a Shopify Partner?",
+          "a": "Yes. Vebryx is a Shopify Partner. We design, build and set up Shopify stores, and build on WooCommerce or custom code where that fits you better."
+      },
+      {
+          "q": "Should I use Shopify, WooCommerce or a custom build?",
+          "a": "Shopify suits most shops that want to start selling quickly. WooCommerce suits businesses already on WordPress. A custom build makes sense for marketplaces and buying flows the platforms can't handle. We'll recommend one before we start."
+      },
+      {
+          "q": "Can you build a multi-vendor marketplace?",
+          "a": "Yes. Sellers can sign up, list their products and get paid, while you set the rules, approve listings and take a commission."
+      },
+      {
+          "q": "Can you move my existing shop?",
+          "a": "Usually, yes. We'll check what can move from your current platform, such as products, customers and orders, when we scope the work."
+      },
+      {
+          "q": "Which payments can customers use?",
+          "a": "Cards and digital wallets through providers such as Stripe, PayPal or Shopify Payments, set up for UK VAT."
+      },
+      {
+          "q": "Who owns the store?",
+          "a": "You do. The store, its content and your customer data are yours, and platform accounts are set up in your name."
+      },
+      {
+          "q": "Can you help us get sales after launch?",
+          "a": "Yes. Our performance marketing team runs paid social and Google Ads campaigns to bring in customers."
+      }
+  ],
 };

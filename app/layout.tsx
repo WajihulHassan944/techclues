@@ -7,6 +7,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import SiteEffects from "@/components/SiteEffects";
 import MobileMenu from "@/components/MobileMenu";
 import FloatingUi from "@/components/FloatingUi";
+import ClientNav from "@/components/ClientNav";
 
 export const metadata: Metadata = {
   title: "Custom Software Development Company in Glasgow | Vebryx",
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteEffects />
         <MobileMenu />
         <FloatingUi />
+        <ClientNav />
         <SiteHeader />
         {children}
         <SiteFooter />

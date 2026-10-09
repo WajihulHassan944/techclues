@@ -8342,3 +8342,17 @@ html.lenis body {
 @keyframes calc-step-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .calc-step-in { animation: calc-step-in 500ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 @media (prefers-reduced-motion: reduce) { .calc-step-in { animation: none; } }
+
+/* Services intro: eyebrow, headline, subtitle and chips ease in on load. */
+@keyframes svc-in { from { opacity: 0; transform: translateY(var(--y, 12px)); } to { opacity: 1; transform: none; } }
+@keyframes svc-rise { from { transform: translateY(105%); } to { transform: none; } }
+.svc-in { animation: svc-in 700ms cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) both; }
+.svc-rise { animation: svc-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) both; }
+@media (prefers-reduced-motion: reduce) { .svc-in, .svc-rise { animation: none; } }
+
+/* Services intro: eyebrow, headline, subtitle and chips ease in on load. */
+@keyframes svc-in { from { opacity: 0; transform: translateY(var(--y, 12px)); } to { opacity: 1; transform: none; } }
+@keyframes svc-rise { from { transform: translateY(105%); } to { transform: none; } }
+.svc-in { animation: svc-in 700ms cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) both; }
+.svc-rise { animation: svc-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) both; }
+@media (prefers-reduced-motion: reduce) { .svc-in, .svc-rise { animation: none; } }

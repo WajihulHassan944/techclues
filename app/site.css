@@ -8303,3 +8303,18 @@ html.lenis body {
     transition-property: overflow;
     transition-duration: 1ms
 }
+
+/* Hero rotating word: slide the old word up and out, the new one up from below. */
+@keyframes hero-word-in {
+  from { transform: translateY(110%); }
+  to { transform: none; }
+}
+@keyframes hero-word-out {
+  from { transform: none; }
+  to { transform: translateY(-110%); }
+}
+.hero-word-in { animation: hero-word-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.hero-word-out { animation: hero-word-out 700ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-word-in, .hero-word-out { animation: none; }
+}

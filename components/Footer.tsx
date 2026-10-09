@@ -6,7 +6,7 @@ import { navLinks } from "@/lib/data";
 export function Footer() {
   return (
     <footer className="bg-ink text-white">
-      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1.2fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-[1320px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1.2fr_1fr_1fr]">
         <div className="space-y-5">
           <Logo light />
           <p className="max-w-sm text-sm text-white/70">A product studio for founders who want to test, build and grow.</p>
@@ -35,7 +35,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-5 text-xs text-white/50 sm:px-8">
+        <div className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-between gap-3 px-5 py-5 text-xs text-white/50 sm:px-8">
           <span>© {new Date().getFullYear()} Techclues. All rights reserved.</span>
           <span className="flex gap-5">
             <Link href="/privacy-policy" className="hover:text-white">Privacy policy</Link>

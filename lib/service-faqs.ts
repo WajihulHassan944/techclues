@@ -182,4 +182,34 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Yes. Our performance marketing team runs paid social and Google Ads campaigns to bring in customers."
       }
   ],
+  "ui-ux-design": [
+      {
+          "q": "How much does design cost?",
+          "a": "Essential starts from £1,000, Product from £2,000 and Complete from £3,500. Your price is agreed before any work starts, and you own the design files."
+      },
+      {
+          "q": "Do you only design, or build too?",
+          "a": "Both. You can hire us for design only, or design and build together for a smoother handover."
+      },
+      {
+          "q": "Will I own the design files?",
+          "a": "Yes. You get the full Figma files and design system."
+      },
+      {
+          "q": "How do you test designs?",
+          "a": "With clickable prototypes and short sessions with real or target users."
+      },
+      {
+          "q": "How long does design take?",
+          "a": "It depends on scope. Design for a focused MVP fits inside the 2–4 week MVP timeline; larger products take longer."
+      },
+      {
+          "q": "Do you follow accessibility standards?",
+          "a": "Yes. We design to WCAG guidelines, covering contrast, type size, focus states and screen reader support."
+      },
+      {
+          "q": "Can you work with our existing brand?",
+          "a": "Yes. We'll extend your brand into a product design system, or refine it where it needs help."
+      }
+  ],
 };

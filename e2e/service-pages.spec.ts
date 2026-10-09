@@ -168,6 +168,29 @@ const PAGES: Svc[] = [
     faqCount: 8,
     minImages: 4,
   },
+  {
+    slug: "ui-ux-design",
+    title: "UI/UX Design & Prototyping Agency in Glasgow | Vebryx",
+    kicker: "UI/UX design and prototyping",
+    headline: "Design that users understand in seconds.",
+    serviceCard: "UI/UX & Prototyping",
+    sections: sections("UX and UI: what's the difference?", "Example designs"),
+    painPoints: [
+      "Users sign up, then get lost and leave.",
+      "Your product looks dated next to competitors.",
+      "Developers keep guessing how screens should work.",
+    ],
+    pricing: ["Essential", "£1,000", "Product", "£2,000", "Complete", "£3,500"],
+    compareLabel: "UX and UI: what's the difference?",
+    compare: ["How it works", "How it looks and feels", "Task success and drop-off"],
+    receive: ["User research findings", "Clickable prototype", "Usability test results", "Developer-ready Figma files"],
+    tech: ["Figma", "Framer", "Maze", "Storybook"],
+    faqFirst: "How much does design cost?",
+    faqOther: "Do you only design, or build too?",
+    faqOtherAnswer: "hire us for design only",
+    faqCount: 7,
+    minImages: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {
@@ -559,5 +582,44 @@ test.describe("service page: ecommerce-marketplace-development pricing", () => {
     await expect(pr.locator("#pricing-panel-1")).toBeVisible();
     await expect(pr.locator("#pricing-panel-0")).toBeHidden();
     await expect(pr.locator("#pricing-panel-1")).toContainText("£5,000");
+  });
+});
+
+test.describe("service page: ui-ux-design showcase", () => {
+  test("shows the six example screens", async ({ page }) => {
+    await open(page, "ui-ux-design");
+    const sec = page.locator('section[aria-label="Example designs"]');
+    await sec.scrollIntoViewIfNeeded();
+    await expect(sec.getByRole("heading", { name: "Designed to be used." })).toBeVisible();
+    for (const n of ["banking app", "class booking", "product page", "analytics dashboard", "activity tracker", "boarding pass"])
+      await expect(sec.locator(`figure[aria-label="Example: ${n}"]`)).toHaveCount(1);
+  });
+});
+
+test.describe("homepage: Our approach statement", () => {
+  test("words fill in as the statement scrolls through the screen", async ({ page }) => {
+    await page.goto("/");
+    await rejectCookies(page);
+    const words = page.locator("section p", { hasText: "Most products fail" }).locator("> span");
+    await expect(words).toHaveCount(30);
+    await words.first().scrollIntoViewIfNeeded();
+    const op = (i: number) => words.nth(i).evaluate((e) => Number(getComputedStyle(e).opacity));
+    // Below the fold: dim. Scroll it to the top third: filled.
+    await page.evaluate(() => {
+      const p = [...document.querySelectorAll("section p")].find((e) => e.textContent?.startsWith("Most products fail"))!;
+      window.scrollTo(0, p.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.9);
+    });
+    await expect.poll(() => op(29)).toBeCloseTo(0.14, 1);
+    await page.evaluate(() => {
+      const p = [...document.querySelectorAll("section p")].find((e) => e.textContent?.startsWith("Most products fail"))!;
+      window.scrollTo(0, p.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.1);
+    });
+    await expect.poll(() => op(29)).toBeGreaterThan(0.95);
+    await page.evaluate(() => {
+      const p = [...document.querySelectorAll("section p")].find((e) => e.textContent?.startsWith("Most products fail"))!;
+      const r = p.getBoundingClientRect();
+      window.scrollTo(0, r.top + window.scrollY - window.innerHeight * 0.85 + (0.35 * window.innerHeight + r.height) * 0.5);
+    });
+    await expect.poll(async () => (await op(0)) > 0.99 && (await op(29)) < 0.3).toBe(true);
   });
 });

@@ -8327,3 +8327,13 @@ html.lenis body {
 /* Stack tabs: fade the backdrop in. */
 @keyframes stack-overlay-in { from { opacity: 0; } to { opacity: 1; } }
 .stack-overlay { animation: stack-overlay-in 400ms ease both; }
+
+/* Testimonials: progress bar for the current review and the enter animation for a new one. */
+@keyframes testimonial-progress { from { width: 0%; } to { width: 100%; } }
+.testimonial-bar { animation: testimonial-progress 7000ms linear forwards; }
+@keyframes testimonial-enter {
+  from { opacity: 0; filter: blur(8px); transform: translateY(24px); }
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+.testimonial-in { animation: testimonial-enter 700ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) { .testimonial-in { animation: none; } .testimonial-bar { animation: none; width: 100%; } }

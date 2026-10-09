@@ -192,6 +192,105 @@ test.describe("homepage", () => {
     expect(g.lift.scale).toBeCloseTo(1.044, 2);
   });
 
+  test("stack tab hover previews its layer and resets on leave", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    await page.locator(STACK).scrollIntoViewIfNeeded();
+    const tabs = page.locator(`${STACK} ol button`);
+    const root = page.locator(`${STACK} [style*="perspective"] > div`);
+    await expect(root).not.toHaveAttribute("style", /scale\(0\.78\)/);
+    await tabs.nth(3).hover(); // 04 Data
+    await expect(root).toHaveAttribute("style", /scale\(0\.78\)/);
+    // Previewed, not lifted: the layers spread evenly and nothing is dimmed
+    const g = await stackGeometry(page);
+    expect(g.zs.map(Math.round)).toEqual([-214, -129, -43, 43, 129, 214]);
+    await expect(page.locator(`${STACK} .opacity-55`)).toHaveCount(0);
+    await expect(page.locator(`${STACK} .border-brand\\/60`)).toHaveCount(1);
+    await expect(tabs.nth(3).locator("span span").first()).toHaveClass(/text-ink(?!\/)/);
+    await expect(page.locator(`${STACK} [role='dialog']`)).toHaveCount(0);
+    await expect(page.locator("button.stack-overlay")).toHaveCount(0);
+    const shifted = await page.evaluate((sel) => [...document.querySelectorAll(sel + " [style*='translateX(-56px)']")].length, STACK);
+    expect(shifted).toBe(1);
+    await page.mouse.move(700, 100);
+    await expect(root).not.toHaveAttribute("style", /scale\(0\.78\)/);
+    await expect(page.locator(`${STACK} .border-brand\\/60`)).toHaveCount(0);
+  });
+
+  test("AI section switches panels for each capability", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    const labels = await page.locator('input[name="ai-integration"] + label').allTextContents();
+    expect(labels).toHaveLength(10);
+    const seen = new Set<string>();
+    for (const label of labels) {
+      const name = label.replace(/^\d+/, "").trim();
+      await page.locator("label", { hasText: name }).first().click();
+      const panel = page.locator("#ai-panel");
+      await expect(panel.locator("h3").first()).toHaveText(name);
+      seen.add(await panel.innerText());
+    }
+    expect(seen.size).toBe(10); // every capability has its own content
+  });
+
+  test("phases line fills with scroll and lights up the steps", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    const ol = page.locator("ol", { hasText: "Ignition" });
+    const line = ol.locator(":scope > span.bg-brand");
+    const steps = ol.locator(":scope > li");
+    await expect(steps).toHaveCount(8);
+    await ol.scrollIntoViewIfNeeded();
+    await page.evaluate(() => {
+      const el = [...document.querySelectorAll("ol")].find((o) => o.textContent?.includes("Ignition"))!;
+      window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.6 + 400);
+    });
+    await expect(line).toHaveAttribute("style", /scaleY\(0\.\d+\)/);
+    await expect(steps.nth(0).locator(":scope > div")).toHaveClass(/opacity-100/);
+    await expect(steps.nth(7).locator(":scope > div")).toHaveClass(/opacity-40/);
+    await page.evaluate(() => {
+      const el = [...document.querySelectorAll("ol")].find((o) => o.textContent?.includes("Ignition"))!;
+      window.scrollTo(0, el.getBoundingClientRect().bottom + window.scrollY - window.innerHeight * 0.6 + 50);
+    });
+    await expect(steps.nth(7).locator(":scope > div")).toHaveClass(/opacity-100/);
+    await expect(line).toHaveAttribute("style", /transform: none/);
+  });
+
+  test("testimonials rotate, pause on hover and can be driven by dots and arrows", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    const section = page.locator('section[aria-label="Testimonials"]');
+    const quote = section.locator("blockquote");
+    await section.scrollIntoViewIfNeeded();
+    await expect(quote).toContainText("Great communication and clear project updates");
+    await expect(section.getByRole("button", { name: /^Show review/ })).toHaveCount(10);
+    await section.getByRole("button", { name: "Show review 3" }).click();
+    await expect(quote).toContainText("first mobile prototype");
+    await section.getByRole("button", { name: "Next review" }).click();
+    await expect(quote).toContainText("Amazing, wonderful people");
+    await section.getByRole("button", { name: "Previous review" }).click();
+    await expect(quote).toContainText("first mobile prototype");
+    await section.getByRole("button", { name: "Show review 10" }).click();
+    await section.getByRole("button", { name: "Next review" }).click();
+    await expect(quote).toContainText("Great communication"); // wraps around
+    // Hovering the card pauses the progress bar
+    await section.locator('[class*="rounded-[28px]"]').first().hover();
+    await expect(section.locator(".testimonial-bar")).toHaveCSS("animation-play-state", "paused");
+    await page.mouse.move(5, 5);
+    await expect(section.locator(".testimonial-bar")).toHaveCSS("animation-play-state", "running");
+  });
+
+  test("testimonials advance on their own after seven seconds", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    const section = page.locator('section[aria-label="Testimonials"]');
+    await section.scrollIntoViewIfNeeded();
+    await page.mouse.move(5, 5);
+    await section.getByRole("button", { name: "Show review 1", exact: true }).click();
+    await expect(section.locator("blockquote")).toContainText("Great communication");
+    await page.mouse.move(5, 5); // the click left the pointer over the card, which pauses rotation
+    await expect(section.locator("blockquote")).toContainText("We appreciated their focus", { timeout: 12_000 });
+  });
+
   test("FAQ accordion opens one answer at a time", async ({ page }) => {
     await open(page);
     await dismissCookies(page);

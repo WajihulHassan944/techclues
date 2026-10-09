@@ -64,6 +64,9 @@ export default function StackTabs() {
     const layerForTab = (i: number) => wrappers.length - 1 - i;
 
     let active: number | null = null;
+    let hovered: number | null = null;
+    const HOVER_CARD_OFF = ["border-white/70", "bg-white/75", "shadow-[0_20px_40px_-24px_rgba(14,15,49,0.35)]"];
+    const HOVER_CARD_ON = ["border-brand/60", "bg-white", "shadow-[0_0_0_1px_rgba(0,100,255,0.25),0_30px_60px_-20px_rgba(0,100,255,0.45)]"];
 
     const apply = (next: number | null) => {
       active = next;
@@ -71,10 +74,13 @@ export default function StackTabs() {
       setOverlay(on);
       const wide = window.matchMedia("(min-width: 640px)").matches;
       const g = geometry(wide, persp);
+      // Hovering a tab (pointer devices, wide layout, nothing lifted) previews its layer.
+      const hov = !on && wide && hovered !== null ? hovered : null;
+      const spreadMode = (on && wide) || hov !== null;
 
       zTargets.forEach((el) => el?.classList.toggle("z-[95]", on));
       persp.setAttribute("aria-hidden", on ? "false" : "true");
-      const scaled = wide ? on : true;
+      const scaled = wide ? on || hov !== null : true;
       root.style.transform = `translateX(-50%) translateY(-50%)${scaled ? ` scale(${g.rootScale})` : ""} rotateX(58deg) rotateZ(-42deg)`;
 
       wrappers.forEach((w, d) => {
@@ -89,8 +95,13 @@ export default function StackTabs() {
         inner.style.transition = "transform 700ms cubic-bezier(0.16, 1, 0.3, 1)";
         if (isTarget)
           inner.style.transform = `translateX(${g.lift.x}px) translateY(${g.lift.y}px) translateZ(${g.lift.z}px) scale(${g.lift.scale}) rotate(42deg) rotateX(-58deg)`;
-        else if (on && wide) inner.style.transform = `translateZ(${(d - 2.5) * g.spread}px)`;
+        else if (spreadMode)
+          inner.style.transform = `${hov !== null && d === layerForTab(hov) ? "translateX(-56px) " : ""}translateZ(${(d - 2.5) * g.spread}px)`;
         else inner.style.transform = `translateZ(${(d - 2.5) * g.idleStep}px)`;
+
+        const highlighted = hov !== null && d === layerForTab(hov);
+        card.classList.remove(...(highlighted ? HOVER_CARD_OFF : HOVER_CARD_ON));
+        card.classList.add(...(highlighted ? HOVER_CARD_ON : HOVER_CARD_OFF));
 
         card.classList.toggle("opacity-55", on && !isTarget);
         content.classList.toggle("pointer-events-none", !isTarget);
@@ -108,7 +119,7 @@ export default function StackTabs() {
       });
 
       tabClasses.forEach((t, i) => {
-        const isActive = on && i === next;
+        const isActive = (on && i === next) || hov === i;
         t.num.className = isActive ? t.idle[0].replace("text-muted", "text-brand") : t.idle[0];
         t.label.className = isActive ? t.idle[1].replace("text-ink/45 group-hover:text-ink/75", "text-ink") : t.idle[1];
         t.desc.className = isActive ? t.idle[2].replace("text-muted/70", "text-ink-soft") : t.idle[2];
@@ -123,7 +134,22 @@ export default function StackTabs() {
     buttons.forEach((b, i) => {
       const h = () => apply(active === i ? null : i);
       b.addEventListener("click", h);
-      cleanups.push(() => b.removeEventListener("click", h));
+      const enter = () => {
+        if (!window.matchMedia("(hover: hover)").matches) return;
+        hovered = i;
+        apply(active);
+      };
+      const leave = () => {
+        hovered = null;
+        apply(active);
+      };
+      b.addEventListener("mouseenter", enter);
+      b.addEventListener("mouseleave", leave);
+      cleanups.push(() => {
+        b.removeEventListener("click", h);
+        b.removeEventListener("mouseenter", enter);
+        b.removeEventListener("mouseleave", leave);
+      });
     });
     wrappers.forEach((w, d) => {
       const h = () => {

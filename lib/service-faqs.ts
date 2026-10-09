@@ -28,4 +28,34 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "We review the data with you, fix what users struggle with and plan the next release. You can carry on with us as an ongoing partner."
       }
   ],
+  "prototype-to-production": [
+      {
+          "q": "How much does it cost?",
+          "a": "The code audit is £750, fixed. The hardening sprint starts from £3,500, and we fix its price at the end of the audit. Book the sprint and the audit fee comes off it."
+      },
+      {
+          "q": "Which tools do you work with?",
+          "a": "Apps built with Lovable, Bolt, Replit, Cursor, v0, Windsurf and similar, as well as code written with help from ChatGPT or Claude."
+      },
+      {
+          "q": "Will you rebuild everything?",
+          "a": "Only if it's the sensible option. We keep what's sound and fix what isn't, and the audit tells you which before you spend anything more."
+      },
+      {
+          "q": "How long does it take?",
+          "a": "The audit takes about a week. Most hardening sprints take 2–4 weeks, depending on what the audit finds."
+      },
+      {
+          "q": "What do you need from me?",
+          "a": "Access to the code and the accounts it runs on, such as GitHub, Supabase and your hosting, plus a quick walk-through of what the app should do."
+      },
+      {
+          "q": "Can I keep building with AI tools afterwards?",
+          "a": "Yes. We leave the code organised and tested, so you can carry on with AI tools or with us without breaking what's live."
+      },
+      {
+          "q": "Who owns the code?",
+          "a": "You do. The code, accounts and documentation stay yours."
+      }
+  ],
 };

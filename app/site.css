@@ -8337,3 +8337,8 @@ html.lenis body {
 }
 .testimonial-in { animation: testimonial-enter 700ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 @media (prefers-reduced-motion: reduce) { .testimonial-in { animation: none; } .testimonial-bar { animation: none; width: 100%; } }
+
+/* Calculator: each step eases in. */
+@keyframes calc-step-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.calc-step-in { animation: calc-step-in 500ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) { .calc-step-in { animation: none; } }

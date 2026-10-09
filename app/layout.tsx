@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
 import "./site.css";
+import SiteHeader from "@/components/site/SiteHeader";
+import SiteFooter from "@/components/site/SiteFooter";
+import HeaderScroll from "@/components/HeaderScroll";
+import SmoothScroll from "@/components/SmoothScroll";
+import SiteEffects from "@/components/SiteEffects";
+import MobileMenu from "@/components/MobileMenu";
+import FloatingUi from "@/components/FloatingUi";
 
 export const metadata: Metadata = {
   title: "Custom Software Development Company in Glasgow | Vebryx",
@@ -11,7 +18,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-GB" className="poppins_287b9d5-module__CtRvUW__variable antialiased">
-      <body>{children}</body>
+      <body>
+        <HeaderScroll />
+        <SmoothScroll />
+        <SiteEffects />
+        <MobileMenu />
+        <FloatingUi />
+        <SiteHeader />
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }

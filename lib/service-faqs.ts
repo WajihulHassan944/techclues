@@ -88,4 +88,34 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "We use established platforms and set up user roles and permissions, so people only see what they should."
       }
   ],
+  "performance-marketing": [
+      {
+          "q": "How much do you charge?",
+          "a": "Launch is £750 a month, Growth £1,250 a month and Scale from £2,000 a month. Your ad budget is separate from our fee."
+      },
+      {
+          "q": "What budget do I need?",
+          "a": "It depends on your goals and market. We'll recommend a starting budget and scale what works."
+      },
+      {
+          "q": "How soon will I see results?",
+          "a": "Early signals usually show within the first few weeks, then we optimise from there."
+      },
+      {
+          "q": "Do you work with pre-launch products?",
+          "a": "Yes. Waitlist campaigns are one of the best ways to validate demand."
+      },
+      {
+          "q": "Which channels should I use?",
+          "a": "The ones your customers use. We research your audience first, then test the most promising channels with small budgets."
+      },
+      {
+          "q": "Do you create the ads?",
+          "a": "Yes. We write the copy and design the creative, then test variations to find what works."
+      },
+      {
+          "q": "How do you report results?",
+          "a": "Clear reports showing spend, results and cost per acquisition, with recommendations for what to do next."
+      }
+  ],
 };

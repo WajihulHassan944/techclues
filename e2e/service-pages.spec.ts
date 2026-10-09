@@ -99,6 +99,29 @@ const PAGES: Svc[] = [
     faqCount: 7,
     minImages: 4,
   },
+  {
+    slug: "performance-marketing",
+    title: "Performance Marketing Agency for UK Startups | Vebryx",
+    kicker: "Performance marketing for startups",
+    headline: "Find your first users, then keep them coming.",
+    serviceCard: "Performance Marketing",
+    sections: sections("Paid social or paid search?", "How a marketing funnel works"),
+    painPoints: [
+      "You've launched, but nobody's signing up.",
+      "Ad spend goes out, but you can't tell what's working.",
+      "You need proof of demand before building more.",
+    ],
+    pricing: ["Launch", "£750", "Growth", "£1,250", "Scale", "£2,000"],
+    compareLabel: "Paid social or paid search?",
+    compare: ["People by interest and profile", "People searching for a solution", "Meta, LinkedIn, TikTok"],
+    receive: ["Audience and channel research", "Campaign strategy and budget plan", "A/B tests", "Growth recommendations"],
+    tech: ["Google Ads", "Meta Ads", "Mixpanel", "Mailchimp"],
+    faqFirst: "How much do you charge?",
+    faqOther: "What budget do I need?",
+    faqOtherAnswer: "We'll recommend a starting budget and scale what works.",
+    faqCount: 7,
+    minImages: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {
@@ -358,5 +381,59 @@ test.describe("service page: low-code-no-code timeline", () => {
     await expect(region("Days")).toHaveClass(/text-muted/);
     await page.keyboard.press("End");
     await expect(region("Months")).toHaveClass(/text-ink(?!\/)/);
+  });
+});
+
+test.describe("service page: performance-marketing funnel", () => {
+  const SEC = 'section[aria-label="How a marketing funnel works"]';
+  const panel = (page: Page, key: string) => page.locator(`${SEC} #funnel-${key}`);
+
+  async function openFunnel(page: Page) {
+    await open(page, "performance-marketing");
+    await page.locator(SEC).scrollIntoViewIfNeeded();
+    await page.mouse.move(5, 5);
+  }
+
+  test("starts on Reach and clicking a funnel stage shows its panel", async ({ page }) => {
+    await openFunnel(page);
+    await expect(panel(page, "reach")).toHaveAttribute("aria-hidden", "false");
+    await expect(panel(page, "convert")).toHaveAttribute("aria-hidden", "true");
+    await page.locator(SEC).getByRole("tab", { name: /sign up or buy/ }).click();
+    await expect(panel(page, "convert")).toHaveAttribute("aria-hidden", "false");
+    await expect(panel(page, "reach")).toHaveAttribute("aria-hidden", "true");
+    await expect(panel(page, "convert")).toContainText("Conversion rate");
+    await expect(panel(page, "convert")).toContainText("Google Tag Manager");
+    await expect(panel(page, "convert")).toContainText("Stage 3 of 4");
+  });
+
+  test("after testing counts the figures up and shows the multiplier", async ({ page }) => {
+    await openFunnel(page);
+    const live = page.locator(`${SEC} [aria-live=polite]`);
+    await expect(live).toContainText("9 customers");
+    await expect(live).toContainText("3 coming back");
+    await page.getByRole("radio", { name: "After testing" }).click();
+    await expect(page.getByRole("radio", { name: "After testing" })).toHaveAttribute("aria-checked", "true");
+    await expect(live).toContainText("18 customers", { timeout: 3000 });
+    await expect(live).toContainText("9 coming back");
+    await expect(live).toContainText("2× the customers", { timeout: 3000 });
+    await page.locator(SEC).getByRole("tab", { name: /click through/ }).click();
+    await expect(panel(page, "click")).toContainText("2%");
+    await page.getByRole("radio", { name: "Before testing" }).click();
+    await expect(live).toContainText("9 customers", { timeout: 3000 });
+    await expect(panel(page, "click")).toContainText("1.5%");
+  });
+
+  test("rotates through the stages by itself until you pick one", async ({ page }) => {
+    await openFunnel(page);
+    await expect(panel(page, "click")).toHaveAttribute("aria-hidden", "false", { timeout: 9000 });
+    await page.locator(SEC).getByRole("tab", { name: /come back for more/ }).click();
+    await page.mouse.move(5, 5);
+    await page.waitForTimeout(6500);
+    await expect(panel(page, "return")).toHaveAttribute("aria-hidden", "false");
+  });
+
+  test("particles run inside the funnel", async ({ page }) => {
+    await openFunnel(page);
+    await expect.poll(() => page.locator(`${SEC} svg circle[opacity]:not([opacity="0"])`).count(), { timeout: 5000 }).toBeGreaterThan(3);
   });
 });

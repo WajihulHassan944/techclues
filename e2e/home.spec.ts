@@ -15,6 +15,32 @@ async function open(page: Page) {
   return errors;
 }
 
+/** Reads the 3D stack's root transform and each layer's transform from the page. */
+async function stackGeometry(page: Page) {
+  return page.evaluate((sel) => {
+    const persp = document.querySelector(sel + ' [style*="perspective"]') as HTMLElement;
+    const root = persp.firstElementChild as HTMLElement;
+    const layers = [...root.children].filter((c) => c.classList.contains("inset-0")).map((c) => (c.firstElementChild as HTMLElement).style.transform);
+    const zs = layers.map((t) => parseFloat(/translateZ\(([-\d.]+)px/.exec(t)![1]));
+    const liftT = layers.find((t) => t.includes("translateX"))!;
+    const num = (re: RegExp) => parseFloat(re.exec(liftT)?.[1] ?? "1");
+    return {
+      root: root.style.transform,
+      zs,
+      lift: { x: num(/translateX\(([-\d.]+)px/), y: num(/translateY\(([-\d.]+)px/), z: num(/translateZ\(([-\d.]+)px/), scale: num(/scale\(([-\d.]+)\)/) },
+    };
+  }, STACK);
+}
+
+async function stackGeometryIdle(page: Page) {
+  return page.evaluate((sel) => {
+    const persp = document.querySelector(sel + ' [style*="perspective"]') as HTMLElement;
+    const root = persp.firstElementChild as HTMLElement;
+    const layers = [...root.children].filter((c) => c.classList.contains("inset-0")).map((c) => (c.firstElementChild as HTMLElement).style.transform);
+    return { root: root.style.transform, zs: layers.map((t) => parseFloat(/translateZ\(([-\d.]+)px/.exec(t)![1])) };
+  }, STACK);
+}
+
 async function dismissCookies(page: Page) {
   await page.getByRole("button", { name: "Accept all" }).click();
   await expect(page.locator("#cookie-title")).toHaveCount(0);
@@ -140,6 +166,32 @@ test.describe("homepage", () => {
     await expect(page.locator(`${STACK} [role='dialog']`)).toHaveCount(0);
   });
 
+  test("smooth scroll eases wheel movement instead of jumping", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    await expect(page.locator("html")).toHaveClass(/lenis/);
+    await page.mouse.move(700, 450);
+    await page.mouse.wheel(0, 800);
+    await page.waitForTimeout(60);
+    const early = await page.evaluate(() => window.scrollY);
+    expect(early).toBeLessThan(800); // still easing
+    await expect.poll(() => page.evaluate(() => Math.round(window.scrollY)), { timeout: 4000 }).toBeGreaterThanOrEqual(780);
+  });
+
+  test("stack lift geometry matches the original at 1440x900", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    await page.locator(STACK).scrollIntoViewIfNeeded();
+    await page.locator(`${STACK} ol button`).nth(1).click();
+    const g = await stackGeometry(page);
+    expect(g.root).toContain("scale(0.78)");
+    expect(g.zs.slice(0, 4).map(Math.round)).toEqual([-214, -129, -43, 43]); // 0.17 x 504px container
+    expect(g.lift.x).toBeCloseTo(-390, 0);
+    expect(g.lift.y).toBeCloseTo(433.1, 0);
+    expect(g.lift.z).toBeCloseTo(364.2, 0);
+    expect(g.lift.scale).toBeCloseTo(1.044, 2);
+  });
+
   test("FAQ accordion opens one answer at a time", async ({ page }) => {
     await open(page);
     await dismissCookies(page);
@@ -221,6 +273,24 @@ test.describe("homepage", () => {
 
 test.describe("homepage on mobile", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test("stack graphic is pre-spread and lifts a card with the narrow-screen geometry", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    await page.locator(STACK).scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
+    const idle = await stackGeometryIdle(page);
+    expect(idle.root).toContain("scale(0.86)");
+    expect(idle.zs.map(Math.round)).toEqual([-195, -117, -39, 39, 117, 195]);
+    await page.locator(`${STACK} ol button`).nth(1).click();
+    const g = await stackGeometry(page);
+    expect(g.root).toContain("scale(0.86)");
+    expect(g.zs.map(Math.round)).toEqual([-195, -117, -39, 39, 345, 195]); // only the lifted layer moves
+    expect(g.lift.x).toBeCloseTo(-369.4, 0);
+    expect(g.lift.y).toBeCloseTo(410.3, 0);
+    expect(g.lift.z).toBeCloseTo(345, 0);
+    expect(g.lift.scale).toBeCloseTo(350 / 328.05, 1); // container is 350px wide at 390px
+  });
 
   test("no horizontal overflow and hamburger menu works", async ({ page }) => {
     await open(page);

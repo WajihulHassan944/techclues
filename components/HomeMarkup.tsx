@@ -6,6 +6,7 @@ import HeroCanvas from "./HeroCanvas";
 import StackTabs from "./StackTabs";
 import CountUp from "./CountUp";
 import MobileMenu from "./MobileMenu";
+import SmoothScroll from "./SmoothScroll";
 import SiteEffects from "./SiteEffects";
 import FloatingUi from "./FloatingUi";
 import StackSection from "./generated/StackSection";
@@ -17,6 +18,7 @@ export default function HomeMarkup() {
   return (
     <>
 <HeaderScroll />
+<SmoothScroll />
 <SiteEffects />
 <HeroCanvas />
 <StackTabs />

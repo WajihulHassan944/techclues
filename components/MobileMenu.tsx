@@ -106,7 +106,7 @@ export default function MobileMenu() {
   if (!open || !host) return null;
   return createPortal(
     <nav aria-label="Mobile" className="pointer-events-auto fixed inset-0 z-40 flex h-dvh flex-col bg-paper lg:hidden">
-      <div className="flex-1 overflow-y-auto overscroll-contain px-5 pb-8 pt-[104px] sm:px-8">
+      <div data-lenis-prevent="true" className="flex-1 overflow-y-auto overscroll-contain px-5 pb-8 pt-[104px] sm:px-8">
         <ul>
           {ITEMS.map((it) => {
             const isOpen = expanded === it.label;

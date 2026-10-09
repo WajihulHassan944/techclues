@@ -2,7 +2,22 @@
 
 import { useEffect } from "react";
 
-const DURATION = 1600;
+const DURATION = 1800;
+
+/** cubic-bezier(.16, 1, .3, 1), the easing the original uses. */
+function ease(t: number) {
+  const x1 = 0.16, y1 = 1, x2 = 0.3, y2 = 1;
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  let u = t;
+  for (let i = 0; i < 8; i++) {
+    const x = ((ax * u + bx) * u + cx) * u - t;
+    const dx = (3 * ax * u + 2 * bx) * u + cx;
+    if (Math.abs(x) < 1e-5 || !dx) break;
+    u -= x / dx;
+  }
+  return ((ay * u + by) * u + cy) * u;
+}
 
 /** Counts the "Vebryx in numbers" figures up from zero the first time they scroll into view. */
 export default function CountUp() {
@@ -30,7 +45,7 @@ export default function CountUp() {
         const t0 = performance.now();
         const tick = (now: number) => {
           const p = Math.min(1, (now - t0) / DURATION);
-          const eased = 1 - Math.pow(1 - p, 3);
+          const eased = ease(p);
           nodes.forEach((n) => (n.el.textContent = p === 1 ? n.final : fmt(n, n.target * eased)));
           if (p < 1) raf = requestAnimationFrame(tick);
         };

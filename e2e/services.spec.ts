@@ -12,6 +12,15 @@ const SERVICES = [
   ["Strategy & Brand Identity", "brand-strategy"],
 ] as const;
 
+/** Dismisses the cookie banner; it only goes away once React has hydrated, so retry the click until it does. */
+async function rejectCookies(page: Page) {
+  await expect(async () => {
+    const btn = page.getByRole("button", { name: "Reject all" });
+    if (await btn.count()) await btn.click();
+    await expect(page.locator("#cookie-title")).toHaveCount(0, { timeout: 1500 });
+  }).toPass({ timeout: 20_000 });
+}
+
 async function open(page: Page) {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(String(e)));
@@ -19,8 +28,8 @@ async function open(page: Page) {
     if (m.type() === "error" && !/_rsc|404|Failed to load resource/.test(m.text())) errors.push(m.text());
   });
   await page.goto("/services");
-  await expect(page.locator("#cookie-title")).toBeVisible(); // hydrated
-  await page.getByRole("button", { name: "Reject all" }).click();
+  await expect(page.locator("#cookie-title")).toBeVisible();
+  await rejectCookies(page);
   return errors;
 }
 

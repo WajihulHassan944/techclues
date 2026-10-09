@@ -7,6 +7,7 @@ import { useEffect } from "react";
  *  - scroll reveal for [data-reveal] elements
  *  - the nav hover highlight and the Services / Industries / Company dropdowns
  *  - the stat-card pointer spotlight
+ *  - scroll parallax on photos inside `-inset-y-[N%]` wrappers (offset runs from -(N-2)% to +(N-2)%)
  */
 export default function SiteEffects() {
   useEffect(() => {
@@ -101,6 +102,40 @@ export default function SiteEffects() {
       card.addEventListener("pointermove", move);
       cleanups.push(() => card.removeEventListener("pointermove", move));
     });
+
+    // Photo parallax: the offset follows how far the photo's frame has travelled through the viewport.
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const frames = Array.from(document.querySelectorAll<HTMLElement>('div[class*="-inset-y-["]'))
+        .filter((el) => el.querySelector("img") && el.parentElement)
+        .map((el) => {
+          const m = /-inset-y-\[(\d+)%\]/.exec(el.className);
+          return m ? { el, amp: Number(m[1]) - 2, host: el.parentElement as HTMLElement } : null;
+        })
+        .filter((f): f is { el: HTMLElement; amp: number; host: HTMLElement } => f !== null);
+      let raf = 0;
+      const update = () => {
+        raf = 0;
+        const vh = window.innerHeight;
+        for (const { el, amp, host } of frames) {
+          const r = host.getBoundingClientRect();
+          const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+          el.style.transform = `translateY(${-amp + 2 * amp * p}%)`;
+        }
+      };
+      const schedule = () => {
+        if (!raf) raf = requestAnimationFrame(update);
+      };
+      if (frames.length) {
+        update();
+        window.addEventListener("scroll", schedule, { passive: true });
+        window.addEventListener("resize", schedule);
+        cleanups.push(() => {
+          cancelAnimationFrame(raf);
+          window.removeEventListener("scroll", schedule);
+          window.removeEventListener("resize", schedule);
+        });
+      }
+    }
 
     return () => {
       io.disconnect();

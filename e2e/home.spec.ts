@@ -42,8 +42,12 @@ async function stackGeometryIdle(page: Page) {
 }
 
 async function dismissCookies(page: Page) {
-  await page.getByRole("button", { name: "Accept all" }).click();
-  await expect(page.locator("#cookie-title")).toHaveCount(0);
+  // The banner only goes away once React has hydrated, so retry the click until it does.
+  await expect(async () => {
+    const btn = page.getByRole("button", { name: "Accept all" });
+    if (await btn.count()) await btn.click();
+    await expect(page.locator("#cookie-title")).toHaveCount(0, { timeout: 1500 });
+  }).toPass({ timeout: 20_000 });
 }
 
 test.describe("homepage", () => {

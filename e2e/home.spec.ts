@@ -1,0 +1,241 @@
+import { test, expect, type Page } from "@playwright/test";
+
+const STACK = '[aria-label="Our tech stack"]';
+
+async function open(page: Page) {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(String(e)));
+  page.on("console", (m) => {
+    if (m.type() === "error" && !/_rsc|404|Failed to load resource/.test(m.text())) errors.push(m.text());
+  });
+  await page.goto("/");
+  await page.waitForLoadState("load");
+  // Wait for hydration: the cookie banner is rendered by a client component.
+  await expect(page.locator("#cookie-title")).toBeVisible();
+  return errors;
+}
+
+async function dismissCookies(page: Page) {
+  await page.getByRole("button", { name: "Accept all" }).click();
+  await expect(page.locator("#cookie-title")).toHaveCount(0);
+}
+
+test.describe("homepage", () => {
+  test("renders the page with correct metadata, no console errors and no overflow", async ({ page }) => {
+    const errors = await open(page);
+    await expect(page).toHaveTitle(/Custom Software Development Company in Glasgow/);
+    await expect(page.locator("h1")).toContainText("Launch-ready MVPs.");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    expect(errors).toEqual([]);
+  });
+
+  test("all images load", async ({ page }) => {
+    await open(page);
+    for (let y = 0; y < (await page.evaluate(() => document.documentElement.scrollHeight)); y += 800) {
+      await page.evaluate((v) => window.scrollTo(0, v), y);
+      await page.waitForTimeout(120);
+    }
+    const broken = await page.evaluate(() =>
+      [...document.images].filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src),
+    );
+    expect(broken).toEqual([]);
+  });
+
+  test("hero word rotates through every phrase", async ({ page }) => {
+    await open(page);
+    const pill = page.locator("h1 span[aria-hidden='true'].absolute").last();
+    const seen = new Set<string>();
+    const deadline = Date.now() + 15_000;
+    while (Date.now() < deadline && seen.size < 5) {
+      const txt = (await pill.locator("span.absolute").last().textContent()) ?? "";
+      if (txt) seen.add(txt.trim());
+      await page.waitForTimeout(200);
+    }
+    expect([...seen].sort()).toEqual(["UI/UX design", "idea validation", "mobile apps", "rapid MVPs", "scaling up"].sort());
+  });
+
+  test("hero WebGL canvas is drawn when WebGL is available", async ({ page }) => {
+    await open(page);
+    const canvas = page.locator(".hero-lift canvas");
+    await expect(canvas).toHaveCount(1);
+    const hasGl = await page.evaluate(() => !!document.createElement("canvas").getContext("webgl"));
+    test.skip(!hasGl, "WebGL unavailable in this browser");
+    await expect(canvas).toHaveCSS("opacity", "1");
+  });
+
+  test("header switches to its scrolled state and back", async ({ page }) => {
+    await open(page);
+    const nav = page.locator("header nav");
+    const logo = page.locator("header a[aria-label='Vebryx home']");
+    await expect(nav).not.toHaveClass(/bg-white\/95/);
+    await page.evaluate(() => window.scrollTo(0, 1500));
+    await expect(nav).toHaveClass(/bg-white\/95/);
+    await expect(logo).toHaveClass(/opacity-0/);
+    const floating = page.locator("a.fixed", { hasText: "Start your project" });
+    await expect(floating).toBeVisible();
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(nav).not.toHaveClass(/bg-white\/95/);
+    await expect(logo).not.toHaveClass(/opacity-0/);
+    await expect(floating).toHaveCount(0);
+  });
+
+  test("nav dropdowns open on hover and close with Escape", async ({ page }) => {
+    await open(page);
+    for (const [label, expected] of [
+      ["Services", "All services"],
+      ["Industries", "All industries"],
+      ["Company", "Careers"],
+    ] as const) {
+      await page.locator("header nav button", { hasText: label }).hover();
+      const panel = page.locator("[data-nav-panel]:not(.hidden)");
+      await expect(panel).toHaveCount(1);
+      await expect(panel).toContainText(expected);
+      await page.keyboard.press("Escape");
+      await expect(page.locator("[data-nav-panel]:not(.hidden)")).toHaveCount(0);
+      await page.mouse.move(700, 800);
+    }
+  });
+
+  test("stat counters count up to their final values", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    const nums = page.locator('section[aria-label="Vebryx in numbers"] p > span');
+    await page.locator('section[aria-label="Vebryx in numbers"]').scrollIntoViewIfNeeded();
+    await expect(nums).toHaveText(["4", "4.3", "23", "1,000", "12"], { timeout: 6_000 });
+  });
+
+  test("stack tabs lift a layer, dim the rest and reset", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    await page.locator(STACK).scrollIntoViewIfNeeded();
+    const tabs = page.locator(`${STACK} ol button`);
+    await expect(tabs).toHaveCount(6);
+    await tabs.nth(2).click(); // Backend
+    await expect(page.locator(`${STACK} [role='dialog']`)).toHaveAttribute("aria-label", "Backend tools");
+    await expect(page.locator(`${STACK} .opacity-55`)).toHaveCount(5);
+    await expect(tabs.nth(2).locator("span").first()).toHaveClass(/text-brand/);
+    // The rest of the page is dimmed behind the lifted layer
+    const overlay = page.locator("button.stack-overlay");
+    await expect(overlay).toBeVisible();
+    // Switch directly to another tab
+    await tabs.nth(4).click();
+    await expect(page.locator(`${STACK} [role='dialog']`)).toHaveAttribute("aria-label", "AI tools");
+    // Clicking the active tab, or Escape, resets
+    await tabs.nth(4).click();
+    await expect(page.locator(`${STACK} [role='dialog']`)).toHaveCount(0);
+    await expect(page.locator(`${STACK} .opacity-55`)).toHaveCount(0);
+    await expect(overlay).toHaveCount(0);
+    // Clicking the dimmed backdrop also resets
+    await tabs.nth(3).click();
+    await expect(overlay).toBeVisible();
+    await overlay.click({ position: { x: 20, y: 400 } });
+    await expect(page.locator(`${STACK} [role='dialog']`)).toHaveCount(0);
+    await expect(overlay).toHaveCount(0);
+    await tabs.nth(0).click();
+    await page.keyboard.press("Escape");
+    await expect(page.locator(`${STACK} [role='dialog']`)).toHaveCount(0);
+    // The close button inside the lifted card also resets
+    await tabs.nth(1).click();
+    await page.locator(`${STACK} [role='dialog'] button[aria-label='Close']`).evaluate((el: HTMLElement) => el.click());
+    await expect(page.locator(`${STACK} [role='dialog']`)).toHaveCount(0);
+  });
+
+  test("FAQ accordion opens one answer at a time", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    const q1 = page.getByRole("button", { name: "What does Vebryx do?" });
+    const q2 = page.getByRole("button", { name: "How much does an MVP cost?" });
+    await q1.scrollIntoViewIfNeeded();
+    await expect(q1).toHaveAttribute("aria-expanded", "true");
+    await q2.click();
+    await expect(q2).toHaveAttribute("aria-expanded", "true");
+    await expect(q1).toHaveAttribute("aria-expanded", "false");
+    await expect(page.getByText("A Validation MVP starts from")).toBeVisible();
+    await q2.click();
+    await expect(q2).toHaveAttribute("aria-expanded", "false");
+  });
+
+  test("cookie banner: manage preferences, toggle and save", async ({ page }) => {
+    await open(page);
+    await page.getByRole("button", { name: "Manage" }).click();
+    await expect(page.locator("#cookie-title")).toHaveText("Cookie preferences");
+    const analytics = page.getByRole("switch", { name: "Analytics" });
+    await expect(analytics).toHaveAttribute("aria-checked", "false");
+    await analytics.click();
+    await expect(analytics).toHaveAttribute("aria-checked", "true");
+    await page.getByRole("button", { name: "Save choices" }).click();
+    await expect(page.locator("#cookie-title")).toHaveCount(0);
+  });
+
+  test("chat panel opens, takes input without submitting, and closes", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    await page.locator(".chat-launcher").click();
+    const dialog = page.getByRole("dialog", { name: /enquiry/i });
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toContainText("Tell us what you need");
+    await dialog.getByRole("button", { name: "An existing product" }).click();
+    await expect(dialog.getByRole("button", { name: "An existing product" })).toHaveAttribute("aria-pressed", "true");
+    const before = page.url();
+    await dialog.locator("input").first().fill("Test User");
+    await dialog.locator("input").first().press("Enter");
+    expect(page.url()).toBe(before);
+    await dialog.getByRole("button", { name: "Close" }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(page.locator(".chat-launcher")).toContainText("Ask Vebryx");
+  });
+
+  test("contact dock expands on hover and uses placeholder links", async ({ page }) => {
+    await open(page);
+    const wa = page.locator("a.dock-link").first();
+    const label = wa.locator(".dock-label");
+    await expect(label).toHaveCSS("opacity", "0");
+    await wa.hover();
+    await expect(label).toHaveCSS("opacity", "1");
+    for (const href of await page.locator("a.dock-link").evaluateAll((els) => els.map((e) => e.getAttribute("href")))) {
+      expect(href).toBe("#");
+    }
+  });
+
+  test("scroll reveal shows every visible section as you scroll", async ({ page }) => {
+    await open(page);
+    await expect(page.locator("html")).toHaveClass(/js-reveal/);
+    // The page grows as lazily-rendered sections appear, so re-measure while scrolling.
+    for (let y = 0; y < (await page.evaluate(() => document.documentElement.scrollHeight)); y += 500) {
+      await page.evaluate((v) => window.scrollTo(0, v), y);
+      await page.waitForTimeout(80);
+    }
+    await page.waitForTimeout(400);
+    // Anything with a rendered box must have been revealed (hidden-at-this-breakpoint blocks never intersect).
+    const stuck = await page.evaluate(() =>
+      [...document.querySelectorAll("[data-reveal]:not([data-shown])")]
+        .filter((el) => {
+          const r = el.getBoundingClientRect();
+          return r.width > 0 && r.height > 0;
+        })
+        .map((el) => el.className || el.outerHTML.slice(0, 80)),
+    );
+    expect(stuck).toEqual([]);
+  });
+});
+
+test.describe("homepage on mobile", () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test("no horizontal overflow and hamburger menu works", async ({ page }) => {
+    await open(page);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await dismissCookies(page);
+    const burger = page.getByRole("button", { name: "Open menu" });
+    await burger.click();
+    const menu = page.locator("nav[aria-label='Mobile']");
+    await expect(menu).toBeVisible();
+    await expect(page.getByRole("button", { name: "Close menu" })).toHaveAttribute("aria-expanded", "true");
+    await menu.getByRole("button", { name: "Show services" }).click();
+    await expect(menu.getByRole("link", { name: "MVPs & Custom Platforms" })).toBeVisible();
+    await menu.getByRole("button", { name: "Hide services" }).click();
+    await expect(menu.getByRole("link", { name: "MVPs & Custom Platforms" })).toHaveCount(0);
+    await page.getByRole("button", { name: "Close menu" }).click();
+    await expect(menu).toHaveCount(0);
+  });
+});

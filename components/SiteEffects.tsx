@@ -6,6 +6,7 @@ import { useEffect } from "react";
  * Page-wide behaviour that works on the server-rendered markup:
  *  - scroll reveal for [data-reveal] elements
  *  - the nav hover highlight and the Services / Industries / Company dropdowns
+ *  - the stat-card pointer spotlight
  */
 export default function SiteEffects() {
   useEffect(() => {
@@ -88,6 +89,18 @@ export default function SiteEffects() {
       document.addEventListener("keydown", onKey);
       cleanups.push(() => document.removeEventListener("keydown", onKey));
     }
+
+    // Stat-card spotlight follows the pointer
+    document.querySelectorAll<HTMLElement>(".group.isolate").forEach((card) => {
+      if (!card.querySelector('[class*="circle_at_var(--mx)"]')) return;
+      const move = (e: PointerEvent) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        card.style.setProperty("--my", `${e.clientY - r.top}px`);
+      };
+      card.addEventListener("pointermove", move);
+      cleanups.push(() => card.removeEventListener("pointermove", move));
+    });
 
     return () => {
       io.disconnect();

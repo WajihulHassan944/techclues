@@ -8356,3 +8356,10 @@ html.lenis body {
 .svc-in { animation: svc-in 700ms cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) both; }
 .svc-rise { animation: svc-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) both; }
 @media (prefers-reduced-motion: reduce) { .svc-in, .svc-rise { animation: none; } }
+
+/* Low-code race: phase chip text swaps and the "v1 live" badge pops in. */
+@keyframes lc-swap { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+@keyframes lc-pop { from { opacity: 0; scale: 0.6; } to { opacity: 1; scale: 1; } }
+.lc-swap { animation: lc-swap 220ms ease both; }
+.lc-pop { animation: lc-pop 300ms cubic-bezier(0.34, 1.6, 0.64, 1) both; }
+@media (prefers-reduced-motion: reduce) { .lc-swap, .lc-pop { animation: none; } }

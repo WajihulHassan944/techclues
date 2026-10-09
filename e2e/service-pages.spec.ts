@@ -26,7 +26,8 @@ const COMMON_SECTIONS = [
   "Talk to us", "Benefits", "Industry experience", "Your product partner", "Case study", "What clients say", "How it works",
   "Why Vebryx", "Questions", "Related insights", "Start your project",
 ];
-const sections = (compare: string) => COMMON_SECTIONS.map((s) => (s === "__COMPARE__" ? compare : s));
+const sections = (compare: string, extraAfterIncluded?: string) =>
+  COMMON_SECTIONS.flatMap((s) => (s === "__COMPARE__" ? [compare] : s === "What's included" && extraAfterIncluded ? [s, extraAfterIncluded] : [s]));
 
 const PAGES: Svc[] = [
   {
@@ -74,6 +75,29 @@ const PAGES: Svc[] = [
     faqOtherAnswer: "",
     faqCount: 7,
     minImages: 5,
+  },
+  {
+    slug: "low-code-no-code",
+    title: "No-Code & Low-Code Development Agency UK | Vebryx",
+    kicker: "No-code and low-code development",
+    headline: "A working product in days, not months.",
+    serviceCard: "Low-Code / No-Code",
+    sections: sections("Low-code or custom code?", "Low-code against custom code"),
+    painPoints: [
+      "You need to test an idea before committing to a full build.",
+      "Your team runs on spreadsheets and manual work.",
+      "Budget is tight, but you still need something that works.",
+    ],
+    pricing: ["Launch", "£2,500", "Business", "£5,000", "Advanced", "£8,500"],
+    compareLabel: "Low-code or custom code?",
+    compare: ["Speed to launch", "Days to weeks", "Weeks to months", "Platform subscriptions", "Validation and internal tools"],
+    receive: ["Platform recommendation", "Working app or portal", "Team training session", "Upgrade path to custom code"],
+    tech: ["Bubble", "Webflow", "Softr", "Shopify"],
+    faqFirst: "How much does it cost?",
+    faqOther: "Is low-code good enough for real users?",
+    faqOtherAnswer: "We'll tell you honestly when custom code is the better choice.",
+    faqCount: 7,
+    minImages: 4,
   },
 ];
 
@@ -237,3 +261,102 @@ for (const svc of PAGES) {
     });
   });
 }
+
+test.describe("service page: low-code-no-code timeline", () => {
+  const SEC = 'section[aria-label="Low-code against custom code"]';
+  const slider = (page: Page) => page.getByRole("slider", { name: "Timeline" });
+
+  async function openTimeline(page: Page) {
+    await open(page, "low-code-no-code");
+    await page.locator(SEC).scrollIntoViewIfNeeded();
+    await page.mouse.move(5, 5);
+  }
+  const value = async (page: Page) => Number(await slider(page).getAttribute("aria-valuenow"));
+
+  test("plays by itself once on screen, then offers a replay", async ({ page }) => {
+    await openTimeline(page);
+    await expect.poll(() => value(page), { timeout: 4000 }).toBeGreaterThan(5);
+    await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
+    await expect.poll(() => value(page), { timeout: 14_000 }).toBe(100);
+    await expect(page.getByRole("button", { name: "Replay" })).toBeVisible();
+    await expect(slider(page)).toHaveAttribute("aria-valuetext", "Months: low-code Live, custom code Live");
+    await expect(page.locator(SEC).getByText("v1 live")).toHaveCount(2); // both lanes are live by the end
+    await page.getByRole("button", { name: "Replay" }).click();
+    await expect.poll(() => value(page), { timeout: 3000 }).toBeLessThan(60);
+  });
+
+  test("pause holds the position and play resumes from it", async ({ page }) => {
+    await openTimeline(page);
+    await expect.poll(() => value(page), { timeout: 4000 }).toBeGreaterThan(10);
+    await page.getByRole("button", { name: "Pause" }).click();
+    const held = await value(page);
+    await page.waitForTimeout(800);
+    expect(await value(page)).toBe(held);
+    await expect(page.getByRole("button", { name: "Play" })).toBeVisible();
+    await page.getByRole("button", { name: "Play" }).click();
+    await expect.poll(() => value(page), { timeout: 4000 }).toBeGreaterThan(held + 5);
+  });
+
+  test("keyboard moves the timeline and the phases follow", async ({ page }) => {
+    await openTimeline(page);
+    await page.getByRole("button", { name: "Pause" }).click().catch(() => {});
+    await slider(page).focus();
+    await page.keyboard.press("Home");
+    await expect(slider(page)).toHaveAttribute("aria-valuenow", "0");
+    await expect(slider(page)).toHaveAttribute("aria-valuetext", "Days: low-code Scope, custom code Scope");
+    for (let i = 0; i < 2; i++) await page.keyboard.press("ArrowRight"); // 10
+    await expect(slider(page)).toHaveAttribute("aria-valuenow", "10");
+    await expect(slider(page)).toHaveAttribute("aria-valuetext", "Days: low-code Build and connect, custom code Design");
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("ArrowRight"); // 25
+    await expect(slider(page)).toHaveAttribute("aria-valuetext", "Weeks: low-code Live, custom code Build");
+    await expect(page.locator(SEC).getByText("Improving with real users").first()).toBeVisible();
+    for (let i = 0; i < 9; i++) await page.keyboard.press("ArrowRight"); // 70
+    await expect(slider(page)).toHaveAttribute("aria-valuetext", "Months: low-code Live, custom code Test");
+    await expect(page.locator(SEC).getByText("v3", { exact: true })).toHaveCSS("opacity", "1");
+    await expect(page.locator(SEC).getByText("v4", { exact: true })).toHaveCSS("opacity", "0");
+    await page.keyboard.press("End");
+    await expect(slider(page)).toHaveAttribute("aria-valuenow", "100");
+    await page.keyboard.press("ArrowRight"); // clamped
+    await expect(slider(page)).toHaveAttribute("aria-valuenow", "100");
+    await page.keyboard.press("Home");
+    await page.keyboard.press("ArrowLeft"); // clamped
+    await expect(slider(page)).toHaveAttribute("aria-valuenow", "0");
+  });
+
+  test("clicking and dragging the track scrubs the timeline", async ({ page }) => {
+    await openTimeline(page);
+    await page.getByRole("button", { name: "Pause" }).click().catch(() => {});
+    const track = slider(page).locator("xpath=..");
+    const box = (await track.boundingBox())!;
+    await page.mouse.click(box.x + box.width * 0.5, box.y + 60);
+    await expect.poll(() => value(page), { timeout: 2000 }).toBeGreaterThan(48);
+    await expect.poll(() => value(page), { timeout: 2000 }).toBeLessThan(52);
+    // Dragging works from the track (as on the reference page, pressing on the thumb itself does not start a drag).
+    await page.mouse.move(box.x + box.width * 0.3, box.y + 60);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.9, box.y + 60, { steps: 6 });
+    await page.mouse.up();
+    await expect.poll(() => value(page), { timeout: 2000 }).toBeGreaterThan(86);
+    // The phase text under each lane follows the position (90 = both lanes live)
+    const lanes = page.locator(SEC).locator("div.\\[grid-area\\:1\\/1\\]:not([aria-hidden='true'])");
+    await expect(lanes).toHaveCount(2);
+    await expect(lanes.nth(0)).toContainText("Real users are in");
+    await expect(lanes.nth(1)).toContainText("built to grow without limits");
+  });
+
+  test("region labels highlight as the timeline moves", async ({ page }) => {
+    await openTimeline(page);
+    await page.getByRole("button", { name: "Pause" }).click().catch(() => {});
+    await slider(page).focus();
+    const region = (name: string) => page.locator(SEC).getByText(name, { exact: true }).first();
+    await page.keyboard.press("Home");
+    await expect(region("Days")).toHaveClass(/text-ink(?!\/)/);
+    for (let i = 0; i < 6; i++) await page.keyboard.press("ArrowRight"); // 30
+    await expect(region("Weeks")).toHaveClass(/text-ink(?!\/)/);
+    await expect(region("Days")).toHaveClass(/text-muted/);
+    await page.keyboard.press("End");
+    await expect(region("Months")).toHaveClass(/text-ink(?!\/)/);
+  });
+});

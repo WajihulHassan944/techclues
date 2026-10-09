@@ -58,4 +58,34 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "You do. The code, accounts and documentation stay yours."
       }
   ],
+  "low-code-no-code": [
+      {
+          "q": "How much does it cost?",
+          "a": "Launch starts from £2,500, Business from £5,000 and Advanced from £8,500. Your price is agreed before any work starts. Platform subscriptions are separate and sit in your name."
+      },
+      {
+          "q": "Is low-code good enough for real users?",
+          "a": "For many products and internal tools, yes. We'll tell you honestly when custom code is the better choice."
+      },
+      {
+          "q": "Can we move to custom code later?",
+          "a": "Yes. We design with that path in mind, so the switch is straightforward."
+      },
+      {
+          "q": "Can my team maintain it?",
+          "a": "Yes. We train your team and document how everything works."
+      },
+      {
+          "q": "Which platforms do you use?",
+          "a": "Bubble, Webflow, Softr, Shopify, Airtable, Supabase, Zapier, Make and n8n, chosen to fit what you need."
+      },
+      {
+          "q": "Who pays for the platform?",
+          "a": "Subscriptions sit in your name, so you own the account. We'll recommend the right plan."
+      },
+      {
+          "q": "Is my data secure?",
+          "a": "We use established platforms and set up user roles and permissions, so people only see what they should."
+      }
+  ],
 };

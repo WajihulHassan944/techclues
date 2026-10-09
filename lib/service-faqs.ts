@@ -118,4 +118,34 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Clear reports showing spend, results and cost per acquisition, with recommendations for what to do next."
       }
   ],
+  "web-mobile-apps": [
+      {
+          "q": "How much does an app cost?",
+          "a": "Web apps start from £5,000 (Starter), £8,500 (Business) and £15,000 (Advanced). Mobile apps for iOS and Android start from £7,500, £12,500 and £20,000. Your price is agreed before any work starts."
+      },
+      {
+          "q": "Do you build native or cross-platform apps?",
+          "a": "Usually cross-platform with React Native or Flutter, so one codebase serves iOS and Android. We'll recommend native when it's genuinely needed."
+      },
+      {
+          "q": "Can you take over an existing app?",
+          "a": "Yes. We start with a code review, then fix, improve or rebuild depending on what's there."
+      },
+      {
+          "q": "Will you publish to the App Store and Google Play?",
+          "a": "Yes, we handle submission and review for both stores."
+      },
+      {
+          "q": "Which technology do you recommend?",
+          "a": "The one that fits your product, team and budget. We explain the options in plain English and recommend what will last, not what's trendy."
+      },
+      {
+          "q": "How do you keep apps secure?",
+          "a": "Encrypted connections, secure authentication, role-based access and regular dependency updates, with GDPR in mind from the start."
+      },
+      {
+          "q": "Do you support apps after launch?",
+          "a": "Yes. We offer ongoing maintenance, monitoring and new feature development."
+      }
+  ],
 };

@@ -122,6 +122,29 @@ const PAGES: Svc[] = [
     faqCount: 7,
     minImages: 4,
   },
+  {
+    slug: "web-mobile-apps",
+    title: "App Development Company in Glasgow & the UK | Vebryx",
+    kicker: "App development in Glasgow and across the UK",
+    headline: "Web and mobile apps that feel fast and work everywhere.",
+    serviceCard: "Web & Mobile Apps",
+    sections: sections("Native, cross-platform or web app?", "How your app is built"),
+    painPoints: [
+      "Your current app is slow, buggy or hard to change.",
+      "You need the same product on web, iOS and Android.",
+      "You're not sure which technology will last.",
+    ],
+    pricing: ["Starter", "£5,000", "Business", "£8,500", "Advanced", "£15,000"],
+    compareLabel: "Native, cross-platform or web app?",
+    compare: ["One per platform", "Games and hardware-heavy apps", "Tools that live on the web"],
+    receive: ["Technical architecture plan", "iOS and Android apps", "App Store and Google Play release", "Source code and documentation"],
+    tech: ["React", "Flutter", "Firebase", "Vercel"],
+    faqFirst: "How much does an app cost?",
+    faqOther: "Do you build native or cross-platform apps?",
+    faqOtherAnswer: "Usually cross-platform with React Native or Flutter",
+    faqCount: 7,
+    minImages: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {
@@ -435,5 +458,70 @@ test.describe("service page: performance-marketing funnel", () => {
   test("particles run inside the funnel", async ({ page }) => {
     await openFunnel(page);
     await expect.poll(() => page.locator(`${SEC} svg circle[opacity]:not([opacity="0"])`).count(), { timeout: 5000 }).toBeGreaterThan(3);
+  });
+});
+
+test.describe("service page: web-mobile-apps interactions", () => {
+  const SEC = 'section[aria-label="How your app is built"]';
+  const tab = (page: Page, name: string) => page.locator(SEC).getByRole("tab", { name });
+
+  async function openArch(page: Page) {
+    await open(page, "web-mobile-apps");
+    await page.locator(SEC).scrollIntoViewIfNeeded();
+    await page.mouse.move(5, 5);
+  }
+
+  test("picking a layer opens the stack and swaps the tools", async ({ page }) => {
+    await openArch(page);
+    await expect(tab(page, /Web & mobile apps/)).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator(`${SEC} #arch-tech`)).toContainText("Tailwind CSS");
+    await tab(page, /^04\s*Data/).click();
+    await expect(tab(page, /^04\s*Data/)).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator(`${SEC} #arch-tech li`)).toHaveCount(5, { timeout: 3000 });
+    await expect(page.locator(`${SEC} #arch-tech`)).toContainText("PostgreSQL");
+    await expect(page.locator(`${SEC} #arch-tech`)).not.toContainText("Tailwind CSS");
+    await tab(page, /^05\s*Cloud/).click();
+    await expect(page.locator(`${SEC} #arch-tech`)).toContainText("Microsoft Azure", { timeout: 3000 });
+  });
+
+  test("layers above the chosen one lift away and the chosen one is highlighted", async ({ page }) => {
+    await openArch(page);
+    const layers = page.locator(`${SEC} [style*="preserve-3d"] > .cursor-pointer`);
+    await expect(layers).toHaveCount(5);
+    await tab(page, /^03\s*Back end/).click();
+    await expect(layers.nth(2)).toHaveCSS("transform", /.+/);
+    await expect(layers.nth(2).locator("> div").nth(1)).toHaveClass(/border-brand\/60/);
+    await expect(layers.nth(0).locator("> div").nth(1)).toHaveCSS("opacity", "0.35");
+    await expect(layers.nth(3).locator("> div").nth(1)).toHaveCSS("opacity", "1");
+  });
+
+  test("clicking the stack itself selects that layer", async ({ page }) => {
+    await openArch(page);
+    await page.locator(`${SEC} [style*="preserve-3d"] > .cursor-pointer`).nth(4).dispatchEvent("click");
+    await expect(tab(page, /^05\s*Cloud/)).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("steps through the layers by itself until you hover", async ({ page }) => {
+    await openArch(page);
+    await expect(tab(page, /^02\s*API/)).toHaveAttribute("aria-selected", "true", { timeout: 7000 });
+    await page.locator(`${SEC} #arch-tech`).hover();
+    await page.locator(SEC).getByRole("tab").nth(0).hover();
+    await page.waitForTimeout(4500);
+    await expect(tab(page, /^02\s*API/)).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("pricing switches between web and mobile apps", async ({ page }) => {
+    await open(page, "web-mobile-apps");
+    const pr = page.locator("#pricing");
+    await pr.scrollIntoViewIfNeeded();
+    await expect(pr.locator("#pricing-panel-0")).toBeVisible();
+    await expect(pr.locator("#pricing-panel-1")).toBeHidden();
+    await pr.getByRole("tab", { name: "Mobile app" }).click();
+    await expect(pr.getByRole("tab", { name: "Mobile app" })).toHaveAttribute("aria-selected", "true");
+    await expect(pr.locator("#pricing-panel-1")).toBeVisible();
+    await expect(pr.locator("#pricing-panel-0")).toBeHidden();
+    for (const p of ["£7,500", "£12,500", "£20,000"]) await expect(pr.locator("#pricing-panel-1")).toContainText(p);
+    await pr.getByRole("tab", { name: "Web app" }).click();
+    await expect(pr.locator("#pricing-panel-0")).toContainText("£15,000");
   });
 });

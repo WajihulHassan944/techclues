@@ -216,6 +216,10 @@ const PAGES: Svc[] = [
   },
 ];
 
+// Pages whose case study isn't built yet have no "Case study" block.
+const NO_CASE_STUDY = ["prototype-to-production", "low-code-no-code", "web-mobile-apps", "ecommerce-marketplace-development", "ui-ux-design", "brand-strategy"];
+for (const svc of PAGES) if (NO_CASE_STUDY.includes(svc.slug)) svc.sections = svc.sections.filter((l) => l !== "Case study");
+
 async function rejectCookies(page: Page) {
   // The banner only disappears once React has hydrated, so retry the click until it does.
   await expect(async () => {

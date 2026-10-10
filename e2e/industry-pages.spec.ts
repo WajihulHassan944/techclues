@@ -36,6 +36,7 @@ const SECTORS: Sector[] = [
     faqFirst: "Do you build to NHS and GDPR standards?",
     faqOther: "Can you integrate with our existing systems?",
     faqCount: 4,
+    noCaseStudy: true,
   },
   {
     slug: "retail-ecommerce",
@@ -50,6 +51,7 @@ const SECTORS: Sector[] = [
     faqFirst: "Do you build on Shopify or custom?",
     faqOther: "Can you build a marketplace?",
     faqCount: 4,
+    noCaseStudy: true,
   },
   {
     slug: "pre-seed-seed-startups",
@@ -78,6 +80,7 @@ const SECTORS: Sector[] = [
     faqFirst: "Can you build our SaaS from scratch?",
     faqOther: "Do you handle subscriptions?",
     faqCount: 4,
+    noCaseStudy: true,
   },
   {
     slug: "logistics-transportation",
@@ -92,6 +95,7 @@ const SECTORS: Sector[] = [
     faqFirst: "Can you connect to our existing TMS or WMS?",
     faqOther: "Do driver apps work without signal?",
     faqCount: 4,
+    noCaseStudy: true,
   },
   {
     slug: "education-consulting",
@@ -106,6 +110,7 @@ const SECTORS: Sector[] = [
     faqFirst: "Should we use an off-the-shelf LMS?",
     faqOther: "Can we sell courses and sessions online?",
     faqCount: 4,
+    noCaseStudy: true,
   },
   {
     slug: "recruitment-staffing",

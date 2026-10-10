@@ -338,4 +338,22 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "With GDPR in mind: clear consent, retention rules and easy data requests."
       }
   ],
+  "industries-industry-manufacturing": [
+      {
+          "q": "Can you connect to our ERP or machines?",
+          "a": "Yes. We integrate with ERP and MES systems and can collect machine data through sensors or gateways."
+      },
+      {
+          "q": "Will the apps work on the shop floor?",
+          "a": "Yes. We design for tablets, gloves and noisy environments, with offline support where needed."
+      },
+      {
+          "q": "Can we start small?",
+          "a": "Yes. We usually digitise one process first, such as maintenance, then expand."
+      },
+      {
+          "q": "Do you replace legacy systems?",
+          "a": "Where it makes sense. Often we connect to them first and replace them gradually."
+      }
+  ],
 };

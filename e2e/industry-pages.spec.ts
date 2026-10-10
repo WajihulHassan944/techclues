@@ -122,6 +122,21 @@ const SECTORS: Sector[] = [
     faqCount: 4,
     noCaseStudy: true,
   },
+  {
+    slug: "industry-manufacturing",
+    title: "Manufacturing Software Development in the UK | Vebryx",
+    kicker: "Manufacturing software development",
+    headline: "Modern software for the factory floor.",
+    name: "Industry & manufacturing",
+    challenges: ["Paper and spreadsheets", "Limited visibility", "Ageing systems"],
+    build: ["Production dashboards", "Maintenance apps", "Quality management", "Inventory & supply"],
+    standards: ["Built for the floor", "Works with what you have", "Reliable and secure", "Step-by-step change"],
+    tech: ["React", "Python", "Redis", "Microsoft Azure"],
+    faqFirst: "Can you connect to our ERP or machines?",
+    faqOther: "Will the apps work on the shop floor?",
+    faqCount: 4,
+    noCaseStudy: true,
+  },
 ];
 
 async function rejectCookies(page: Page) {

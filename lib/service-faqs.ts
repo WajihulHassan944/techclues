@@ -386,4 +386,42 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Yes. We can carry your new brand straight into your website or product."
       }
   ],
+  "partners": [
+      {
+          "q": "Who can join?",
+          "a": "Anyone who meets businesses that need software, apps, AI, design or marketing: agencies without a development team, freelancers, business advisers, accountants, startup communities and past clients. We approve each partner. Vebryx staff can't take part."
+      },
+      {
+          "q": "What do I earn?",
+          "a": "10% of our fees up to £20,000, and 5% of anything above that, up to £5,000 a referral. For monthly services, the same on the first 6 months' fees. A ZERO.ONE earns a flat £50. Pro partners, with 3 or more paid referrals in 12 months, earn 12.5% on the first £20,000. Further work from the same client within 12 months of their first payment earns 5%."
+      },
+      {
+          "q": "How do I register a referral?",
+          "a": "Use the \"Refer a client\" form on this page, or email sales@vebryx.co.uk with you and the client both copied, before their first call with us. Only refer people who have agreed to us contacting them. We confirm in writing whether the referral is registered, and the commission it qualifies for."
+      },
+      {
+          "q": "When does a referral count?",
+          "a": "When the client is new to us (not in touch with us in the previous 6 months), signs within 6 months of your referral, and pays. If two partners introduce the same client, the first registered referral counts."
+      },
+      {
+          "q": "What counts as fees?",
+          "a": "What the client pays us, excluding VAT and third-party costs such as ad spend, hosting, software licences and app store fees. An audit fee that's credited against a build is counted once."
+      },
+      {
+          "q": "When and how am I paid?",
+          "a": "By bank transfer in pounds, within 14 days of each client payment clearing. When a project is paid in stages, commission is paid in stages too. Businesses send us an invoice, and you're responsible for your own tax."
+      },
+      {
+          "q": "What if a client cancels or gets a refund?",
+          "a": "Commission is due only on what the client pays and keeps paying. If we refund a payment, the commission on it comes off your next payout."
+      },
+      {
+          "q": "What should I tell the people I refer?",
+          "a": "That you may earn a referral fee. Please don't promise prices, timelines or results on our behalf: we'll quote after a call."
+      },
+      {
+          "q": "Can the terms change?",
+          "a": "We may change the rates for future referrals, with notice. A referral we've registered keeps the commission we confirmed. The full terms come with your welcome email."
+      }
+  ],
 };

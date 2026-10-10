@@ -36,6 +36,20 @@ const SECTORS: Sector[] = [
     faqOther: "Can you integrate with our existing systems?",
     faqCount: 4,
   },
+  {
+    slug: "retail-ecommerce",
+    title: "Ecommerce & Retail Software Development UK | Vebryx",
+    kicker: "Ecommerce and retail software development",
+    headline: "Commerce experiences that sell, on every screen.",
+    name: "Retail & e-commerce",
+    challenges: ["Abandoned baskets", "Disconnected channels", "Rising acquisition costs"],
+    build: ["Custom storefronts", "Marketplaces", "Checkout & payments", "Inventory & orders"],
+    standards: ["Speed sells", "Secure payments", "Measured growth", "Ready for peaks"],
+    tech: ["Next.js", "Stripe", "Meta Ads", "Mailchimp"],
+    faqFirst: "Do you build on Shopify or custom?",
+    faqOther: "Can you build a marketplace?",
+    faqCount: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {

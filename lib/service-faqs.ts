@@ -230,4 +230,22 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Yes. Many healthcare products start with a focused MVP, such as online booking, and grow from there."
       }
   ],
+  "industries-retail-ecommerce": [
+      {
+          "q": "Do you build on Shopify or custom?",
+          "a": "Both routes are possible. We recommend a platform when it fits, and custom builds when you need something it can't do."
+      },
+      {
+          "q": "Can you build a marketplace?",
+          "a": "Yes, including seller onboarding, split payments, commissions and reviews."
+      },
+      {
+          "q": "Can you connect to our stock system?",
+          "a": "Yes. We integrate with inventory, ERP and point-of-sale systems through their APIs."
+      },
+      {
+          "q": "Can you help us grow after launch?",
+          "a": "Yes. Our performance marketing team runs campaigns and tests to improve conversion."
+      }
+  ],
 };

@@ -29,8 +29,29 @@ s = open(tmp).read()
 main = s[s.index("<main"): s.index("</main>") + 7]
 main = re.sub(r'tabIndex="(-?[0-9]+)"', r"tabIndex={\1}", main)
 main = re.sub(r"style=\{\{([^{}]*\"--[^{}]*)\}\}", r"style={{\1} as React.CSSProperties}", main)
+imports = ""
+if 'aria-label="Questions"' in main:
+    # FAQ: swap the list for the shared accordion and register the questions from the page's JSON-LD
+    q = main.index('aria-label="Questions"')
+    f0 = main.index('<ul className="border-t border-ink/10">', q)
+    f1 = main.index("</ul>", f0) + 5
+    n_buttons = main[f0:f1].count("<button")
+    key = route.replace("/", "-")
+    main = main[:f0] + '<Accordion items={serviceFaqs["%s"]} />' % key + main[f1:]
+    m = re.search(r'"@type": ?"FAQPage".*?\}\s*\]\s*\}', html, re.S)
+    qa = re.findall(r'"name": ?"((?:[^"\\]|\\.)*)",\s*"acceptedAnswer": ?\{\s*"@type": ?"Answer",\s*"text": ?"((?:[^"\\]|\\.)*)"', m.group(0))
+    items = [{"q": json.loads('"' + a + '"'), "a": json.loads('"' + b + '"')} for a, b in qa]
+    assert len(items) == n_buttons, (len(items), n_buttons)
+    faq_path = root + "/lib/service-faqs.ts"
+    faq = open(faq_path).read()
+    if f'"{key}":' not in faq:
+        entry = f'  "{key}": ' + json.dumps(items, indent=4, ensure_ascii=False).replace("\n", "\n  ") + ",\n"
+        faq = faq.replace("\n};\n", "\n" + entry + "};\n")
+        open(faq_path, "w").write(faq)
+    imports = 'import Accordion from "./Accordion";\nimport { serviceFaqs } from "@/lib/service-faqs";\n\n'
+    print("faq items", len(items))
 open(f"{root}/components/{name}Markup.tsx", "w").write(f'''/* {route} page content, generated from the saved markup. */
-export default function {name}Markup() {{
+{imports}export default function {name}Markup() {{
   return (
     <>
 {main}

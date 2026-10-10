@@ -212,4 +212,22 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Yes. We'll extend your brand into a product design system, or refine it where it needs help."
       }
   ],
+  "industries-healthcare-medical": [
+      {
+          "q": "Do you build to NHS and GDPR standards?",
+          "a": "We design with GDPR and relevant NHS Digital standards in mind from day one, and plan compliance needs during discovery."
+      },
+      {
+          "q": "Can you integrate with our existing systems?",
+          "a": "Yes. We connect patient management, EHR/EMR and booking systems through their APIs or standard formats."
+      },
+      {
+          "q": "Can you build a medical device app?",
+          "a": "We can build the software and plan for MHRA guidance where it applies. Regulatory sign-off stays with you and your advisers."
+      },
+      {
+          "q": "Can we start small?",
+          "a": "Yes. Many healthcare products start with a focused MVP, such as online booking, and grow from there."
+      }
+  ],
 };

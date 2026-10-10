@@ -92,6 +92,20 @@ const SECTORS: Sector[] = [
     faqOther: "Do driver apps work without signal?",
     faqCount: 4,
   },
+  {
+    slug: "education-consulting",
+    title: "Edtech & Consulting Software Development UK | Vebryx",
+    kicker: "Edtech and consulting software development",
+    headline: "Share your expertise at scale.",
+    name: "Education & consulting",
+    challenges: ["Time for hire", "Scattered tools", "Keeping learners engaged"],
+    build: ["Learning platforms", "Client portals", "Booking & scheduling", "Assessments & certificates"],
+    standards: ["Easy for everyone", "Safe data", "Works on any device", "Built to grow"],
+    tech: ["Next.js", "Supabase", "Webflow", "Zapier"],
+    faqFirst: "Should we use an off-the-shelf LMS?",
+    faqOther: "Can we sell courses and sessions online?",
+    faqCount: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {

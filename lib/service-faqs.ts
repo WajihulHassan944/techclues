@@ -302,4 +302,22 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Usually with the biggest bottleneck, such as dispatch or tracking, as a focused first release."
       }
   ],
+  "industries-education-consulting": [
+      {
+          "q": "Should we use an off-the-shelf LMS?",
+          "a": "Sometimes that's the right call. We build custom when you need your own brand, flows or business model."
+      },
+      {
+          "q": "Can we sell courses and sessions online?",
+          "a": "Yes, with one-off payments, subscriptions and bundles."
+      },
+      {
+          "q": "Can you build a client portal for our consultancy?",
+          "a": "Yes, with secure document sharing, updates and messaging."
+      },
+      {
+          "q": "Can we launch quickly?",
+          "a": "Yes. A low-code first version can go live fast, then grow into custom code."
+      }
+  ],
 };

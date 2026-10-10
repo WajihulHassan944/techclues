@@ -110,7 +110,7 @@ export default function SiteEffects() {
     // Photo parallax: the offset follows how far the photo's frame has travelled through the viewport.
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const frames = Array.from(document.querySelectorAll<HTMLElement>('div[class*="-inset-y-["]'))
-        .filter((el) => el.querySelector("img") && el.parentElement)
+        .filter((el) => el.querySelector("img") && el.parentElement && !el.closest("[data-ab-banner]"))
         .map((el) => {
           const m = /-inset-y-\[(\d+)%\]/.exec(el.className);
           return m ? { el, amp: Number(m[1]) - 2, host: el.parentElement as HTMLElement } : null;

@@ -64,9 +64,9 @@ void main() {
 const FRAME_MS = 1000 / 30;
 
 /** Animated WebGL gradient behind the hero. The CSS gradient stays as the fallback. */
-export default function HeroCanvas() {
+export default function HeroCanvas({ selector = ".hero-lift canvas" }: { selector?: string }) {
   useEffect(() => {
-    const canvas = document.querySelector<HTMLCanvasElement>(".hero-lift canvas");
+    const canvas = document.querySelector<HTMLCanvasElement>(selector);
     if (!canvas) return;
     const gl = canvas.getContext("webgl", { antialias: false, premultipliedAlpha: false });
     if (!gl) return;
@@ -152,7 +152,7 @@ export default function HeroCanvas() {
       io.disconnect();
       window.removeEventListener("pointermove", onPointer);
     };
-  }, []);
+  }, [selector]);
 
   return null;
 }

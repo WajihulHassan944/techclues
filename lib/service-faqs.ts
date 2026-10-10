@@ -284,4 +284,22 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "With a multi-tenant architecture and role-based access built in from the start."
       }
   ],
+  "industries-logistics-transportation": [
+      {
+          "q": "Can you connect to our existing TMS or WMS?",
+          "a": "Yes. We integrate through APIs or data feeds, or replace legacy tools step by step."
+      },
+      {
+          "q": "Do driver apps work without signal?",
+          "a": "Yes. We build offline-first apps that sync when a connection returns."
+      },
+      {
+          "q": "Can you add live tracking for customers?",
+          "a": "Yes, with tracking links, delivery windows and notifications by SMS or email."
+      },
+      {
+          "q": "Where should we start?",
+          "a": "Usually with the biggest bottleneck, such as dispatch or tracking, as a focused first release."
+      }
+  ],
 };

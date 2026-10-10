@@ -78,6 +78,20 @@ const SECTORS: Sector[] = [
     faqOther: "Do you handle subscriptions?",
     faqCount: 4,
   },
+  {
+    slug: "logistics-transportation",
+    title: "Logistics Software Development in the UK | Vebryx",
+    kicker: "Logistics software development",
+    headline: "Logistics software that keeps every part of the operation moving.",
+    name: "Logistics & transportation",
+    challenges: ["Legacy systems", "Last-mile pressure", "Compliance and sustainability"],
+    build: ["Fleet management", "Transport management (TMS)", "Warehouse management (WMS)", "Route optimisation"],
+    standards: ["Real-time by default", "Works offline", "Integration-first"],
+    tech: ["React", "Redis", "PostgreSQL", "Google Cloud"],
+    faqFirst: "Can you connect to our existing TMS or WMS?",
+    faqOther: "Do driver apps work without signal?",
+    faqCount: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {

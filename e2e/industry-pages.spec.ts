@@ -50,6 +50,20 @@ const SECTORS: Sector[] = [
     faqOther: "Can you build a marketplace?",
     faqCount: 4,
   },
+  {
+    slug: "pre-seed-seed-startups",
+    title: "Product Development for Pre-seed & Seed Startups | Vebryx",
+    kicker: "Product development for pre-seed and seed startups",
+    headline: "From idea to investor-ready product.",
+    name: "Pre-seed & seed startups",
+    challenges: ["Limited runway", "Proving demand", "No technical co-founder"],
+    build: ["Idea validation", "Lean MVPs", "Clickable prototypes", "Waitlists & launch"],
+    standards: ["Clear scope and price", "Speed over polish", "Investor-ready", "A partner, not a vendor"],
+    tech: ["Figma", "Supabase", "Vercel", "Stripe"],
+    faqFirst: "How much does a startup MVP cost?",
+    faqOther: "How fast can we launch?",
+    faqCount: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {

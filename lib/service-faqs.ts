@@ -248,4 +248,22 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Yes. Our performance marketing team runs campaigns and tests to improve conversion."
       }
   ],
+  "industries-pre-seed-seed-startups": [
+      {
+          "q": "How much does a startup MVP cost?",
+          "a": "A Validation MVP starts from £2,500, a Lean MVP from £5,000 and a Custom or SaaS platform from £10,000, with your price agreed before any work starts. Try our cost calculator for an instant estimate."
+      },
+      {
+          "q": "How fast can we launch?",
+          "a": "A Lean MVP usually takes 2–4 weeks, and a Validation MVP to test demand first takes 1–2 weeks."
+      },
+      {
+          "q": "Can you help with our pitch?",
+          "a": "We can build prototypes and product demos that make your pitch concrete."
+      },
+      {
+          "q": "What if we pivot?",
+          "a": "That's what validation is for. We keep builds lean so changing direction is affordable."
+      }
+  ],
 };

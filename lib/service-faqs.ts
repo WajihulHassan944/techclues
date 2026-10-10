@@ -320,4 +320,22 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Yes. A low-code first version can go live fast, then grow into custom code."
       }
   ],
+  "industries-recruitment-staffing": [
+      {
+          "q": "Can you integrate with our ATS or CRM?",
+          "a": "Yes. We connect through their APIs, or automate between tools where APIs are limited."
+      },
+      {
+          "q": "Can you build a job board?",
+          "a": "Yes, with search, alerts, applications and multi-posting to other boards."
+      },
+      {
+          "q": "Do you use AI for matching?",
+          "a": "Where it helps. AI can rank and summarise candidates, with consultants making the final call."
+      },
+      {
+          "q": "How do you handle candidate data?",
+          "a": "With GDPR in mind: clear consent, retention rules and easy data requests."
+      }
+  ],
 };

@@ -14,6 +14,7 @@ type Sector = {
   faqFirst: string;
   faqOther: string;
   faqCount: number;
+  noCaseStudy?: boolean; // some sectors have no case study yet
 };
 
 const SECTIONS = [
@@ -106,6 +107,21 @@ const SECTORS: Sector[] = [
     faqOther: "Can we sell courses and sessions online?",
     faqCount: 4,
   },
+  {
+    slug: "recruitment-staffing",
+    title: "Recruitment Software Development in the UK | Vebryx",
+    kicker: "Recruitment software development",
+    headline: "Place better candidates, faster.",
+    name: "Recruitment & staffing",
+    challenges: ["Admin overload", "Candidate drop-off", "Disconnected tools"],
+    build: ["Job boards", "Candidate portals", "Client portals", "Smart matching"],
+    standards: ["GDPR-ready", "Integration-first", "Mobile-friendly", "Fair and transparent"],
+    tech: ["React", "Zapier", "Make", "HubSpot"],
+    faqFirst: "Can you integrate with our ATS or CRM?",
+    faqOther: "Can you build a job board?",
+    faqCount: 4,
+    noCaseStudy: true,
+  },
 ];
 
 async function rejectCookies(page: Page) {
@@ -145,7 +161,7 @@ for (const s of SECTORS) {
     test("has every content section in order", async ({ page }) => {
       await open(page, url);
       const labels = await page.locator("main section[aria-label]").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
-      expect(labels).toEqual(SECTIONS);
+      expect(labels).toEqual(s.noCaseStudy ? SECTIONS.filter((l) => l !== "Case study") : SECTIONS);
     });
 
     test("challenges, solutions, standards and tech stack are complete", async ({ page }) => {

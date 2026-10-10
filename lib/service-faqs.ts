@@ -356,4 +356,34 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Where it makes sense. Often we connect to them first and replace them gradually."
       }
   ],
+  "brand-strategy": [
+      {
+          "q": "How much does branding cost?",
+          "a": "Essential starts from £750, Identity from £1,500 and Complete from £2,500. Your price is agreed before any work starts, and you get editable files."
+      },
+      {
+          "q": "Do you design logos only?",
+          "a": "We can, but the best results come from positioning first, then the identity that expresses it."
+      },
+      {
+          "q": "What do I receive?",
+          "a": "Logo files, colour and type system, brand guidelines and any launch assets we agree."
+      },
+      {
+          "q": "Can you refresh an existing brand?",
+          "a": "Yes. We'll keep what works and evolve the rest."
+      },
+      {
+          "q": "How long does a brand project take?",
+          "a": "It depends on scope. A focused identity is quicker than a full strategy; we'll give you a clear timeline before we start."
+      },
+      {
+          "q": "Will I get editable files?",
+          "a": "Yes: vector logo files, colour codes, font details and editable templates."
+      },
+      {
+          "q": "Can you apply the brand to our website?",
+          "a": "Yes. We can carry your new brand straight into your website or product."
+      }
+  ],
 };

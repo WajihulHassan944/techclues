@@ -26,8 +26,8 @@ const COMMON_SECTIONS = [
   "Talk to us", "Benefits", "Industry experience", "Your product partner", "Case study", "What clients say", "How it works",
   "Why Vebryx", "Questions", "Related insights", "Start your project",
 ];
-const sections = (compare: string, extraAfterIncluded?: string) =>
-  COMMON_SECTIONS.flatMap((s) => (s === "__COMPARE__" ? [compare] : s === "What's included" && extraAfterIncluded ? [s, extraAfterIncluded] : [s]));
+const sections = (compare: string | null, extraAfterIncluded?: string) =>
+  COMMON_SECTIONS.flatMap((s) => (s === "__COMPARE__" ? (compare ? [compare] : []) : s === "What's included" && extraAfterIncluded ? [s, extraAfterIncluded] : [s]));
 
 const PAGES: Svc[] = [
   {
@@ -191,6 +191,29 @@ const PAGES: Svc[] = [
     faqCount: 7,
     minImages: 4,
   },
+  {
+    slug: "brand-strategy",
+    title: "Branding Agency for Startups in Glasgow | Vebryx",
+    kicker: "Brand strategy and identity for startups",
+    headline: "A brand that makes people trust you from the first click.",
+    serviceCard: "Strategy & Brand Identity",
+    sections: sections(null),
+    painPoints: [
+      "You struggle to explain what makes you different.",
+      "Your brand looks homemade next to competitors.",
+      "Every page and post looks slightly different.",
+    ],
+    pricing: ["Essential", "£750", "Identity", "£1,500", "Complete", "£2,500"],
+    compareLabel: "",
+    compare: [],
+    receive: ["Market and competitor review", "Positioning statement", "Brand guidelines", "Launch assets"],
+    tech: ["Figma", "Adobe Illustrator", "Miro", "Notion"],
+    faqFirst: "How much does branding cost?",
+    faqOther: "Do you design logos only?",
+    faqOtherAnswer: "best results come from positioning first",
+    faqCount: 7,
+    minImages: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {
@@ -256,8 +279,10 @@ for (const svc of PAGES) {
       await open(page, svc.slug);
       const pricing = page.locator('section[aria-label="Pricing"]');
       for (const text of svc.pricing) await expect(pricing).toContainText(text);
-      const compare = page.locator(`section[aria-label="${svc.compareLabel}"]`);
-      for (const text of svc.compare) await expect(compare).toContainText(text);
+      if (svc.compareLabel) {
+        const compare = page.locator(`section[aria-label="${svc.compareLabel}"]`);
+        for (const text of svc.compare) await expect(compare).toContainText(text);
+      }
       const receive = page.locator('section[aria-label="What you receive"]');
       for (const text of svc.receive) await expect(receive).toContainText(text);
       const tech = page.locator('section[aria-label="Technologies"]');
@@ -348,7 +373,7 @@ for (const svc of PAGES) {
     test("fits the screen", async ({ page }) => {
       await open(page, svc.slug);
       expect(await fits(page)).toBe(true);
-      await page.locator(`section[aria-label="${svc.compareLabel}"]`).scrollIntoViewIfNeeded();
+      await page.locator(`section[aria-label="${svc.compareLabel || "Pricing"}"]`).scrollIntoViewIfNeeded();
       expect(await fits(page)).toBe(true);
     });
   });

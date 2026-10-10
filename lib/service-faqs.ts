@@ -424,4 +424,336 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "We may change the rates for future referrals, with notice. A referral we've registered keeps the commission we confirmed. The full terms come with your welcome email."
       }
   ],
+  "faq-getting-started": [
+      {
+          "q": "What does Vebryx do?",
+          "a": "We design and build digital products: MVPs, custom platforms, web and mobile apps, and the brand and interface around them. Most of our work is taking an idea to something real people can use."
+      },
+      {
+          "q": "How do I start a project with you?",
+          "a": "Book the free 30-minute strategy call. We'll talk through your idea, what you're trying to prove and what it would take to build, and you'll leave with a plan whether or not you work with us."
+      },
+      {
+          "q": "What happens on the first call?",
+          "a": "Questions, mostly ours. We want the problem, the people you're building for and the outcome you need. If we're a fit, we follow up with scope, cost and a timeline."
+      },
+      {
+          "q": "Do I need a finished spec before we talk?",
+          "a": "No. A paragraph and a rough idea of who it's for is enough. Turning that into a scope is part of what we do."
+      },
+      {
+          "q": "Do you work with non-technical founders?",
+          "a": "Most of our clients are non-technical. We explain trade-offs in plain terms and never ask you to pick a database."
+      },
+      {
+          "q": "Can you take over a product someone else started?",
+          "a": "Often, yes. We'll review what exists first and tell you honestly whether it's better to continue it or rebuild the parts that are holding you back."
+      },
+      {
+          "q": "Do you work with clients outside the UK?",
+          "a": "Yes. We're based in Glasgow and work with founders elsewhere over calls and shared documents; the process doesn't change."
+      },
+      {
+          "q": "How do I know whether to build an MVP or the full product?",
+          "a": "If any important assumption is still a guess, build the MVP. If the demand is proven and you're solving a known problem, going straight to the full build can be the cheaper route."
+      }
+  ],
+  "faq-pricing": [
+      {
+          "q": "How much does an MVP cost?",
+          "a": "It depends on the features, the platforms and the pace. The MVP cost calculator gives you a range in a couple of minutes, and the call turns that into a firm number."
+      },
+      {
+          "q": "How accurate is the cost calculator?",
+          "a": "It's a planning range, not a quote. It's built from what we've charged for similar work, but the final figure comes after we've scoped your project properly."
+      },
+      {
+          "q": "Why do estimates vary so much between agencies?",
+          "a": "Mostly scope and seniority. A cheap quote usually means fewer features, less testing or a junior team; ask anyone quoting you what's excluded."
+      },
+      {
+          "q": "What's included in the price?",
+          "a": "Design, development, testing and launch of the scope we agree. Third-party costs like hosting, payment processing or paid AI usage sit outside it."
+      },
+      {
+          "q": "Do you charge per project or by the hour?",
+          "a": "We price the agreed scope, so you know the figure before we start rather than watching a meter run."
+      },
+      {
+          "q": "How are payments scheduled?",
+          "a": "Payment terms are set out in the proposal and tied to milestones, so nothing is due before you've seen progress against it."
+      },
+      {
+          "q": "What happens if the scope changes mid-project?",
+          "a": "We tell you what it costs in time and money before anything is built, and you decide. Small changes usually absorb; new features are quoted."
+      },
+      {
+          "q": "Are there ongoing costs after launch?",
+          "a": "Hosting, domains and any paid services your product uses are billed by those providers. Ongoing development or support is optional and agreed separately."
+      },
+      {
+          "q": "Do you offer payment plans?",
+          "a": "Milestone payments already spread the cost across the project. If you need something different, raise it on the call and we'll tell you straight whether it works."
+      }
+  ],
+  "faq-process": [
+      {
+          "q": "How quickly can you launch?",
+          "a": "A validation MVP takes 2–4 weeks. Larger platforms are usually around 8 weeks, depending on scope."
+      },
+      {
+          "q": "What are the stages of a project?",
+          "a": "Eight: Ignition, Compass, Pillar, Canvas, Forge, Bridge, Sentinel and Everest — idea and research, then planning, design, build, integrations, QA and launch."
+      },
+      {
+          "q": "What do you need from me during the build?",
+          "a": "Decisions, quickly, and access to anyone who knows your users. An hour a week of your time is typical; slow decisions are the usual cause of slow projects."
+      },
+      {
+          "q": "How often will I hear from you?",
+          "a": "Weekly at minimum, with something to look at rather than a status update. You'll have a direct line to the people building it."
+      },
+      {
+          "q": "Can you work to a fixed launch date?",
+          "a": "Yes, provided the scope can move. Fixed date and fixed scope at the same time is where projects go wrong."
+      },
+      {
+          "q": "What if I need it faster?",
+          "a": "We can put more people on it, which costs more per week but shortens the calendar. The calculator's pace options show the effect."
+      },
+      {
+          "q": "Do you work in sprints?",
+          "a": "We build in short cycles with something reviewable at the end of each one, so you're never waiting weeks to see where the project is."
+      },
+      {
+          "q": "What usually slows a project down?",
+          "a": "Waiting on content, waiting on access to a third-party system, and mid-build changes of direction. We flag all three early."
+      },
+      {
+          "q": "Can we start before everything is decided?",
+          "a": "Yes. We start with the parts we're sure of and design the rest so that later decisions don't force a rebuild."
+      }
+  ],
+  "faq-mvp": [
+      {
+          "q": "What exactly is an MVP?",
+          "a": "The smallest version of your product that tests the assumption your business depends on. Not a demo, not half a product — something real users can complete a real task with."
+      },
+      {
+          "q": "How do you decide what goes into the first version?",
+          "a": "We work back from the assumption you need to test. Anything that doesn't help prove or disprove it waits for version two."
+      },
+      {
+          "q": "What if the idea doesn't validate?",
+          "a": "Then you've saved the cost of building it. That's the point: we'd rather kill a bad idea in week two than bill you for six months of it."
+      },
+      {
+          "q": "Do you do research before building?",
+          "a": "Yes. Understanding the users and the existing alternatives is part of the early stages, not an optional extra."
+      },
+      {
+          "q": "Can you help us get the first users?",
+          "a": "We've run waitlist and launch campaigns alongside builds — Infinite Running League had over 1,000 sign-ups before any code was written."
+      },
+      {
+          "q": "Is MVP code throwaway?",
+          "a": "Not the way we build it. It's a smaller product, not a worse one, and it's built so the next version extends it rather than replaces it."
+      },
+      {
+          "q": "What is “Kill my idea”?",
+          "a": "A free stress test. You describe the idea, we aim at the customer, the alternatives, the differentiation, the scope and the risks, and tell you what to validate first."
+      }
+  ],
+  "faq-design": [
+      {
+          "q": "Do you design as well as build?",
+          "a": "Yes. UI/UX design and prototyping are part of the process, and we also do brand and identity work when a product needs one."
+      },
+      {
+          "q": "Will I see designs before development starts?",
+          "a": "Always. You get a clickable prototype to walk through, so changes happen in design where they're cheap."
+      },
+      {
+          "q": "Do you follow our brand or create one?",
+          "a": "Either. If you have brand guidelines we work inside them; if you don't, we can create the identity alongside the product."
+      },
+      {
+          "q": "Can you test the design with real users?",
+          "a": "Yes, that's what the prototype is for. Watching a handful of people use it before we build is the cheapest research there is."
+      },
+      {
+          "q": "What do you design in?",
+          "a": "Figma, with Framer and Maze alongside it for prototyping and testing."
+      },
+      {
+          "q": "Is the product accessible?",
+          "a": "We build to sensible accessibility standards — contrast, keyboard use, screen-reader labelling — as a default, and we can go further if you're held to a specific standard."
+      },
+      {
+          "q": "Do we get the design files?",
+          "a": "Yes. The design files are yours along with the rest of the work."
+      }
+  ],
+  "faq-technology": [
+      {
+          "q": "What do you build with?",
+          "a": "React and Next.js on the front end, Node, Python or .NET on the back end, PostgreSQL or MongoDB for data, hosted on AWS, Google Cloud, Azure or Vercel. Flutter and React Native for mobile."
+      },
+      {
+          "q": "Who chooses the stack?",
+          "a": "We recommend, you decide. The choice follows what the product needs and what your team can maintain, not what's fashionable."
+      },
+      {
+          "q": "Do you build mobile apps?",
+          "a": "Yes, for iOS and Android. Whether you need one on day one is a different question, and often the answer is no."
+      },
+      {
+          "q": "Web app or mobile app first?",
+          "a": "Web first, usually. It's faster to build, easier to change and there's no app store review between you and your users."
+      },
+      {
+          "q": "When do you use low-code or no-code?",
+          "a": "When speed matters more than a custom build — internal tools, simple marketplaces, storefronts. We use Shopify, Webflow, Bubble, Softr and automation tools like Zapier, Make and n8n, and we'll tell you when custom code is the better call."
+      },
+      {
+          "q": "Can you integrate with the systems we already use?",
+          "a": "Yes. Payments, CRMs, email, maps, analytics and internal APIs are routine; integrations are a stage of our process, not an afterthought."
+      },
+      {
+          "q": "How do you handle security?",
+          "a": "Roles and permissions, sensible authentication, encrypted connections, and access limited to what each user needs. If you're handling sensitive data, tell us early so it shapes the architecture."
+      },
+      {
+          "q": "How do you test?",
+          "a": "Quality assurance is its own stage: we test across devices and browsers, and fix what we find before launch rather than after."
+      },
+      {
+          "q": "Will it handle growth?",
+          "a": "We build the foundation to scale from the start, so the first version doesn't have to be thrown away when traffic arrives."
+      }
+  ],
+  "faq-ai": [
+      {
+          "q": "What can you actually build with AI?",
+          "a": "Assistants that answer from your own content, generated copy and images, document and data extraction, search that understands intent, and automations that remove manual steps."
+      },
+      {
+          "q": "Can you add AI to our existing product?",
+          "a": "Yes. That's most of this work: integrating models into a product that already exists rather than starting again."
+      },
+      {
+          "q": "Which models do you use?",
+          "a": "Whichever fits the job — Claude, OpenAI and Gemini models, with LangChain and Hugging Face tooling around them. We'll weigh accuracy, speed and cost per use before recommending one."
+      },
+      {
+          "q": "Is our data used to train someone else's model?",
+          "a": "Not with the enterprise and API arrangements we build on, where training on your data is off by default. We confirm the terms of whichever provider you choose before we wire it in."
+      },
+      {
+          "q": "How do you keep AI answers accurate?",
+          "a": "Ground them in your own content, constrain what the model is allowed to answer, and show sources where it matters. We also test the awkward questions, not just the easy ones."
+      },
+      {
+          "q": "What does an AI feature add to the cost?",
+          "a": "The build cost is in the calculator; the running cost depends on usage and the model you pick. We'll size both before you commit."
+      },
+      {
+          "q": "Should my MVP have AI in it?",
+          "a": "Only if it's doing real work for the user. AI that's there to be mentioned in the pitch deck adds cost and risk without adding value."
+      }
+  ],
+  "faq-launch": [
+      {
+          "q": "What happens at launch?",
+          "a": "We deploy, monitor it, and stay close for the first stretch of real usage — that's the Everest stage of our process."
+      },
+      {
+          "q": "Do you provide hosting?",
+          "a": "We set it up and can manage it for you. The hosting itself is billed by the provider, so you keep ownership of the account."
+      },
+      {
+          "q": "What if we find a bug after launch?",
+          "a": "Tell us. If it's something we built and it isn't doing what we agreed, we fix it."
+      },
+      {
+          "q": "Do you offer ongoing support?",
+          "a": "Yes, as an ongoing arrangement agreed separately. Plenty of clients keep us for a few days a month; others take it in-house."
+      },
+      {
+          "q": "Can our own developers take it over?",
+          "a": "Yes. We hand over the code, the accounts and the documentation, and we'll walk your team through it."
+      },
+      {
+          "q": "Do we get the source code?",
+          "a": "Yes. The product and the code we write for it are yours."
+      },
+      {
+          "q": "Can you keep building after launch?",
+          "a": "That's usually the plan. The first version teaches you what to build next, and we'll keep going for as long as it's useful."
+      }
+  ],
+  "faq-working-together": [
+      {
+          "q": "Where are you based?",
+          "a": "Glasgow, at 40 Plantation Square. We work with clients across the UK and beyond, and we're happy to meet in person if you're nearby."
+      },
+      {
+          "q": "Who will I work with day to day?",
+          "a": "The people building your product. There's no account manager relaying messages between you and the team."
+      },
+      {
+          "q": "Will you sign an NDA?",
+          "a": "Yes, and we already work under NDAs for several clients. Ask before you share anything sensitive and we'll get it signed."
+      },
+      {
+          "q": "Who owns the intellectual property?",
+          "a": "You do. The product, the designs and the code are yours."
+      },
+      {
+          "q": "Will our project appear in your portfolio?",
+          "a": "Only with your permission. Where we're under an NDA, details stay confidential — which is why some of our case studies are deliberately light on specifics."
+      },
+      {
+          "q": "Do you work under a contract?",
+          "a": "Always. Scope, timeline, cost and terms are agreed in writing before work starts."
+      },
+      {
+          "q": "What if we're not happy with something?",
+          "a": "Say so early. Short cycles exist precisely so you can redirect us in week one rather than week six."
+      },
+      {
+          "q": "How do we reach you?",
+          "a": "Email info@vebryx.co.uk, call +44 7446 478755, or book the free strategy call. During a project you'll have a shared channel with the team."
+      }
+  ],
+  "faq-fit": [
+      {
+          "q": "Which industries do you work in?",
+          "a": "Healthcare, logistics and transport, retail and e-commerce, education and consulting, funded startups, recruitment and staffing, SaaS, and industry and manufacturing."
+      },
+      {
+          "q": "Do you work in regulated industries?",
+          "a": "We've built for healthcare and finance-adjacent products. Tell us the rules you're held to early and they shape the design rather than arriving as a surprise at the end."
+      },
+      {
+          "q": "Do you only work with startups?",
+          "a": "No. Plenty of our work is for established businesses replacing spreadsheets and disconnected tools with one product."
+      },
+      {
+          "q": "We're pre-funding. Can you still help?",
+          "a": "Yes, and the MVP route exists for exactly that position — something real to show users and investors without spending the round you haven't raised yet."
+      },
+      {
+          "q": "Can you help with a funding round?",
+          "a": "We can't raise it for you, but a working product and evidence that people use it is the most persuasive thing you can take into the room."
+      },
+      {
+          "q": "Do you take equity instead of fees?",
+          "a": "Our default is a straightforward fee. If you want to discuss something else, raise it on the call and we'll give you a direct answer."
+      },
+      {
+          "q": "Is there work you turn down?",
+          "a": "Yes — when we don't think we're the right people for it, or when the plan is to build something nobody has checked anyone wants. We'll say so rather than take the project."
+      }
+  ],
 };

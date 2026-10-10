@@ -64,6 +64,20 @@ const SECTORS: Sector[] = [
     faqOther: "How fast can we launch?",
     faqCount: 4,
   },
+  {
+    slug: "saas-startups",
+    title: "SaaS Development for UK Startups | Vebryx",
+    kicker: "SaaS development for startups",
+    headline: "SaaS products built to launch fast and scale well.",
+    name: "SaaS startups",
+    challenges: ["Rebuilding the basics", "Onboarding drop-off", "Scaling pains"],
+    build: ["SaaS MVPs", "Accounts & teams", "Subscriptions & billing", "Dashboards & analytics"],
+    standards: ["Multi-tenant by design", "Measure everything", "Performance at scale", "Ship continuously"],
+    tech: ["Next.js", "Supabase", "Stripe", "Mixpanel"],
+    faqFirst: "Can you build our SaaS from scratch?",
+    faqOther: "Do you handle subscriptions?",
+    faqCount: 4,
+  },
 ];
 
 async function rejectCookies(page: Page) {

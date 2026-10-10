@@ -266,4 +266,22 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "That's what validation is for. We keep builds lean so changing direction is affordable."
       }
   ],
+  "industries-saas-startups": [
+      {
+          "q": "Can you build our SaaS from scratch?",
+          "a": "Yes, from validation and design to billing, dashboards and launch."
+      },
+      {
+          "q": "Do you handle subscriptions?",
+          "a": "Yes. We set up plans, trials, upgrades and invoicing, usually with Stripe."
+      },
+      {
+          "q": "Can you take over our existing product?",
+          "a": "Yes. We start with a code review, then improve or rebuild what's needed."
+      },
+      {
+          "q": "How do you keep customer data separate?",
+          "a": "With a multi-tenant architecture and role-based access built in from the start."
+      }
+  ],
 };

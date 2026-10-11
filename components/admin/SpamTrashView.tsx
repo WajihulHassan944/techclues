@@ -6,7 +6,7 @@ import EnquiryList from "./EnquiryList";
 import { useInbox } from "./InboxProvider";
 
 export default function SpamTrashView() {
-  const { state, deleteForever, unblock, resetSample } = useInbox();
+  const { state, deleteForever, unblock } = useInbox();
   const [folder, setFolder] = useState<"spam" | "trash">("spam");
   const [confirm, setConfirm] = useState(false);
   const [now] = useState(() => Date.now());
@@ -68,13 +68,6 @@ export default function SpamTrashView() {
           </ul>
         )}
       </section>
-
-      <p className="adm-muted adm-reset">
-        Showing sample data.{" "}
-        <button type="button" className="adm-text-btn" onClick={resetSample}>
-          Restore the sample enquiries
-        </button>
-      </p>
     </div>
   );
 }

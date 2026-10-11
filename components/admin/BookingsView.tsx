@@ -48,7 +48,7 @@ function CallRow({ b, now, onOpen }: { b: Booking; now: number; onOpen: () => vo
 }
 
 export default function BookingsView() {
-  const { bookings, availability, blockDay, unblockDay, reset } = useBookings();
+  const { bookings, availability, blockDay, unblockDay } = useBookings();
   const [now] = useState(() => Date.now());
   const today = dateKey(now);
   const [top, setTop] = useState<"calls" | "availability">("calls");
@@ -252,12 +252,7 @@ export default function BookingsView() {
               </aside>
             </div>
           )}
-          <p className="adm-muted adm-reset">
-            Times are UK time. Showing sample data.{" "}
-            <button type="button" className="adm-text-btn" onClick={reset}>
-              Restore the sample bookings
-            </button>
-          </p>
+          <p className="adm-muted adm-reset">Times are UK time.</p>
         </>
       )}
 

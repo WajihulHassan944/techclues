@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { logActivity } from "@/lib/admin/activity";
-import { ADMIN_EMAIL, AUTH_KEY } from "./nav";
+import { login, restoreSession } from "@/lib/api/auth";
+import { ApiError } from "@/lib/api/client";
+import { ADMIN_EMAIL } from "./nav";
 import { IconArrowLeft, IconArrowRight, IconEye, IconEyeOff } from "./icons";
 
 export default function LoginForm() {
@@ -12,20 +13,18 @@ export default function LoginForm() {
   const [email, setEmail] = useState(ADMIN_EMAIL);
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({});
   const [busy, setBusy] = useState(false);
   const [forgot, setForgot] = useState(false);
 
-  // Already signed in: go straight to the panel.
+  // Already signed in (valid refresh cookie): go straight to the panel.
   useEffect(() => {
-    try {
-      if (localStorage.getItem(AUTH_KEY) === "1") router.replace("/admin");
-    } catch {
-      /* ignore */
-    }
+    restoreSession().then((ok) => {
+      if (ok) router.replace("/admin");
+    });
   }, [router]);
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     const er: typeof errors = {};
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) er.email = "Check your email address.";
@@ -36,15 +35,13 @@ export default function LoginForm() {
       return;
     }
     setBusy(true);
-    window.setTimeout(() => {
-      try {
-        localStorage.setItem(AUTH_KEY, "1");
-        logActivity("security", "Signed in from this device");
-      } catch {
-        /* ignore */
-      }
+    try {
+      await login(email.trim(), password);
       router.replace("/admin");
-    }, 600);
+    } catch (err) {
+      setErrors({ form: err instanceof ApiError ? err.message : "Something went wrong. Please try again." });
+      setBusy(false);
+    }
   }
 
   return (
@@ -87,7 +84,12 @@ export default function LoginForm() {
           </div>
           {forgot && (
             <p className="adm-note" role="status">
-              Password reset isn&apos;t connected yet. In this static preview, any email and password will sign you in.
+              Password reset isn&apos;t wired up yet — ask whoever deployed the API to reset it directly.
+            </p>
+          )}
+          {errors.form && (
+            <p className="adm-err" role="alert">
+              {errors.form}
             </p>
           )}
           <button type="submit" className="adm-btn" disabled={busy}>

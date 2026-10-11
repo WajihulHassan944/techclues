@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { logActivity } from "@/lib/admin/activity";
-import { ADMIN_EMAIL, AUTH_KEY, NAV, itemFor } from "./nav";
+import { logout as apiLogout, restoreSession } from "@/lib/api/auth";
+import { ADMIN_EMAIL, NAV, itemFor } from "./nav";
 import InboxProvider, { useInbox } from "./InboxProvider";
 import BookingsProvider, { useBookings } from "./BookingsProvider";
 import BlogProvider from "./BlogProvider";
-import NewsletterProvider from "./NewsletterProvider";
+import NewsletterProvider, { useNewsletter } from "./NewsletterProvider";
 import SettingsProvider from "./SettingsProvider";
+import { useAdminRealtime } from "@/lib/pusher/client";
 import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSearch, IconSettings, IconShield, IconSpark } from "./icons";
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {
@@ -28,6 +29,35 @@ function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void,
       document.removeEventListener("keydown", key);
     };
   }, [ref, onOut, active]);
+}
+
+/** Keeps the panel live: refreshes the relevant provider and toasts when something happens elsewhere. */
+function RealtimeBridge() {
+  const { toast, refresh: refreshInbox } = useInbox();
+  const { refresh: refreshBookings } = useBookings();
+  const { refresh: refreshSubs } = useNewsletter();
+
+  useAdminRealtime({
+    "enquiry.created": (data) => {
+      const d = data as { name?: string; subject?: string };
+      toast(`New enquiry${d.name ? ` from ${d.name}` : ""}`);
+      refreshInbox();
+    },
+    "booking.created": (data) => {
+      const d = data as { name?: string };
+      toast(`New booking${d.name ? ` from ${d.name}` : ""}`);
+      refreshBookings();
+    },
+    "booking.updated": () => refreshBookings(),
+    "subscriber.created": (data) => {
+      const d = data as { email?: string };
+      toast(`New subscriber${d.email ? `: ${d.email}` : ""}`);
+      refreshSubs();
+    },
+    "reply.sent": () => refreshInbox(),
+  });
+
+  return null;
 }
 
 function NavBadge({ href, fallback }: { href: string; fallback?: string }) {
@@ -49,16 +79,12 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const userRef = useRef<HTMLDivElement>(null);
   const current = itemFor(path);
 
-  // Static sign-in: the panel opens only after the login screen has been passed in this browser.
+  // The panel opens only once a session is restored from the refresh-token cookie.
   useEffect(() => {
-    let ok = false;
-    try {
-      ok = localStorage.getItem(AUTH_KEY) === "1";
-    } catch {
-      ok = false;
-    }
-    if (!ok) router.replace("/admin/login");
-    else setReady(true);
+    restoreSession().then((ok) => {
+      if (!ok) router.replace("/admin/login");
+      else setReady(true);
+    });
   }, [router]);
 
   useEffect(() => {
@@ -77,13 +103,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   useOutside(userRef, () => setMenu(null), menu === "user");
 
   const logout = () => {
-    logActivity("security", "Signed out");
-    try {
-      localStorage.removeItem(AUTH_KEY);
-    } catch {
-      /* ignore */
-    }
-    router.replace("/admin/login");
+    apiLogout().finally(() => router.replace("/admin/login"));
   };
 
   if (!ready) return <div className="adm-shell" aria-busy="true" style={{ minHeight: "100vh" }} />;
@@ -94,6 +114,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     <BlogProvider>
     <NewsletterProvider>
     <SettingsProvider>
+    <RealtimeBridge />
     <div className="adm-shell">
       <div className="adm-scrim" data-open={drawer} onClick={() => setDrawer(false)} aria-hidden="true" />
       <aside className="adm-side" data-open={drawer} aria-label="Admin navigation">

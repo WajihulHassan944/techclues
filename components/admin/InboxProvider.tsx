@@ -1,11 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { logActivity } from "@/lib/admin/activity";
-import { seedInbox } from "@/lib/admin/inbox-seed";
+import { api } from "@/lib/api/client";
 import type { Enquiry, Folder, InboxState, StatusKey } from "@/lib/admin/inbox-types";
-
-const KEY = "techclues-admin-inbox-v1";
 
 type Ctx = {
   state: InboxState;
@@ -22,7 +19,7 @@ type Ctx = {
   addNote: (id: string, body: string) => void;
   block: (email: string) => void;
   unblock: (email: string) => void;
-  resetSample: () => void;
+  refresh: () => void;
 };
 
 const InboxCtx = createContext<Ctx | null>(null);
@@ -32,30 +29,39 @@ export const useInbox = () => {
   return c;
 };
 
+type ApiNote = { _id: string; at: string; body: string };
+type ApiMessage = { _id: string; from: "them" | "us"; at: string; body: string };
+type ApiEnquiry = Omit<Enquiry, "id" | "thread" | "notes"> & {
+  _id: string;
+  thread: ApiMessage[];
+  notes: ApiNote[];
+};
+
+function mapEnquiry(d: ApiEnquiry): Enquiry {
+  return {
+    ...d,
+    id: d._id,
+    thread: d.thread.map((m) => ({ id: m._id, from: m.from, at: m.at, body: m.body })),
+    notes: d.notes.map((n) => ({ id: n._id, at: n.at, body: n.body })),
+  };
+}
+
 export default function InboxProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<InboxState | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const timer = useRef<number | undefined>(undefined);
 
-  useEffect(() => {
-    let loaded: InboxState | null = null;
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) loaded = JSON.parse(raw) as InboxState;
-    } catch {
-      loaded = null;
-    }
-    setState(loaded && Array.isArray(loaded.enquiries) ? loaded : seedInbox(Date.now()));
+  const load = useCallback(async () => {
+    const [list, blocked] = await Promise.all([
+      api.get<{ items: ApiEnquiry[] }>("/api/admin/inbox?pageSize=500"),
+      api.get<{ email: string; at: string }[]>("/api/admin/inbox/blocked"),
+    ]);
+    setState({ enquiries: list.items.map(mapEnquiry), blocked });
   }, []);
 
   useEffect(() => {
-    if (!state) return;
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    } catch {
-      /* storage unavailable: the panel still works for this visit */
-    }
-  }, [state]);
+    load().catch(() => setState({ enquiries: [], blocked: [] }));
+  }, [load]);
 
   const toast = useCallback((m: string) => {
     setMsg(m);
@@ -68,60 +74,99 @@ export default function InboxProvider({ children }: { children: React.ReactNode 
     setState((s) => (s ? { ...s, enquiries: s.enquiries.map((e) => (set.has(e.id) ? fn(e) : e)) } : s));
   }, []);
 
-  const api = useMemo<Ctx | null>(() => {
+  const ctx = useMemo<Ctx | null>(() => {
     if (!state) return null;
-    const now = () => new Date().toISOString();
+    const refresh = () => {
+      load().catch(() => toast("Couldn't refresh the inbox"));
+    };
     return {
       state,
       unread: state.enquiries.filter((e) => e.folder === "inbox" && !e.read).length,
       toast,
       get: (id) => state.enquiries.find((e) => e.id === id),
-      setRead: (ids, read) => patch(ids, (e) => ({ ...e, read })),
+      setRead: (ids, read) => {
+        patch(ids, (e) => ({ ...e, read }));
+        api.patch("/api/admin/inbox/read", { ids, read }).catch(() => {
+          toast("Couldn't update read status");
+          refresh();
+        });
+      },
       setStatus: (ids, status) => {
         patch(ids, (e) => ({ ...e, status, read: true }));
-        logActivity("inbox", `Marked ${ids.length === 1 ? (state.enquiries.find((x) => x.id === ids[0])?.name ?? "an enquiry") : `${ids.length} enquiries`} as ${status}`);
         toast(ids.length === 1 ? `Marked as ${status}` : `${ids.length} enquiries marked as ${status}`);
+        api.patch("/api/admin/inbox/status", { ids, status }).catch(() => {
+          toast("Couldn't update status");
+          refresh();
+        });
       },
-      toggleStar: (id) => patch([id], (e) => ({ ...e, starred: !e.starred })),
+      toggleStar: (id) => {
+        patch([id], (e) => ({ ...e, starred: !e.starred }));
+        api.patch(`/api/admin/inbox/${id}/star`).catch(() => {
+          toast("Couldn't update star");
+          refresh();
+        });
+      },
       moveTo: (ids, folder) => {
         patch(ids, (e) => ({ ...e, folder }));
-        logActivity("inbox", `Moved ${ids.length === 1 ? (state.enquiries.find((x) => x.id === ids[0])?.name ?? "an enquiry") : `${ids.length} enquiries`} to ${folder === "inbox" ? "the inbox" : folder}`);
         const where = folder === "inbox" ? "the inbox" : folder === "spam" ? "spam" : "trash";
         toast(ids.length === 1 ? `Moved to ${where}` : `${ids.length} enquiries moved to ${where}`);
+        api.patch("/api/admin/inbox/move", { ids, folder }).catch(() => {
+          toast("Couldn't move enquiries");
+          refresh();
+        });
       },
       deleteForever: (ids) => {
         const set = new Set(ids);
         setState((s) => (s ? { ...s, enquiries: s.enquiries.filter((e) => !set.has(e.id)) } : s));
-        logActivity("inbox", `Deleted ${ids.length} ${ids.length === 1 ? "enquiry" : "enquiries"} for good`);
         toast(ids.length === 1 ? "Deleted for good" : `${ids.length} enquiries deleted for good`);
+        api.post("/api/admin/inbox/delete-forever", { ids }).catch(() => {
+          toast("Couldn't delete — restoring");
+          refresh();
+        });
       },
       sendReply: (id, body) => {
-        const to = state.enquiries.find((x) => x.id === id);
-        logActivity("inbox", `Replied to ${to?.name ?? "a visitor"}${to ? ` (${to.subject})` : ""}`);
-        patch([id], (e) => ({ ...e, thread: [...e.thread, { id: `t-${Date.now()}`, from: "us", at: now(), body }], status: e.status === "new" ? "replied" : e.status, read: true, draft: "" }));
-        toast("Reply sent from techcluesltd@gmail.com");
+        api
+          .post(`/api/admin/inbox/${id}/reply`, { body })
+          .then((updated) => {
+            const u = updated as ApiEnquiry;
+            patch([id], () => mapEnquiry(u));
+            toast("Reply sent from techcluesltd@gmail.com");
+          })
+          .catch(() => toast("Couldn't send the reply — please try again"));
       },
-      saveDraft: (id, body) => patch([id], (e) => ({ ...e, draft: body })),
-      addNote: (id, body) => patch([id], (e) => ({ ...e, notes: [...e.notes, { id: `n-${Date.now()}`, at: now(), body }] })),
+      saveDraft: (id, draft) => {
+        patch([id], (e) => ({ ...e, draft }));
+        api.patch(`/api/admin/inbox/${id}/draft`, { draft }).catch(() => {});
+      },
+      addNote: (id, body) => {
+        api
+          .post(`/api/admin/inbox/${id}/notes`, { body })
+          .then((updated) => patch([id], () => mapEnquiry(updated as ApiEnquiry)))
+          .catch(() => toast("Couldn't save the note"));
+      },
       block: (email) => {
-        setState((s) => (s && !s.blocked.some((b) => b.email === email) ? { ...s, blocked: [...s.blocked, { email, at: now() }] } : s));
+        setState((s) => (s && !s.blocked.some((b) => b.email === email) ? { ...s, blocked: [...s.blocked, { email, at: new Date().toISOString() }] } : s));
         toast(`${email} blocked`);
-        logActivity("inbox", `Blocked ${email}`);
+        api.post("/api/admin/inbox/block", { email }).catch(() => {
+          toast("Couldn't block sender");
+          refresh();
+        });
       },
       unblock: (email) => {
         setState((s) => (s ? { ...s, blocked: s.blocked.filter((b) => b.email !== email) } : s));
         toast(`${email} unblocked`);
+        api.post("/api/admin/inbox/unblock", { email }).catch(() => {
+          toast("Couldn't unblock sender");
+          refresh();
+        });
       },
-      resetSample: () => {
-        setState(seedInbox(Date.now()));
-        toast("Sample enquiries restored");
-      },
+      refresh,
     };
-  }, [state, patch, toast]);
+  }, [state, patch, toast, load]);
 
-  if (!api) return <div aria-busy="true" style={{ minHeight: "60vh" }} />;
+  if (!ctx) return <div aria-busy="true" style={{ minHeight: "60vh" }} />;
   return (
-    <InboxCtx.Provider value={api}>
+    <InboxCtx.Provider value={ctx}>
       {children}
       <div className="adm-toast-wrap" aria-live="polite">
         {msg && (

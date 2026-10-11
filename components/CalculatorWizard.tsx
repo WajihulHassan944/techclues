@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { calculatorIcons } from "@/lib/calculator-icons";
 import { estimate, features, goals, gbp, labelOf, paces, platforms, type Answers, type Option } from "@/lib/calculator";
+import { api, ApiError } from "@/lib/api/client";
 
 const STEPS = ["Details", "Goal", "Platform", "Features", "Timeline", "Estimate"];
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -110,6 +111,8 @@ export default function CalculatorWizard() {
   const [details, setDetails] = useState<Details>(EMPTY);
   const [unlocked, setUnlocked] = useState(false);
   const [a, setA] = useState<Answers>(DEFAULTS);
+  const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [submitError, setSubmitError] = useState("");
 
   const validDetails = details.name.trim().length > 0 && EMAIL.test(details.email.trim());
   const hasFeatures = a.features.length > 0;
@@ -254,11 +257,48 @@ export default function CalculatorWizard() {
                 </button>
               </p>
             </div>
-            <button type="button" className="group inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand disabled:cursor-wait disabled:bg-ink/60">
-              Submit my estimate
-              <Arrow cls="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+            <button
+              type="button"
+              disabled={submitState === "sending" || submitState === "sent"}
+              onClick={async () => {
+                setSubmitState("sending");
+                setSubmitError("");
+                try {
+                  await api.post(
+                    "/api/public/brief",
+                    {
+                      name: details.name.trim(),
+                      email: details.email.trim(),
+                      company: details.company.trim() || undefined,
+                      platform: labelOf.platform(a.platform),
+                      goal: labelOf.goal(a.goal),
+                      features: a.features.map((id) => labelOf.feature(id)).join(", "),
+                      pace: labelOf.pace(a.pace),
+                      result: {
+                        title: "Estimate shown to the visitor",
+                        headline: range,
+                        lines: [`Timeline: ${weeks}`, `Based on ${a.features.length} feature(s), ${labelOf.platform(a.platform)}`],
+                      },
+                    },
+                    { auth: false },
+                  );
+                  setSubmitState("sent");
+                } catch (err) {
+                  setSubmitState("error");
+                  setSubmitError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+                }
+              }}
+              className="group inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand disabled:cursor-wait disabled:bg-ink/60"
+            >
+              {submitState === "sending" ? "Sending…" : submitState === "sent" ? "Sent — we'll be in touch" : "Submit my estimate"}
+              {submitState !== "sent" && <Arrow cls="size-4 transition-transform duration-300 group-hover:translate-x-1" />}
             </button>
           </div>
+          {submitState === "error" && (
+            <p role="alert" className="mt-4 text-[13px] text-[#b42318]">
+              {submitError}
+            </p>
+          )}
         </div>
       </div>
     );

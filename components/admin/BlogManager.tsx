@@ -39,7 +39,7 @@ function RowMenu({ post, onDelete }: { post: Post; onDelete: () => void }) {
           <Link href={`/admin/blog/${post.id}`} className="adm-pop-item" role="menuitem">
             Edit
           </Link>
-          <button type="button" className="adm-pop-item" role="menuitem" onClick={() => { const id = duplicate(post.id); setOpen(false); if (id) router.push(`/admin/blog/${id}`); }}>
+          <button type="button" className="adm-pop-item" role="menuitem" onClick={() => { setOpen(false); duplicate(post.id).then((id) => { if (id) router.push(`/admin/blog/${id}`); }); }}>
             Duplicate
           </button>
           {post.status === "published" && (
@@ -58,7 +58,7 @@ function RowMenu({ post, onDelete }: { post: Post; onDelete: () => void }) {
 }
 
 function PostsTab() {
-  const { posts, categories, authors, remove, reset } = useBlog();
+  const { posts, categories, authors, remove } = useBlog();
   const [tab, setTab] = useState<Tab>("all");
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState("");
@@ -156,13 +156,6 @@ function PostsTab() {
           </ul>
         )}
       </div>
-      <p className="adm-muted adm-reset">
-        Showing sample posts.{" "}
-        <button type="button" className="adm-text-btn" onClick={reset}>
-          Restore the sample posts
-        </button>
-      </p>
-
       {del && (
         <Dialog
           title="Delete this post?"

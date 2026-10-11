@@ -9,7 +9,9 @@ import { SOURCES, SOURCE_KEYS, type SourceKey } from "@/lib/admin/inbox-types";
 import { EMAIL_RE, downloadText } from "@/lib/admin/newsletter";
 import type { Template } from "@/lib/admin/templates";
 import { dateKey } from "@/lib/admin/tz";
-import { ADMIN_EMAIL, AUTH_KEY } from "./nav";
+import { ADMIN_EMAIL } from "./nav";
+import { changePassword, logout as apiLogout } from "@/lib/api/auth";
+import { ApiError } from "@/lib/api/client";
 import { useBookings } from "./BookingsProvider";
 import Dialog from "./Dialog";
 import { useInbox } from "./InboxProvider";
@@ -127,7 +129,7 @@ function Notifications() {
           <button type="button" className="adm-mini" disabled={!dirty} onClick={() => setDraft(settings)}>
             Discard
           </button>
-          <button type="button" className="adm-btn adm-btn-sm" disabled={!dirty || !draft.fromName.trim()} onClick={() => update({ recipients: draft.recipients, events: draft.events, summaryTime: draft.summaryTime, fromName: draft.fromName.trim() }, "Notification settings saved", "Updated the notification settings")}>
+          <button type="button" className="adm-btn adm-btn-sm" disabled={!dirty || !draft.fromName.trim()} onClick={() => update({ recipients: draft.recipients, events: draft.events, summaryTime: draft.summaryTime, fromName: draft.fromName.trim() }, "Notification settings saved")}>
             Save changes
           </button>
         </span>
@@ -222,7 +224,7 @@ function Templates() {
             </li>
           ))}
         </ul>
-        <button type="button" className="adm-text-btn" onClick={() => update({ templates: DEFAULT_SETTINGS.templates }, "Templates restored to the defaults", "Restored the default reply templates")}>
+        <button type="button" className="adm-text-btn" onClick={() => update({ templates: DEFAULT_SETTINGS.templates }, "Templates restored to the defaults")}>
           Restore the default templates
         </button>
       </section>
@@ -235,7 +237,7 @@ function Templates() {
         </label>
         <textarea id="st-sig" className="adm-textarea" rows={5} value={sig} onChange={(e) => setSig(e.target.value)} />
         <div className="adm-dlg-foot-btns">
-          <button type="button" className="adm-btn adm-btn-sm" disabled={sig === settings.signature || !sig.trim()} onClick={() => update({ signature: sig.trim() }, "Signature saved", "Updated the email signature")}>
+          <button type="button" className="adm-btn adm-btn-sm" disabled={sig === settings.signature || !sig.trim()} onClick={() => update({ signature: sig.trim() }, "Signature saved")}>
             Save signature
           </button>
           <button type="button" className="adm-mini" disabled={sig === settings.signature} onClick={() => setSig(settings.signature)}>
@@ -250,7 +252,7 @@ function Templates() {
           onClose={() => setEdit(null)}
           onSave={(t) => {
             const exists = settings.templates.some((x) => x.id === t.id);
-            update({ templates: exists ? settings.templates.map((x) => (x.id === t.id ? t : x)) : [...settings.templates, t] }, exists ? "Template saved" : "Template added", `${exists ? "Edited" : "Added"} the reply template “${t.label}”`);
+            update({ templates: exists ? settings.templates.map((x) => (x.id === t.id ? t : x)) : [...settings.templates, t] }, exists ? "Template saved" : "Template added");
             setEdit(null);
           }}
         />
@@ -264,7 +266,7 @@ function Templates() {
               <button type="button" className="adm-mini" onClick={() => setDel(null)}>
                 Keep it
               </button>
-              <button type="button" className="adm-btn adm-btn-sm adm-btn-danger" onClick={() => { update({ templates: settings.templates.filter((x) => x.id !== del.id) }, "Template deleted", `Deleted the reply template “${del.label}”`); setDel(null); }}>
+              <button type="button" className="adm-btn adm-btn-sm adm-btn-danger" onClick={() => { update({ templates: settings.templates.filter((x) => x.id !== del.id) }, "Template deleted"); setDel(null); }}>
                 Delete template
               </button>
             </span>
@@ -290,17 +292,19 @@ const strength = (p: string) => {
 const STRENGTH = ["Too short", "Weak", "Fair", "Good", "Strong", "Very strong"];
 
 function Security() {
-  const { settings, update } = useSettings();
+  const { settings, refresh } = useSettings();
+  const { toast } = useInbox();
   const router = useRouter();
   const [cur, setCur] = useState("");
   const [next, setNext] = useState("");
   const [again, setAgain] = useState("");
   const [errs, setErrs] = useState<Record<string, string>>({});
   const [show, setShow] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [now] = useState(() => Date.now());
   const s = strength(next);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const er: Record<string, string> = {};
     if (!cur) er.cur = "Enter your current password.";
@@ -309,35 +313,33 @@ function Security() {
     if (again !== next) er.again = "The two passwords don't match.";
     setErrs(er);
     if (Object.keys(er).length) return;
-    update({ passwordChangedAt: new Date().toISOString() }, "Password changed", "Changed the password");
-    logActivity("security", "Changed the password");
-    setCur("");
-    setNext("");
-    setAgain("");
+    setBusy(true);
+    try {
+      await changePassword(cur, next);
+      toast("Password changed — other sessions were signed out");
+      refresh();
+      setCur("");
+      setNext("");
+      setAgain("");
+    } catch (err) {
+      setErrs({ cur: err instanceof ApiError ? err.message : "Couldn't change the password." });
+    } finally {
+      setBusy(false);
+    }
   };
 
   const signOutEverywhere = () => {
-    logActivity("security", "Signed out of every device");
-    try {
-      localStorage.removeItem(AUTH_KEY);
-    } catch {
-      /* ignore */
-    }
-    router.replace("/admin/login");
+    apiLogout().finally(() => router.replace("/admin/login"));
   };
 
-  const sessions = [
-    { id: "this", device: "This device", where: "Signed in now", current: true },
-    { id: "ios", device: "iPhone · Safari", where: "London, UK · 3 days ago", current: false },
-    { id: "mac", device: "MacBook · Chrome", where: "Birmingham, UK · 9 days ago", current: false },
-  ];
+  const sessions = [{ id: "this", device: "This device", where: "Signed in now", current: true }];
 
   return (
     <div className="adm-avail">
       <div className="adm-avail-grid">
         <section className="adm-panel" aria-labelledby="st-s1">
           <h3 id="st-s1">Change password</h3>
-          <p className="adm-muted">{settings.passwordChangedAt ? `Last changed ${fmtWhen(settings.passwordChangedAt, now)}.` : "Use a long, unique password."} In this static preview any current password is accepted.</p>
+          <p className="adm-muted">{settings.passwordChangedAt ? `Last changed ${fmtWhen(settings.passwordChangedAt, now)}.` : "Use a long, unique password."}</p>
           <form className="adm-form" onSubmit={submit} noValidate>
             <div className="adm-field">
               <label htmlFor="pw-cur">Current password</label>
@@ -365,8 +367,8 @@ function Security() {
             <label className="adm-check">
               <input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} /> Show passwords
             </label>
-            <button type="submit" className="adm-btn adm-btn-sm">
-              Change password
+            <button type="submit" className="adm-btn adm-btn-sm" disabled={busy}>
+              {busy ? "Changing…" : "Change password"}
             </button>
           </form>
         </section>
@@ -519,7 +521,7 @@ function Privacy() {
           </div>
         </div>
         <p className="adm-muted">Your privacy policy tells people how their data is used. Keep these periods in line with it.</p>
-        <button type="button" className="adm-btn adm-btn-sm" disabled={!dirty} onClick={() => update({ retention: { spamDays: spam, enquiryMonths: months } }, "Retention settings saved", `Set spam retention to ${spam} days and enquiry retention to ${months ? `${months} months` : "never delete"}`)}>
+        <button type="button" className="adm-btn adm-btn-sm" disabled={!dirty} onClick={() => update({ retention: { spamDays: spam, enquiryMonths: months } }, "Retention settings saved")}>
           Save
         </button>
       </section>
@@ -550,7 +552,7 @@ function Privacy() {
 
 /* ---------------- activity log ---------------- */
 function ActivityLog() {
-  const log = useActivity();
+  const [log, refreshLog] = useActivity();
   const [kind, setKind] = useState<"" | ActivityKind>("");
   const [confirm, setConfirm] = useState(false);
   const [now] = useState(() => Date.now());
@@ -561,7 +563,7 @@ function ActivityLog() {
       <div className="adm-panelhead">
         <div>
           <h3 id="st-a1">Activity log</h3>
-          <p className="adm-muted">What has been done in the panel, newest first. Kept in this browser for now.</p>
+          <p className="adm-muted">What has been done in the panel, newest first.</p>
         </div>
         <span className="adm-dlg-foot-btns">
           <button type="button" className="adm-mini" disabled={rows.length === 0} onClick={() => downloadText(`techclues-activity-${dateKey(Date.now())}.csv`, ["When,Area,What", ...rows.map((r) => [r.at, ACTIVITY_LABEL[r.kind], `"${r.text.replace(/"/g, '""')}"`].join(","))].join("\r\n") + "\r\n")}>
@@ -608,7 +610,7 @@ function ActivityLog() {
               <button type="button" className="adm-mini" onClick={() => setConfirm(false)}>
                 Keep it
               </button>
-              <button type="button" className="adm-btn adm-btn-sm adm-btn-danger" onClick={() => { clearActivity(); setConfirm(false); }}>
+              <button type="button" className="adm-btn adm-btn-sm adm-btn-danger" onClick={() => { clearActivity().then(refreshLog); setConfirm(false); }}>
                 Clear log
               </button>
             </span>
@@ -623,7 +625,6 @@ function ActivityLog() {
 
 export default function SettingsView() {
   const [tab, setTab] = useState<Tab>("notifications");
-  const { reset } = useSettings();
   return (
     <div className="adm-stack">
       <div className="adm-tabs" role="tablist" aria-label="Settings sections">
@@ -638,12 +639,6 @@ export default function SettingsView() {
       {tab === "security" && <Security />}
       {tab === "privacy" && <Privacy />}
       {tab === "activity" && <ActivityLog />}
-      <p className="adm-muted adm-reset">
-        Settings are kept in this browser for now.{" "}
-        <button type="button" className="adm-text-btn" onClick={reset}>
-          Restore every setting to its default
-        </button>
-      </p>
     </div>
   );
 }

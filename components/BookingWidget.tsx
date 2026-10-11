@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ComponentProps, type CSSProperties } from "react";
+import { api, ApiError } from "@/lib/api/client";
 
 const TITLE = "Free MVP strategy call";
 const DURATION = 30;
@@ -83,26 +84,13 @@ const uses12 = () => {
   }
 };
 
-/* ---------- offline stand-in for /api/booking/slots ---------- */
+/* ---------- real availability from the API ---------- */
 type SlotData = { slots: string[]; duration: number; horizonEnd: string };
-function availableSlots(fromISO: string, toISO: string): SlotData {
-  const now = Date.now();
-  const lead = now + 4 * 36e5;
-  const last = now + 20 * 864e5;
-  const from = new Date(fromISO).getTime();
-  const to = new Date(toISO).getTime();
-  const slots: string[] = [];
-  const start = partsOf(new Date(now), "Europe/London");
-  for (let i = 0; i < 40; i++) {
-    const day = new Date(Date.UTC(start.year, start.month - 1, start.day + i));
-    const dow = (day.getUTCDay() + 6) % 7;
-    if (dow > 4) continue;
-    for (let s = 0; s <= 16; s++) {
-      const t = zoned(day.getUTCFullYear(), day.getUTCMonth() + 1, day.getUTCDate(), 9 * 60 + s * 30, "Europe/London").getTime();
-      if (t >= lead && t <= last && t >= from && t < to) slots.push(new Date(t).toISOString());
-    }
-  }
-  return { slots, duration: DURATION, horizonEnd: new Date(now + 30 * 864e5).toISOString() };
+async function availableSlots(fromISO: string, toISO: string): Promise<SlotData> {
+  return api.get<SlotData>(
+    `/api/public/availability?from=${encodeURIComponent(fromISO)}&to=${encodeURIComponent(toISO)}`,
+    { auth: false },
+  );
 }
 
 /* ---------- small icons ---------- */
@@ -148,16 +136,26 @@ function SlotPicker({ timeZone: tz, onTimeZoneChange, h12, selected, onSelect, r
     const nm = nextMonth(ym.y, ym.m);
     const from = zoned(ym.y, ym.m, 1, 0, tz);
     const to = zoned(nm.y, nm.m, 1, 0, tz);
+    let cancelled = false;
     const id = window.setTimeout(() => {
-      const res = availableSlots(from.toISOString(), to.toISOString());
-      setCache((c) => ({ ...c, [key]: res }));
-      if (!res.slots.length && !jumped.current && to.toISOString() < res.horizonEnd) {
-        jumped.current = true;
-        setDir(1);
-        setYm(nm);
-      }
+      availableSlots(from.toISOString(), to.toISOString())
+        .then((res) => {
+          if (cancelled) return;
+          setCache((c) => ({ ...c, [key]: res }));
+          if (!res.slots.length && !jumped.current && to.toISOString() < res.horizonEnd) {
+            jumped.current = true;
+            setDir(1);
+            setYm(nm);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) setCache((c) => ({ ...c, [key]: { error: true } }));
+        });
     }, 350);
-    return () => window.clearTimeout(id);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(id);
+    };
   }, [key, cache, ym, tz]);
 
   const byDay = useMemo(() => {
@@ -349,7 +347,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
-type Booked = { name: string; email: string; start: string; googleUrl: string; icsUrl: string; manageUrl: string };
+type Booked = { name: string; email: string; start: string; meetingLink?: string; googleUrl: string; icsUrl: string; manageUrl: string };
 
 function Widget() {
   const [tz, setTz] = useState(detectTz);
@@ -363,14 +361,12 @@ function Widget() {
     return { name: q.get("name") ?? "", email: q.get("email") ?? "", company: q.get("company") ?? "", phone: "", notes: q.get("notes") ?? "", website: "" };
   });
   const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
-  const [formError] = useState("");
+  const [formError, setFormError] = useState("");
   const [busy, setBusy] = useState(false);
   const [booked, setBooked] = useState<Booked | null>(null);
   const headRef = useRef<HTMLHeadingElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const first = useRef(true);
-  void setRefresh;
-  void setNotice;
 
   useEffect(() => {
     if (first.current) {
@@ -397,23 +393,49 @@ function Widget() {
       document.getElementById(`booking-${Object.keys(er)[0]}`)?.focus();
       return;
     }
+    setFormError("");
     setBusy(true);
-    window.setTimeout(() => {
-      const start = new Date(slot!);
-      const end = new Date(start.getTime() + DURATION * 6e4);
-      const stamp = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-      const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//TechClues//Booking//EN", "BEGIN:VEVENT", `DTSTART:${stamp(start)}`, `DTEND:${stamp(end)}`, `SUMMARY:${TITLE}`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
-      setBooked({
-        name: form.name.trim(),
-        email: form.email.trim(),
-        start: slot!,
-        googleUrl: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(TITLE)}&dates=${stamp(start)}/${stamp(end)}`,
-        icsUrl: `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`,
-        manageUrl: "/book-a-call",
-      });
-      setBusy(false);
-      setStep("done");
-    }, 700);
+    (async () => {
+      try {
+        const res = await api.post<{ id: string; start: string; minutes: number; meetingLink?: string }>(
+          "/api/public/bookings",
+          {
+            name: form.name.trim(),
+            email: form.email.trim(),
+            company: form.company.trim() || undefined,
+            phone: form.phone.trim() || undefined,
+            start: slot!,
+            topic: form.notes.trim() || TITLE,
+            website: form.website,
+          },
+          { auth: false },
+        );
+        const start = new Date(res.start);
+        const end = new Date(start.getTime() + (res.minutes ?? DURATION) * 6e4);
+        const stamp = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+        const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//TechClues//Booking//EN", "BEGIN:VEVENT", `DTSTART:${stamp(start)}`, `DTEND:${stamp(end)}`, `SUMMARY:${TITLE}`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+        setBooked({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          start: res.start,
+          meetingLink: res.meetingLink,
+          googleUrl: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(TITLE)}&dates=${stamp(start)}/${stamp(end)}`,
+          icsUrl: `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`,
+          manageUrl: "/book-a-call",
+        });
+        setStep("done");
+      } catch (err) {
+        if (err instanceof ApiError && err.statusCode === 400) {
+          setFormError(err.message || "That time is no longer available — please pick another slot.");
+          setStep("pick");
+          setRefresh((r) => r + 1);
+        } else {
+          setFormError("Something went wrong booking your call. Please try again.");
+        }
+      } finally {
+        setBusy(false);
+      }
+    })();
   };
 
   const when = slot ? `${new Intl.DateTimeFormat("en-GB", { timeZone: tz, weekday: "long", day: "numeric", month: "long" }).format(new Date(slot))}, ${timeText(slot, tz, h12)}` : "";

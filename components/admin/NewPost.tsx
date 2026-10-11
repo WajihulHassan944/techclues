@@ -12,7 +12,7 @@ export default function NewPost() {
   useEffect(() => {
     if (done.current) return;
     done.current = true;
-    router.replace(`/admin/blog/${create()}`);
+    create().then((id) => router.replace(`/admin/blog/${id}`));
   }, [create, router]);
   return <div aria-busy="true" style={{ minHeight: "40vh" }} />;
 }

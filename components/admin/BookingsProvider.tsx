@@ -1,13 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { logActivity } from "@/lib/admin/activity";
-import { DEFAULT_AVAILABILITY, type Availability } from "@/lib/admin/availability";
-import { seedBookings, type Booking, type BookingStatus } from "@/lib/admin/bookings-seed";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { api } from "@/lib/api/client";
+import type { Availability } from "@/lib/admin/availability";
+import type { Booking, BookingStatus } from "@/lib/admin/bookings-seed";
 import { fmtKey, dateKey, fmtTime } from "@/lib/admin/tz";
 import { useInbox } from "./InboxProvider";
 
-const KEY = "techclues-admin-bookings-v1";
 type State = { bookings: Booking[]; availability: Availability };
 
 type Ctx = {
@@ -19,10 +18,10 @@ type Ctx = {
   setStatus: (id: string, status: BookingStatus) => void;
   addNote: (id: string, body: string) => void;
   saveAvailability: (av: Availability) => void;
-  deleteByEmail: (email: string) => number;
+  deleteByEmail: (email: string) => void;
   blockDay: (date: string, reason: string) => void;
   unblockDay: (date: string) => void;
-  reset: () => void;
+  refresh: () => void;
 };
 
 const BookingsCtx = createContext<Ctx | null>(null);
@@ -34,34 +33,42 @@ export const useBookings = () => {
 
 const whenText = (iso: string) => `${fmtKey(dateKey(iso), { weekday: "short", day: "numeric", month: "short" })}, ${fmtTime(iso)}`;
 
+type ApiBooking = Omit<Booking, "id" | "notes" | "history"> & {
+  _id: string;
+  notes: { _id: string; at: string; body: string }[];
+  history: { _id: string; at: string; text: string }[];
+};
+
+function mapBooking(b: ApiBooking): Booking {
+  return {
+    ...b,
+    id: b._id,
+    notes: b.notes.map((n) => ({ id: n._id, at: n.at, body: n.body })),
+    history: b.history.map((h) => ({ id: h._id, at: h.at, text: h.text })),
+  };
+}
+
 export default function BookingsProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useInbox();
   const [state, setState] = useState<State | null>(null);
 
-  useEffect(() => {
-    let loaded: State | null = null;
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) loaded = JSON.parse(raw) as State;
-    } catch {
-      loaded = null;
-    }
-    setState(loaded && Array.isArray(loaded.bookings) && loaded.availability ? loaded : { bookings: seedBookings(Date.now()), availability: DEFAULT_AVAILABILITY });
+  const load = useCallback(async () => {
+    const [list, av] = await Promise.all([
+      api.get<{ items: ApiBooking[] }>("/api/admin/bookings?pageSize=500"),
+      api.get<Availability>("/api/admin/bookings/availability"),
+    ]);
+    setState({ bookings: list.items.map(mapBooking), availability: av });
   }, []);
 
   useEffect(() => {
-    if (!state) return;
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    } catch {
-      /* storage unavailable */
-    }
-  }, [state]);
+    load().catch(() => setState({ bookings: [], availability: { slotMinutes: 30, bufferMinutes: 0, noticeHours: 4, windowDays: 21, meetingLink: "", days: [], blocked: [] } }));
+  }, [load]);
 
-  const api = useMemo<Ctx | null>(() => {
+  const ctx = useMemo<Ctx | null>(() => {
     if (!state) return null;
     const patch = (id: string, fn: (b: Booking) => Booking) => setState((s) => (s ? { ...s, bookings: s.bookings.map((b) => (b.id === id ? fn(b) : b)) } : s));
     const now = () => new Date().toISOString();
+    const refresh = () => load().catch(() => toast("Couldn't refresh bookings"));
     return {
       bookings: state.bookings,
       availability: state.availability,
@@ -70,45 +77,66 @@ export default function BookingsProvider({ children }: { children: React.ReactNo
         const old = state.bookings.find((b) => b.id === id);
         patch(id, (b) => ({ ...b, start: startIso, history: [...b.history, { id: `h-${Date.now()}`, at: now(), text: `Moved from ${whenText(b.start)} to ${whenText(startIso)}${notify ? " (visitor emailed)" : ""}` }] }));
         toast(`${old?.name.split(" ")[0] ?? "Call"} moved to ${whenText(startIso)}${notify ? ", visitor emailed" : ""}`);
-        logActivity("bookings", `Moved ${old?.name ?? "a"} call to ${whenText(startIso)}`);
+        api.patch(`/api/admin/bookings/${id}/reschedule`, { start: startIso, notify }).catch(() => {
+          toast("Couldn't reschedule — please try again");
+          refresh();
+        });
       },
       cancel: (id, reason, notify) => {
         patch(id, (b) => ({ ...b, status: "cancelled", cancelReason: reason, history: [...b.history, { id: `h-${Date.now()}`, at: now(), text: `Cancelled: ${reason}${notify ? " (visitor emailed)" : ""}` }] }));
         toast(notify ? "Call cancelled, visitor emailed" : "Call cancelled");
-        logActivity("bookings", `Cancelled ${state.bookings.find((b) => b.id === id)?.name ?? "a"} call: ${reason}`);
+        api.patch(`/api/admin/bookings/${id}/cancel`, { reason, notify }).catch(() => {
+          toast("Couldn't cancel — please try again");
+          refresh();
+        });
       },
       setStatus: (id, status) => {
         patch(id, (b) => ({ ...b, status, history: [...b.history, { id: `h-${Date.now()}`, at: now(), text: status === "completed" ? "Marked as completed" : status === "no-show" ? "Marked as no-show" : `Status set to ${status}` }] }));
         toast(status === "completed" ? "Marked as completed" : status === "no-show" ? "Marked as no-show" : `Marked as ${status}`);
-        logActivity("bookings", `Marked ${state.bookings.find((b) => b.id === id)?.name ?? "a"} call as ${status}`);
+        api.patch(`/api/admin/bookings/${id}/status`, { status }).catch(() => {
+          toast("Couldn't update status");
+          refresh();
+        });
       },
-      addNote: (id, body) => patch(id, (b) => ({ ...b, notes: [...b.notes, { id: `bn-${Date.now()}`, at: now(), body }] })),
+      addNote: (id, body) => {
+        patch(id, (b) => ({ ...b, notes: [...b.notes, { id: `bn-${Date.now()}`, at: now(), body }] }));
+        api.post(`/api/admin/bookings/${id}/notes`, { body }).catch(() => toast("Couldn't save the note"));
+      },
       deleteByEmail: (email) => {
-        const n = state.bookings.filter((b) => b.email.toLowerCase() === email.toLowerCase()).length;
-        if (n) setState((s) => (s ? { ...s, bookings: s.bookings.filter((b) => b.email.toLowerCase() !== email.toLowerCase()) } : s));
-        return n;
+        setState((s) => (s ? { ...s, bookings: s.bookings.filter((b) => b.email.toLowerCase() !== email.toLowerCase()) } : s));
+        api.post("/api/admin/bookings/delete-by-email", { email }).catch(() => {
+          toast("Couldn't delete bookings for that email");
+          refresh();
+        });
       },
       saveAvailability: (av) => {
         setState((s) => (s ? { ...s, availability: av } : s));
         toast("Availability saved");
-        logActivity("bookings", "Updated the availability settings");
+        api.patch("/api/admin/bookings/availability", av).catch(() => {
+          toast("Couldn't save availability");
+          refresh();
+        });
       },
       blockDay: (date, reason) => {
         setState((s) => (s ? { ...s, availability: { ...s.availability, blocked: [...s.availability.blocked.filter((x) => x.date !== date), { date, reason }].sort((a, b) => a.date.localeCompare(b.date)) } } : s));
         toast(`${fmtKey(date, { weekday: "short", day: "numeric", month: "short" })} blocked`);
-        logActivity("bookings", `Blocked ${fmtKey(date, { weekday: "short", day: "numeric", month: "short" })}: ${reason}`);
+        api.post("/api/admin/bookings/availability/block", { date, reason }).catch(() => {
+          toast("Couldn't block that day");
+          refresh();
+        });
       },
       unblockDay: (date) => {
         setState((s) => (s ? { ...s, availability: { ...s.availability, blocked: s.availability.blocked.filter((x) => x.date !== date) } } : s));
         toast(`${fmtKey(date, { weekday: "short", day: "numeric", month: "short" })} is open again`);
+        api.post("/api/admin/bookings/availability/unblock", { date }).catch(() => {
+          toast("Couldn't reopen that day");
+          refresh();
+        });
       },
-      reset: () => {
-        setState({ bookings: seedBookings(Date.now()), availability: DEFAULT_AVAILABILITY });
-        toast("Sample bookings restored");
-      },
+      refresh,
     };
-  }, [state, toast]);
+  }, [state, toast, load]);
 
-  if (!api) return <div aria-busy="true" style={{ minHeight: "60vh" }} />;
-  return <BookingsCtx.Provider value={api}>{children}</BookingsCtx.Provider>;
+  if (!ctx) return <div aria-busy="true" style={{ minHeight: "60vh" }} />;
+  return <BookingsCtx.Provider value={ctx}>{children}</BookingsCtx.Provider>;
 }

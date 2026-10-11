@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { emptyBody, headingsOf, readMinutes, slugify, wordCount, type Post } from "@/lib/admin/blog-types";
 import { fmtWhen } from "@/lib/admin/format";
 import { logActivity } from "@/lib/admin/activity";
+import { api } from "@/lib/api/client";
 import { useBlog } from "./BlogProvider";
 import Dialog from "./Dialog";
 import { useInbox } from "./InboxProvider";
@@ -133,12 +134,17 @@ export default function PostEditor({ id }: { id: string }) {
   const saveDraft = () => finish({ status: "draft", scheduledFor: undefined, publishedAt: post.status === "published" ? undefined : post.publishedAt }, "Draft saved");
   const back = () => (dirty && post.status === "published" ? setLeave(true) : router.push("/admin/blog"));
 
-  const onCover = (f?: File) => {
+  const onCover = async (f?: File) => {
     if (!f) return;
     if (!/^image\//.test(f.type) || f.size > 1_500_000) return toast("Choose an image under 1.5 MB");
-    const r = new FileReader();
-    r.onload = () => set("cover", String(r.result));
-    r.readAsDataURL(f);
+    try {
+      const formData = new FormData();
+      formData.append("file", f);
+      const { url } = await api.post<{ url: string }>("/api/admin/blog/upload-image", undefined, { formData });
+      set("cover", url);
+    } catch {
+      toast("Couldn't upload that image — please try again");
+    }
   };
 
   const primaryLabel = post.status === "published" ? "Update post" : schedule ? "Schedule" : "Publish";

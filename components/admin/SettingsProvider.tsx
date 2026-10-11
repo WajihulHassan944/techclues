@@ -1,13 +1,11 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { logActivity } from "@/lib/admin/activity";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { api } from "@/lib/api/client";
 import { DEFAULT_SETTINGS, type Settings } from "@/lib/admin/settings-defaults";
 import { useInbox } from "./InboxProvider";
 
-const KEY = "techclues-admin-settings-v1";
-
-type Ctx = { settings: Settings; update: (patch: Partial<Settings>, message?: string, log?: string) => void; reset: () => void };
+type Ctx = { settings: Settings; update: (patch: Partial<Settings>, message?: string) => void; refresh: () => void };
 
 const SettingsCtx = createContext<Ctx | null>(null);
 export const useSettings = () => {
@@ -20,43 +18,32 @@ export default function SettingsProvider({ children }: { children: React.ReactNo
   const { toast } = useInbox();
   const [settings, setSettings] = useState<Settings | null>(null);
 
-  useEffect(() => {
-    let loaded: Settings | null = null;
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) loaded = { ...DEFAULT_SETTINGS, ...(JSON.parse(raw) as Partial<Settings>) };
-    } catch {
-      loaded = null;
-    }
-    setSettings(loaded ?? DEFAULT_SETTINGS);
+  const load = useCallback(async () => {
+    const s = await api.get<Settings>("/api/admin/settings");
+    setSettings({ ...DEFAULT_SETTINGS, ...s });
   }, []);
 
   useEffect(() => {
-    if (!settings) return;
-    try {
-      localStorage.setItem(KEY, JSON.stringify(settings));
-    } catch {
-      /* ignore */
-    }
-  }, [settings]);
+    load().catch(() => setSettings(DEFAULT_SETTINGS));
+  }, [load]);
 
-  const api = useMemo<Ctx | null>(() => {
+  const ctx = useMemo<Ctx | null>(() => {
     if (!settings) return null;
+    const refresh = () => load().catch(() => toast("Couldn't refresh settings"));
     return {
       settings,
-      update: (patch, message, log) => {
+      update: (patch, message) => {
         setSettings((s) => (s ? { ...s, ...patch } : s));
         if (message) toast(message);
-        if (log) logActivity("settings", log);
+        api.put("/api/admin/settings", patch).catch(() => {
+          toast("Couldn't save that change");
+          refresh();
+        });
       },
-      reset: () => {
-        setSettings(DEFAULT_SETTINGS);
-        toast("Settings restored to the defaults");
-        logActivity("settings", "Restored the default settings");
-      },
+      refresh,
     };
-  }, [settings, toast]);
+  }, [settings, toast, load]);
 
-  if (!api) return <div aria-busy="true" style={{ minHeight: "60vh" }} />;
-  return <SettingsCtx.Provider value={api}>{children}</SettingsCtx.Provider>;
+  if (!ctx) return <div aria-busy="true" style={{ minHeight: "60vh" }} />;
+  return <SettingsCtx.Provider value={ctx}>{children}</SettingsCtx.Provider>;
 }

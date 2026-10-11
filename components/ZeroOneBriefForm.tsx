@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ComponentProps } from "react";
+import { api } from "@/lib/api/client";
 
 const Arrow = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
@@ -36,22 +37,32 @@ function Field({ label, ...rest }: { label: string } & ComponentProps<"input">) 
 }
 
 export default function ZeroOneBriefForm() {
-  const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [callHref, setCallHref] = useState("/book-a-call");
+  const [error, setError] = useState("");
   const sent = state === "sent";
 
-  function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (state === "sending") return;
     const form = e.currentTarget;
     const d = new FormData(form);
     const v = (k: string) => String(d.get(k) ?? "").trim();
     setState("sending");
-    window.setTimeout(() => {
+    setError("");
+    try {
+      await api.post(
+        "/api/public/zero-one",
+        { name: v("name"), email: v("email"), company: v("company"), phone: v("phone"), idea: v("idea"), consent: d.get("consent") === "on", website: v("website") },
+        { auth: false },
+      );
       setCallHref(`/book-a-call?${new URLSearchParams({ name: v("name"), email: v("email"), company: v("company"), notes: `ZERO.ONE: ${v("idea")}`.slice(0, 500) })}`);
       form.reset();
       setState("sent");
-    }, 600);
+    } catch {
+      setState("error");
+      setError("Something went wrong sending your brief. Please try again.");
+    }
   }
 
   return (
@@ -70,6 +81,7 @@ export default function ZeroOneBriefForm() {
           <Field label="Contact number" name="phone" type="tel" required autoComplete="tel" minLength={7} />
         </div>
       </Step>
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-px w-px opacity-0" />
       <div>
         <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-relaxed text-ink-soft">
           <input type="checkbox" name="consent" required className="mt-0.5 size-[18px] shrink-0 cursor-pointer rounded-[5px] border border-ink/25 accent-brand" />
@@ -98,6 +110,11 @@ export default function ZeroOneBriefForm() {
           </button>
           {!sent && <p className="text-[14px] text-muted">No payment now. We&apos;ll review it first.</p>}
         </div>
+        {state === "error" && (
+          <p role="alert" className="mt-4 rounded-xl bg-[#fdecec] px-4 py-3 text-[14px] text-[#b42318]">
+            {error}
+          </p>
+        )}
         {sent && (
           <div className="mt-6 rounded-2xl bg-[#e9f7ef] p-5 text-[15px] leading-relaxed text-[#146c3b]">
             <p className="flex items-start gap-3">

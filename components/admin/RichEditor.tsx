@@ -6,6 +6,7 @@ import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor, useEditorState, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { api } from "@/lib/api/client";
 
 const MAX_IMAGE_BYTES = 1_500_000;
 
@@ -65,13 +66,19 @@ function Toolbar({ editor }: { editor: Editor }) {
     setAlt("");
     setErr("");
   };
-  const onFile = (f?: File) => {
+  const onFile = async (f?: File) => {
     if (!f) return;
     if (!/^image\//.test(f.type)) return setErr("Choose an image file.");
     if (f.size > MAX_IMAGE_BYTES) return setErr("That image is over 1.5 MB. Use a smaller one.");
-    const r = new FileReader();
-    r.onload = () => addImage(String(r.result));
-    r.readAsDataURL(f);
+    setErr("");
+    const formData = new FormData();
+    formData.append("file", f);
+    try {
+      const { url: uploadedUrl } = await api.post<{ url: string }>("/api/admin/blog/upload-image", undefined, { formData });
+      addImage(uploadedUrl);
+    } catch {
+      setErr("Couldn't upload that image — please try again.");
+    }
   };
 
   return (

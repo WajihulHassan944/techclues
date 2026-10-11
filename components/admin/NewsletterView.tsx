@@ -142,7 +142,7 @@ function ImportDialog({ onClose }: { onClose: () => void }) {
 }
 
 export default function NewsletterView() {
-  const { subs, setStatus, remove, reset } = useNewsletter();
+  const { subs, setStatus, remove } = useNewsletter();
   const { toast } = useInbox();
   const [now] = useState(() => Date.now());
   const [period, setPeriod] = useState<(typeof PERIODS)[number]["key"]>("30d");
@@ -395,12 +395,6 @@ export default function NewsletterView() {
             </nav>
           )}
         </div>
-        <p className="adm-muted adm-reset">
-          Showing sample subscribers.{" "}
-          <button type="button" className="adm-text-btn" onClick={reset}>
-            Restore the sample subscribers
-          </button>
-        </p>
       </section>
 
       {dialog === "add" && <AddDialog onClose={() => setDialog(null)} />}

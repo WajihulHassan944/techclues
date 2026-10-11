@@ -756,4 +756,26 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Yes — when we don't think we're the right people for it, or when the plan is to build something nobody has checked anyone wants. We'll say so rather than take the project."
       }
   ],
+  "grant-funding": [
+      {
+          "q": "Do you guarantee funding?",
+          "a": "No. Funding decisions are made by the grant provider, and most schemes are competitive. We help you find schemes that fit and put forward the strongest application we can."
+      },
+      {
+          "q": "What does it cost?",
+          "a": "Checking your options is free, with no obligation. If you'd like us to prepare an application, we agree the scope and cost with you before any work starts."
+      },
+      {
+          "q": "Which schemes are open?",
+          "a": "It changes through the year and depends on where you're based, your sector and the project. Our UK funding guide lists what's open now, what's paused and what's coming."
+      },
+      {
+          "q": "Who can apply?",
+          "a": "Most schemes are for small and medium-sized businesses, and many only cover one nation or region of the UK. That's why the form asks where you're based and how big the business is."
+      },
+      {
+          "q": "Can you build the project as well?",
+          "a": "Yes. We design and build websites, software, automation and AI, so the plan in your application and the build that follows line up."
+      }
+  ],
 };

@@ -7,6 +7,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import SiteEffects from "@/components/SiteEffects";
 import MobileMenu from "@/components/MobileMenu";
 import FloatingUi from "@/components/FloatingUi";
+import SiteChrome from "@/components/site/SiteChrome";
 import ClientNav from "@/components/ClientNav";
 
 export const metadata: Metadata = {
@@ -20,15 +21,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-GB" className="poppins_287b9d5-module__CtRvUW__variable antialiased">
       <body>
-        <HeaderScroll />
-        <SmoothScroll />
-        <SiteEffects />
-        <MobileMenu />
-        <FloatingUi />
-        <ClientNav />
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <SiteChrome
+          top={
+            <>
+              <HeaderScroll />
+              <SmoothScroll />
+              <SiteEffects />
+              <MobileMenu />
+              <FloatingUi />
+              <SiteHeader />
+            </>
+          }
+          bottom={<SiteFooter />}
+        >
+          {children}
+        </SiteChrome>
       </body>
     </html>
   );

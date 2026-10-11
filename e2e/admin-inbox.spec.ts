@@ -181,6 +181,7 @@ test.describe("admin inbox: enquiry", () => {
   });
 
   test("previous and next move through the list, and an unknown id shows a not-found message", async ({ page }) => {
+    test.setTimeout(90000); // 3 full page reloads against a real backend is slower than the old localStorage version
     // Default sort is newest first: Sarah Whitfield (1st), Daniel Okafor (2nd), Priya Nair (3rd).
     const sarahId = await openEnquiryByText(page, "Sarah Whitfield");
     const priyaId = await openEnquiryByText(page, "Priya Nair");

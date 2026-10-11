@@ -39,7 +39,7 @@ test.describe("privacy policy page", () => {
     const errors = await open(page);
     await expect(page).toHaveTitle("Privacy Policy | Vebryx");
     await expect(page.locator("h1")).toHaveText("Privacy policy");
-    await expect(page.getByText("Last updated")).toBeVisible();
+    await expect(page.getByText("Last updated", { exact: false }).first()).toBeVisible();
     await expect(page.locator("time")).toHaveAttribute("datetime", "2026-10-09");
     await expect(page.locator("time")).toHaveText("9 October 2026");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -53,7 +53,7 @@ test.describe("privacy policy page", () => {
     const toc = page.getByRole("navigation", { name: "On this page" });
     await expect(toc.getByRole("link")).toHaveCount(11);
     for (const [id, label] of SECTIONS) {
-      await expect(page.locator(`main h2#${id}`)).toHaveText(label);
+      await expect(page.locator(`main h2[id="${id}"]`)).toHaveText(label);
       await expect(toc.getByRole("link", { name: label, exact: true })).toHaveAttribute("href", `#${id}`);
     }
   });
@@ -62,9 +62,9 @@ test.describe("privacy policy page", () => {
     await open(page);
     const toc = page.getByRole("navigation", { name: "On this page" });
     await toc.getByRole("link", { name: "8. Cookies", exact: true }).click();
-    await expect.poll(() => page.evaluate(() => document.querySelector("#8-cookies")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
+    await expect.poll(() => page.evaluate(() => document.getElementById("8-cookies")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
     await toc.getByRole("link", { name: "Contact us", exact: true }).click();
-    await expect.poll(() => page.evaluate(() => document.querySelector("#contact-us")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
+    await expect.poll(() => page.evaluate(() => document.getElementById("contact-us")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
   });
 
   test("the contents list stays in view while reading", async ({ page }) => {

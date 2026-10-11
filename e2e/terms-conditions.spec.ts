@@ -42,7 +42,7 @@ test.describe("terms and conditions page", () => {
     const errors = await open(page);
     await expect(page).toHaveTitle("Terms & Conditions | Vebryx");
     await expect(page.locator("h1")).toHaveText("Terms & conditions");
-    await expect(page.getByText("Last updated")).toBeVisible();
+    await expect(page.getByText("Last updated", { exact: false }).first()).toBeVisible();
     await expect(page.locator("time")).toHaveAttribute("datetime", "2026-02-04");
     await expect(page.locator("time")).toHaveText("4 February 2026");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -56,7 +56,7 @@ test.describe("terms and conditions page", () => {
     const toc = page.getByRole("navigation", { name: "On this page" });
     await expect(toc.getByRole("link")).toHaveCount(14);
     for (const [id, label] of SECTIONS) {
-      await expect(page.locator(`main h2#${id}`)).toHaveText(label);
+      await expect(page.locator(`main h2[id="${id}"]`)).toHaveText(label);
       await expect(toc.getByRole("link", { name: label, exact: true })).toHaveAttribute("href", `#${id}`);
     }
   });
@@ -65,9 +65,9 @@ test.describe("terms and conditions page", () => {
     await open(page);
     const toc = page.getByRole("navigation", { name: "On this page" });
     await toc.getByRole("link", { name: "7. Third-party services", exact: true }).click();
-    await expect.poll(() => page.evaluate(() => document.querySelector("#7-third-party-services")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
+    await expect.poll(() => page.evaluate(() => document.getElementById("7-third-party-services")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
     await toc.getByRole("link", { name: "Contact us", exact: true }).click();
-    await expect.poll(() => page.evaluate(() => document.querySelector("#contact-us")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
+    await expect.poll(() => page.evaluate(() => document.getElementById("contact-us")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
   });
 
   test("the contents list stays in view while reading", async ({ page }) => {
@@ -91,7 +91,7 @@ test.describe("terms and conditions page", () => {
     await rejectCookies(page);
     await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 2));
     await page.locator("footer").getByRole("link", { name: "Terms & conditions" }).click();
-    await expect(page).toHaveURL(/\/privacy-policy$/);
+    await expect(page).toHaveURL(/\/terms-conditions$/);
     await expect(page.locator("h1")).toHaveText("Terms & conditions");
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(2);
   });

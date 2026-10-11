@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { emptyBody, headingsOf, readMinutes, slugify, wordCount, type Post } from "@/lib/admin/blog-types";
 import { fmtWhen } from "@/lib/admin/format";
+import { logActivity } from "@/lib/admin/activity";
 import { useBlog } from "./BlogProvider";
 import Dialog from "./Dialog";
 import { useInbox } from "./InboxProvider";
@@ -119,6 +120,7 @@ export default function PostEditor({ id }: { id: string }) {
     save(next, true);
     setPost(next);
     toast(message);
+    logActivity("blog", `${message}: “${next.title || "Untitled post"}”`);
   };
   const publish = () => {
     setShowErrors(true);

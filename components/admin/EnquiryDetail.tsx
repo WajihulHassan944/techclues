@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fmtFull, fmtWhen, initials } from "@/lib/admin/format";
 import { SOURCES, STATUSES, STATUS_KEYS, type StatusKey } from "@/lib/admin/inbox-types";
-import { SIGNATURE, TEMPLATES, fillTemplate, firstName } from "@/lib/admin/templates";
+import { fillTemplate, firstName } from "@/lib/admin/templates";
+import { useSettings } from "./SettingsProvider";
 import { useInbox } from "./InboxProvider";
 import { SourcePill, StatusBadge } from "./EnquiryList";
 import { IconArrowLeft, IconArrowRight, IconBan, IconExternal, IconInbox, IconMail } from "./icons";
@@ -13,6 +14,9 @@ import { IconArrowLeft, IconArrowRight, IconBan, IconExternal, IconInbox, IconMa
 export default function EnquiryDetail({ id }: { id: string }) {
   const router = useRouter();
   const { state, get, setRead, setStatus, toggleStar, moveTo, deleteForever, sendReply, saveDraft, addNote, block, toast } = useInbox();
+  const { settings } = useSettings();
+  const SIGNATURE = settings.signature;
+  const TEMPLATES = settings.templates;
   const e = get(id);
   const [reply, setReply] = useState(e?.draft ?? "");
   const [note, setNote] = useState("");

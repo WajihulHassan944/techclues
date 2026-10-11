@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { logActivity } from "@/lib/admin/activity";
 import { ADMIN_EMAIL, AUTH_KEY, NAV, itemFor } from "./nav";
 import InboxProvider, { useInbox } from "./InboxProvider";
 import BookingsProvider, { useBookings } from "./BookingsProvider";
 import BlogProvider from "./BlogProvider";
+import NewsletterProvider from "./NewsletterProvider";
+import SettingsProvider from "./SettingsProvider";
 import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSearch, IconSettings, IconShield, IconSpark } from "./icons";
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {
@@ -74,6 +77,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   useOutside(userRef, () => setMenu(null), menu === "user");
 
   const logout = () => {
+    logActivity("security", "Signed out");
     try {
       localStorage.removeItem(AUTH_KEY);
     } catch {
@@ -88,6 +92,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     <InboxProvider>
     <BookingsProvider>
     <BlogProvider>
+    <NewsletterProvider>
+    <SettingsProvider>
     <div className="adm-shell">
       <div className="adm-scrim" data-open={drawer} onClick={() => setDrawer(false)} aria-hidden="true" />
       <aside className="adm-side" data-open={drawer} aria-label="Admin navigation">
@@ -195,6 +201,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </main>
       </div>
     </div>
+    </SettingsProvider>
+    </NewsletterProvider>
     </BlogProvider>
     </BookingsProvider>
     </InboxProvider>

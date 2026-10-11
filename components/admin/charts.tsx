@@ -181,3 +181,155 @@ export function Spark({ points }: { points: number[] }) {
     </svg>
   );
 }
+
+/* ---------- generic versions, for data that is not enquiries by source ---------- */
+export type CountBucket = { start: Date; end: Date; total: number; rows: { label: string; value: number }[] };
+
+/** Counts per day or week with a hover breakdown. `noun` is singular, e.g. "sign-up". */
+export function CountColumns({ buckets, bucketDays, table, noun, plural: pl }: { buckets: CountBucket[]; bucketDays: number; table: boolean; noun: string; plural: string }) {
+  const [active, setActive] = useState<number | null>(null);
+  const max = Math.max(0, ...buckets.map((b) => b.total));
+  const { top, ticks } = niceAxis(max);
+  const n = buckets.length;
+  const every = n <= 8 ? 1 : n <= 16 ? 2 : 5;
+  const unit = bucketDays === 1 ? "day" : "week";
+  const label = (b: CountBucket) => (bucketDays === 1 ? fmtLong(b.start) : `${fmtDay(b.start)} to ${fmtDay(b.end)}`);
+  const count = (v: number) => `${v} ${v === 1 ? noun : pl}`;
+
+  if (table) {
+    return (
+      <div className="adm-tablewrap" data-lenis-prevent>
+        <table className="adm-data">
+          <caption className="sr-only">
+            {pl} per {unit}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{bucketDays === 1 ? "Day" : "Week"}</th>
+              <th scope="col" className="num">
+                {pl[0].toUpperCase() + pl.slice(1)}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...buckets].reverse().map((b) => (
+              <tr key={b.start.toISOString()}>
+                <th scope="row">{label(b)}</th>
+                <td className="num">{b.total}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  const tip = active === null ? null : buckets[active];
+  const side = active === null ? "" : active < 2 ? "adm-tip-left" : active > n - 3 ? "adm-tip-right" : "";
+  return (
+    <div className="adm-chart" role="group" aria-label={`${pl} per ${unit}`}>
+      <div className="adm-chart-body">
+        <div className="adm-yaxis" aria-hidden="true">
+          {ticks.map((t) => (
+            <span key={t} style={{ bottom: `${(t / top) * 100}%` }}>
+              {t}
+            </span>
+          ))}
+        </div>
+        <div className="adm-plot" onPointerLeave={() => setActive(null)}>
+          {ticks.map((t) => (
+            <i key={t} className="adm-gl" style={{ bottom: `${(t / top) * 100}%` }} aria-hidden="true" />
+          ))}
+          <div className="adm-cols">
+            {buckets.map((b, i) => (
+              <button key={b.start.toISOString()} type="button" className="adm-col" data-on={active === i} aria-label={`${label(b)}: ${count(b.total)}`} onPointerEnter={() => setActive(i)} onFocus={() => setActive(i)} onBlur={() => setActive(null)}>
+                <span className="adm-bar" style={{ height: b.total ? `max(3px, ${(b.total / top) * 100}%)` : 0 }} />
+              </button>
+            ))}
+          </div>
+          {tip && (
+            <div className={`adm-tip ${side}`} style={{ left: `${((active! + 0.5) / n) * 100}%` }} role="status">
+              <small>{label(tip)}</small>
+              <strong>{count(tip.total)}</strong>
+              {tip.rows.some((r) => r.value > 0) && (
+                <ul>
+                  {tip.rows
+                    .filter((r) => r.value > 0)
+                    .sort((a, c) => c.value - a.value)
+                    .map((r) => (
+                      <li key={r.label}>
+                        <span>{r.label}</span>
+                        <b>{r.value}</b>
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="adm-xaxis" aria-hidden="true">
+        {buckets.map((b, i) => (
+          <span key={b.start.toISOString()} data-x={(n - 1 - i) % every === 0 ? fmtDay(b.start) : ""} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** One bar per label, biggest first, one colour. */
+export function LabelBars({ items, table, heading, noun, plural: pl }: { items: { label: string; value: number }[]; table: boolean; heading: string; noun: string; plural: string }) {
+  const rows = [...items].sort((a, b) => b.value - a.value);
+  const sum = rows.reduce((s, r) => s + r.value, 0);
+  const max = Math.max(1, ...rows.map((r) => r.value));
+  const pct = (v: number) => (sum ? Math.round((v / sum) * 100) : 0);
+  const count = (v: number) => `${v} ${v === 1 ? noun : pl}`;
+  if (table) {
+    return (
+      <div className="adm-tablewrap" data-lenis-prevent>
+        <table className="adm-data">
+          <caption className="sr-only">{heading}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Source</th>
+              <th scope="col" className="num">
+                {pl[0].toUpperCase() + pl.slice(1)}
+              </th>
+              <th scope="col" className="num">
+                Share
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.label}>
+                <th scope="row">{r.label}</th>
+                <td className="num">{r.value}</td>
+                <td className="num">{pct(r.value)}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+  return (
+    <ul className="adm-hbars" aria-label={heading}>
+      {rows.map((r) => (
+        <li key={r.label} className="adm-hrow" tabIndex={0} aria-label={`${r.label}: ${count(r.value)}, ${pct(r.value)}%`}>
+          <span className="adm-hlabel">{r.label}</span>
+          <span className="adm-htrack">
+            <span className="adm-hbar" style={{ width: r.value ? `max(6px, ${(r.value / max) * 86}%)` : 0 }} />
+            <b className="adm-hval" style={{ left: r.value ? `calc(max(6px, ${(r.value / max) * 86}%) + 8px)` : 0 }}>
+              {r.value}
+            </b>
+          </span>
+          <span className="adm-tip adm-tip-row" role="tooltip">
+            <strong>{count(r.value)}</strong>
+            <small>{pct(r.value)}% of the total</small>
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}

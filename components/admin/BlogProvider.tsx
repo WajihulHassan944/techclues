@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { logActivity } from "@/lib/admin/activity";
 import { seedBlog } from "@/lib/admin/blog-seed";
 import { slugify, type Author, type BlogState, type Category, type Post } from "@/lib/admin/blog-types";
 import { useInbox } from "./InboxProvider";
@@ -99,11 +100,13 @@ export default function BlogProvider({ children }: { children: React.ReactNode }
         const copy: Post = { ...src, id: nid, title: `${src.title} (copy)`, slug: uniqueSlug(`${src.slug}-copy`), status: "draft", publishedAt: undefined, scheduledFor: undefined, createdAt: t, updatedAt: t };
         setState((s) => (s ? { ...s, posts: [copy, ...s.posts] } : s));
         toast("Duplicated as a draft");
+        logActivity("blog", `Duplicated “${src.title}”`);
         return nid;
       },
       remove: (id) => {
         setState((s) => (s ? { ...s, posts: s.posts.filter((p) => p.id !== id) } : s));
         toast("Post deleted");
+        logActivity("blog", `Deleted “${state.posts.find((p) => p.id === id)?.title || "an untitled post"}”`);
       },
       uniqueSlug,
       slugTaken,

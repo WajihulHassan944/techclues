@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { logActivity } from "@/lib/admin/activity";
 import { ADMIN_EMAIL, AUTH_KEY } from "./nav";
 import { IconArrowLeft, IconArrowRight, IconEye, IconEyeOff } from "./icons";
 
@@ -38,6 +39,7 @@ export default function LoginForm() {
     window.setTimeout(() => {
       try {
         localStorage.setItem(AUTH_KEY, "1");
+        logActivity("security", "Signed in from this device");
       } catch {
         /* ignore */
       }

@@ -177,7 +177,7 @@ export default function EnquiryDetail({ id }: { id: string }) {
                 <div>
                   <strong>{m.from === "us" ? "You" : e.name}</strong>
                   <small>
-                    {m.from === "us" ? "from info@techclues.co.uk" : e.email} · {fmtWhen(m.at, now)}
+                    {m.from === "us" ? "from techcluesltd@gmail.com" : e.email} · {fmtWhen(m.at, now)}
                   </small>
                 </div>
               </div>
@@ -191,7 +191,7 @@ export default function EnquiryDetail({ id }: { id: string }) {
                 <div>
                   <h3>Reply to {firstName(e)}</h3>
                   <p>
-                    From <strong>info@techclues.co.uk</strong> to <strong>{e.email}</strong>
+                    From <strong>techcluesltd@gmail.com</strong> to <strong>{e.email}</strong>
                   </p>
                 </div>
                 <label className="adm-select-wrap">

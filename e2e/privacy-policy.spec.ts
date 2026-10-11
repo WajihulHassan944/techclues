@@ -82,7 +82,7 @@ test.describe("privacy policy page", () => {
     await expect(c).toContainText("TechClues Limited:");
     await expect(c).toContainText("125 Hazelville Road, Birmingham, England, United Kingdom");
     await expect(c).toContainText("SC879816 (registered in Scotland)");
-    await expect(page.locator("main").getByRole("link", { name: "info@techclues.co.uk" }).first()).toHaveAttribute("href", "mailto:info@techclues.co.uk");
+    await expect(page.locator("main").getByRole("link", { name: "techcluesltd@gmail.com" }).first()).toHaveAttribute("href", "mailto:techcluesltd@gmail.com");
     await expect(page.locator('main a[href="/terms-conditions"]').first()).toBeVisible();
     await expect(page.locator('main a[href="/contact"]').first()).toBeVisible();
   });

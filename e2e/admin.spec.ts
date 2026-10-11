@@ -23,7 +23,7 @@ test.describe("admin: sign in", () => {
     await page.goto("/admin/login");
     await expect(page).toHaveTitle("Admin sign in | TechClues");
     await expect(page.getByRole("heading", { name: "Admin sign in" })).toBeVisible();
-    await expect(page.locator("#adm-email")).toHaveValue("info@techclues.co.uk");
+    await expect(page.locator("#adm-email")).toHaveValue("techcluesltd@gmail.com");
     await expect(page.locator("header, footer")).toHaveCount(0);
     await expect(page.locator("#cookie-title")).toHaveCount(0);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
@@ -99,11 +99,11 @@ test.describe("admin: shell", () => {
 
   test("notifications and account menus open, close with Escape, and log out returns to sign in", async ({ page }) => {
     await page.getByRole("button", { name: "Notifications" }).click();
-    await expect(page.getByRole("dialog", { name: "Notifications" })).toContainText("info@techclues.co.uk");
+    await expect(page.getByRole("dialog", { name: "Notifications" })).toContainText("techcluesltd@gmail.com");
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name: "Notifications" })).toHaveCount(0);
     await page.getByRole("button", { name: "Account menu" }).click();
-    await expect(page.getByRole("menu", { name: "Account" })).toContainText("info@techclues.co.uk");
+    await expect(page.getByRole("menu", { name: "Account" })).toContainText("techcluesltd@gmail.com");
     await page.getByRole("menuitem", { name: "Log out" }).click();
     await expect(page).toHaveURL(/\/admin\/login$/);
     await page.goto("/admin");

@@ -133,7 +133,7 @@ test.describe("admin inbox: enquiry", () => {
     const box = page.getByRole("textbox", { name: "Your reply" });
     await expect(box).toHaveValue(/^Hi Daniel,/);
     await page.getByRole("button", { name: /Send reply/ }).click();
-    await expect(page.getByRole("status").filter({ hasText: "Reply sent from info@techclues.co.uk" })).toBeVisible();
+    await expect(page.getByRole("status").filter({ hasText: "Reply sent from techcluesltd@gmail.com" })).toBeVisible();
     await expect(box).toHaveValue("");
     const sent = page.locator(".adm-msg-us");
     await expect(sent).toHaveCount(1);

@@ -14,7 +14,7 @@ export type Settings = {
 };
 
 export const DEFAULT_SETTINGS: Settings = {
-  recipients: ["info@techclues.co.uk"],
+  recipients: ["techcluesltd@gmail.com"],
   events: { enquiry: true, booking: true, cancelled: true, subscriber: false, summary: true },
   summaryTime: "08:00",
   fromName: "TechClues",

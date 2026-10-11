@@ -99,7 +99,7 @@ export default function InboxProvider({ children }: { children: React.ReactNode 
         const to = state.enquiries.find((x) => x.id === id);
         logActivity("inbox", `Replied to ${to?.name ?? "a visitor"}${to ? ` (${to.subject})` : ""}`);
         patch([id], (e) => ({ ...e, thread: [...e.thread, { id: `t-${Date.now()}`, from: "us", at: now(), body }], status: e.status === "new" ? "replied" : e.status, read: true, draft: "" }));
-        toast("Reply sent from info@techclues.co.uk");
+        toast("Reply sent from techcluesltd@gmail.com");
       },
       saveDraft: (id, body) => patch([id], (e) => ({ ...e, draft: body })),
       addNote: (id, body) => patch([id], (e) => ({ ...e, notes: [...e.notes, { id: `n-${Date.now()}`, at: now(), body }] })),

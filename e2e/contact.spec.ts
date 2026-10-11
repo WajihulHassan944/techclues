@@ -31,7 +31,7 @@ test.describe("contact page", () => {
     await expect(page.getByText("Tell us about your idea. We'll get back to you within a few hours.")).toBeVisible();
     await expect(page.getByRole("link", { name: "Book a free 30-minute call" })).toHaveAttribute("href", "/book-a-call");
     const main = page.locator("main");
-    await expect(main.getByRole("link", { name: "info@techclues.co.uk" })).toHaveAttribute("href", "mailto:info@techclues.co.uk");
+    await expect(main.getByRole("link", { name: "techcluesltd@gmail.com" })).toHaveAttribute("href", "mailto:techcluesltd@gmail.com");
     await expect(main.locator('a[href="tel:+447472411699"]')).toHaveCount(1);
     await expect(main.locator('a[href="https://wa.me/447472411699"]')).toHaveCount(1);
     await expect(main).toContainText("125 Hazelville Road, Birmingham, England, United Kingdom");

@@ -25,7 +25,7 @@ export const NAV: NavGroup[] = [
   { label: "Account", items: [{ href: "/admin/settings", label: "Settings", icon: IconSettings }] },
 ];
 
-export const ADMIN_EMAIL = "info@techclues.co.uk";
+export const ADMIN_EMAIL = "techcluesltd@gmail.com";
 export const AUTH_KEY = "techclues-admin";
 
 const FLAT = NAV.flatMap((g) => g.items);

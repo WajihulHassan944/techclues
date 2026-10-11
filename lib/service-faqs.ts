@@ -397,7 +397,7 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
       },
       {
           "q": "How do I register a referral?",
-          "a": "Use the \"Refer a client\" form on this page, or email info@techclues.co.uk with you and the client both copied, before their first call with us. Only refer people who have agreed to us contacting them. We confirm in writing whether the referral is registered, and the commission it qualifies for."
+          "a": "Use the \"Refer a client\" form on this page, or email techcluesltd@gmail.com with you and the client both copied, before their first call with us. Only refer people who have agreed to us contacting them. We confirm in writing whether the referral is registered, and the commission it qualifies for."
       },
       {
           "q": "When does a referral count?",
@@ -723,7 +723,7 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
       },
       {
           "q": "How do we reach you?",
-          "a": "Email info@techclues.co.uk, call +44 7472 411699, or book the free strategy call. During a project you'll have a shared channel with the team."
+          "a": "Email techcluesltd@gmail.com, call +44 7472 411699, or book the free strategy call. During a project you'll have a shared channel with the team."
       }
   ],
   "faq-fit": [

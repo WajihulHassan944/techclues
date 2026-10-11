@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, type ComponentProps, type CSSProp
 
 const TITLE = "Free MVP strategy call";
 const DURATION = 30;
-const EMAIL = "info@techclues.co.uk";
+const EMAIL = "techcluesltd@gmail.com";
 const PRIVACY = "/privacy-policy";
 const WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const cn = (...a: (string | false | undefined | null)[]) => a.filter(Boolean).join(" ");

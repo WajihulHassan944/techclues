@@ -11,7 +11,7 @@ import BlogProvider from "./BlogProvider";
 import NewsletterProvider, { useNewsletter } from "./NewsletterProvider";
 import SettingsProvider from "./SettingsProvider";
 import { useAdminRealtime } from "@/lib/pusher/client";
-import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSearch, IconSettings, IconShield, IconSpark } from "./icons";
+import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSearch, IconSettings, IconShield } from "./icons";
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {
   useEffect(() => {
@@ -147,12 +147,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             </div>
           ))}
         </nav>
-        <div className="adm-side-foot">
-          <strong>
-            <IconSpark className="adm-ic" /> Static preview
-          </strong>
-          Screens use sample data for now. Nothing here is saved or sent yet.
-        </div>
       </aside>
 
       <div className="adm-main">

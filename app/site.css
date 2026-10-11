@@ -8401,3 +8401,12 @@ html.lenis body {
 .bk-fade { animation: bk-fade 0.25s ease both; }
 .bk-li { animation: bk-li 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
 @media (prefers-reduced-motion: reduce) { .bk-slide-r, .bk-slide-l, .bk-title-r, .bk-title-l, .bk-pop, .bk-fade, .bk-li { animation: none; } }
+
+/* zero-one: pulse ring on the cost bar, floating slot button */
+@keyframes zo-ping { 0% { transform: translateY(-50%) scale(1); opacity: .55; } 44% { transform: translateY(-50%) scale(3.2); opacity: 0; } 55% { transform: translateY(-50%) scale(1); opacity: .55; } 100% { transform: translateY(-50%) scale(3.2); opacity: 0; } }
+.zo-ping { animation: zo-ping 2.45s ease-out both; }
+@keyframes zo-slot-in { from { opacity: 0; transform: translateY(16px) scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes zo-slot-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(16px) scale(.94); } }
+.zo-slot-in { animation: zo-slot-in .45s cubic-bezier(.65, 0, .35, 1) both; }
+.zo-slot-out { animation: zo-slot-out .45s cubic-bezier(.65, 0, .35, 1) both; }
+@media (prefers-reduced-motion: reduce) { .zo-ping { animation: none; } }

@@ -778,4 +778,38 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
           "a": "Yes. We design and build websites, software, automation and AI, so the plan in your application and the build that follows line up."
       }
   ],
+  "zero-one": [
+      {
+          "q": "Can I show it to investors?",
+          "a": "Yes, that's what it's built for. A working feature on a live link, plus feedback from real users, gives you something real to show potential investors, co-founders and early customers."
+      },
+      {
+          "q": "Will it help with a grant application?",
+          "a": "It can. Innovation funders usually want evidence that people need what you're building, and a tested prototype with findings from real users gives you something concrete to point to. It doesn't guarantee funding: the funder decides. If you'd like help with the application itself, we offer grant application support too."
+      },
+      {
+          "q": "Is ZERO.ONE a discount?",
+          "a": "No. It's a smaller product: one feature, one week and one question answered, so you know whether to invest in a full MVP."
+      },
+      {
+          "q": "What counts as the core feature?",
+          "a": "The one thing your product must do for someone to care. If it needs logins, payments or an admin panel to work, it's bigger than ZERO.ONE, and we'll suggest a Validation or Lean MVP instead."
+      },
+      {
+          "q": "Who are the testers?",
+          "a": "Five people you invite: potential customers from your network or audience. We run the sessions and write up what we learn."
+      },
+      {
+          "q": "What if I can't find five testers?",
+          "a": "Tell us on the kick-off call. It's a useful signal in itself, and we'll talk through the best way to reach your first users before the build starts."
+      },
+      {
+          "q": "What happens after the week?",
+          "a": "You get a findings note and a debrief with a clear recommendation. If you go ahead with any build within 30 days, the £499 comes off it."
+      },
+      {
+          "q": "Why only four a month?",
+          "a": "Each ZERO.ONE gets a full week of focus, so we take on one a week."
+      }
+  ],
 };

@@ -23,7 +23,7 @@ test.describe("client-side navigation", () => {
     expect(await page.evaluate(() => window.scrollY)).toBeLessThan(5);
 
     // Logo -> home
-    await page.locator("header").getByRole("link", { name: /vebryx/i }).first().click();
+    await page.locator("header").getByRole("link", { name: /techclues/i }).first().click();
     await expect(page).toHaveURL(/\/$/);
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(42);
 

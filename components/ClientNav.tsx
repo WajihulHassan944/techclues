@@ -28,8 +28,16 @@ export default function ClientNav() {
       e.preventDefault();
       router.push(url.pathname + url.search + url.hash);
     };
+    // Newsletter forms aren't connected to anything yet, so don't let them reload the page.
+    const onSubmit = (e: Event) => {
+      if ((e.target as Element | null)?.closest?.('form[data-form="newsletter"]')) e.preventDefault();
+    };
     document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
+    document.addEventListener("submit", onSubmit);
+    return () => {
+      document.removeEventListener("click", onClick);
+      document.removeEventListener("submit", onSubmit);
+    };
   }, [router]);
   return null;
 }

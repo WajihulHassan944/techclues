@@ -57,7 +57,7 @@ test.describe("admin: sign in", () => {
     await page.goto("/admin/inbox");
     await expect(page).toHaveURL(/\/admin\/login$/);
     await signIn(page);
-    await expect(page.getByRole("heading", { name: "Welcome back." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /^Good (morning|afternoon|evening).$/ })).toBeVisible();
     await page.goto("/admin/login");
     await expect(page).toHaveURL(/\/admin$/); // already signed in
   });
@@ -72,7 +72,8 @@ test.describe("admin: shell", () => {
     const nav = page.getByRole("navigation", { name: "Main" });
     for (const l of ["Dashboard", "Inbox", "Spam & trash", "Bookings", "Blog", "Newsletter", "Settings"]) await expect(nav.getByRole("link", { name: new RegExp(l) })).toBeVisible();
     await expect(nav.getByRole("link", { name: /Dashboard/ })).toHaveAttribute("aria-current", "page");
-    await expect(page.locator("header")).toHaveCount(1); // the admin top bar only
+    await expect(page.locator("header.adm-top")).toHaveCount(1); // the admin top bar only
+    await expect(page.locator('a[aria-label="TechClues home"]')).toHaveCount(0); // not the public site header
     await expect(page.getByRole("link", { name: "TechClues admin home" })).toBeVisible();
   });
 

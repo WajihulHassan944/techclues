@@ -19,7 +19,7 @@ export default function HeaderScroll() {
     const header = document.querySelector("header");
     if (!header) return;
     const bar = header.firstElementChild;
-    const logo = header.querySelector('a[aria-label="Vebryx home"]');
+    const logo = header.querySelector('a[aria-label="TechClues home"]');
     const nav = header.querySelector("nav");
     const cta = header.querySelector(".justify-self-end a");
 

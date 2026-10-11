@@ -96,7 +96,7 @@ test.describe("homepage", () => {
   test("header switches to its scrolled state and back", async ({ page }) => {
     await open(page);
     const nav = page.locator("header nav");
-    const logo = page.locator("header a[aria-label='Vebryx home']");
+    const logo = page.locator("header a[aria-label='TechClues home']");
     await expect(nav).not.toHaveClass(/bg-white\/95/);
     await page.evaluate(() => window.scrollTo(0, 1500));
     await expect(nav).toHaveClass(/bg-white\/95/);

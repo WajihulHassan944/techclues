@@ -79,9 +79,9 @@ test.describe("privacy policy page", () => {
   test("contact details and cross-links are right", async ({ page }) => {
     await open(page);
     const c = page.locator("#contact-us").locator("xpath=following::ul[1]");
-    await expect(c).toContainText("TechClues:");
+    await expect(c).toContainText("TechClues Limited:");
     await expect(c).toContainText("125 Hazelville Road, Birmingham, England, United Kingdom");
-    await expect(c).toContainText("+44 7472 411699");
+    await expect(c).toContainText("SC879816 (registered in Scotland)");
     await expect(page.locator("main").getByRole("link", { name: "info@techclues.co.uk" }).first()).toHaveAttribute("href", "mailto:info@techclues.co.uk");
     await expect(page.locator('main a[href="/terms-conditions"]').first()).toBeVisible();
     await expect(page.locator('main a[href="/contact"]').first()).toBeVisible();

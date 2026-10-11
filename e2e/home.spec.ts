@@ -131,7 +131,7 @@ test.describe("homepage", () => {
     await dismissCookies(page);
     const nums = page.locator('section[aria-label="TechClues in numbers"] p > span');
     await page.locator('section[aria-label="TechClues in numbers"]').scrollIntoViewIfNeeded();
-    await expect(nums).toHaveText(["4", "280", "200", "20", "12"], { timeout: 6_000 });
+    await expect(nums).toHaveText(["4", "4.3", "200", "20", "12"], { timeout: 6_000 });
   });
 
   test("stack tabs lift a layer, dim the rest and reset", async ({ page }) => {

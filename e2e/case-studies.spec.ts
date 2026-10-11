@@ -112,7 +112,7 @@ test.describe("case studies page", () => {
   test("results strip and call to action are present", async ({ page }) => {
     await open(page, "/case-studies");
     const r = page.locator('section[aria-label="Results"]');
-    for (const t of ["200+", "1,000+", "60%", "280+"]) await expect(r).toContainText(t);
+    for (const t of ["200+", "1,000+", "60%", "4.3"]) await expect(r).toContainText(t);
     await expect(page.locator('section[aria-label="Start your project"]')).toHaveCount(1);
   });
 

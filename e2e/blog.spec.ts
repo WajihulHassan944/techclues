@@ -31,17 +31,20 @@ test.describe("blog page", () => {
     expect(errors).toEqual([]);
   });
 
-  test("shows the two articles with their details and links", async ({ page }) => {
+  test("shows the three articles with their details and links", async ({ page }) => {
     await open(page, "/blog");
     const list = page.locator('section[aria-label="Articles"]');
-    await expect(list.locator('a[href^="/blog/"]')).toHaveCount(2);
+    await expect(list.locator('a[href^="/blog/"]')).toHaveCount(3);
     const first = list.locator('a[href="/blog/mvp-software-development-age-of-ai"]');
     await expect(first.getByRole("heading", { name: "MVP Software Development in the Age of AI" })).toBeVisible();
     for (const t of ["AI", "6 October 2026", "16 min read", "Read article"]) await expect(first).toContainText(t);
     const second = list.locator('a[href="/blog/ai-funding-uk-scotland"]');
     await expect(second.getByRole("heading", { name: "Funding for AI projects in the UK and Scotland" })).toBeVisible();
     for (const t of ["Funding", "25 September 2026", "7 min read"]) await expect(second).toContainText(t);
-    await expect(list.locator("img")).toHaveCount(2);
+    const third = list.locator('a[href="/blog/mvp-cost-uk"]');
+    await expect(third.getByRole("heading", { name: "How much does an MVP cost in the UK?" })).toBeVisible();
+    for (const t of ["Costs", "26 August 2026", "6 min read"]) await expect(third).toContainText(t);
+    await expect(list.locator("img")).toHaveCount(3);
   });
 
   test("newsletter form stays on the page when submitted", async ({ page }) => {
@@ -107,6 +110,18 @@ const POSTS: Post[] = [
     toc: 8,
     firstHeading: "The short answer",
     secondHeading: "R&D tax relief",
+    other: ["MVP Software Development in the Age of AI", "/blog/mvp-software-development-age-of-ai"],
+  },
+  {
+    slug: "mvp-cost-uk",
+    title: "MVP Cost in UK and How Much Startups Should Budget | Vebryx",
+    h1: "How much does an MVP cost in the UK?",
+    category: "Costs",
+    date: "26 August 2026",
+    read: "6 min read",
+    toc: 9,
+    firstHeading: "The short answer",
+    secondHeading: "What an MVP budget actually pays for",
     other: ["MVP Software Development in the Age of AI", "/blog/mvp-software-development-age-of-ai"],
   },
 ];
@@ -180,7 +195,7 @@ for (const p of POSTS) {
     test("links only go to pages that exist", async ({ page }) => {
       await open(page, url);
       const hrefs = await page.locator("main a[href^='/']").evaluateAll((els) => [...new Set(els.map((e) => (e as HTMLAnchorElement).getAttribute("href")!.split("#")[0].split("?")[0]))]);
-      for (const h of hrefs) expect(["/blog", "/blog/ai-funding-uk-scotland", "/blog/mvp-software-development-age-of-ai", "/grant-funding", "/book-a-call", "/mvp-cost-calculator", "/contact", "/services", "/case-studies", "/zero-one", ""].concat(["/services/mvp-development", "/services/prototype-to-production", "/services/low-code-no-code", "/services/web-mobile-apps", "/services/performance-marketing", "/services/ui-ux-design", "/services/brand-strategy", "/services/ecommerce-marketplace-development"])).toContain(h);
+      for (const h of hrefs) expect(["/blog", "/blog/ai-funding-uk-scotland", "/blog/mvp-cost-uk", "/blog/mvp-software-development-age-of-ai", "/kill-my-idea", "/grant-funding", "/book-a-call", "/mvp-cost-calculator", "/contact", "/services", "/case-studies", "/zero-one", ""].concat(["/services/mvp-development", "/services/prototype-to-production", "/services/low-code-no-code", "/services/web-mobile-apps", "/services/performance-marketing", "/services/ui-ux-design", "/services/brand-strategy", "/services/ecommerce-marketplace-development"])).toContain(h);
     });
 
     test("images load and scroll reveal settles", async ({ page }) => {
@@ -200,7 +215,7 @@ for (const p of POSTS) {
 
 test.describe("blog on mobile", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
-  for (const path of ["/blog", "/blog/mvp-software-development-age-of-ai", "/blog/ai-funding-uk-scotland"]) {
+  for (const path of ["/blog", "/blog/mvp-software-development-age-of-ai", "/blog/ai-funding-uk-scotland", "/blog/mvp-cost-uk"]) {
     test(`${path} fits the screen`, async ({ page }) => {
       await open(page, path);
       for (let y = 0; y < (await page.evaluate(() => document.documentElement.scrollHeight)); y += 900) {

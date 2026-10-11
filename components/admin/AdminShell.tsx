@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ADMIN_EMAIL, AUTH_KEY, NAV, itemFor } from "./nav";
+import InboxProvider, { useInbox } from "./InboxProvider";
 import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSearch, IconSettings, IconShield, IconSpark } from "./icons";
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {
@@ -22,6 +23,12 @@ function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void,
       document.removeEventListener("keydown", key);
     };
   }, [ref, onOut, active]);
+}
+
+function NavBadge({ href, fallback }: { href: string; fallback?: string }) {
+  const { unread } = useInbox();
+  const n = href === "/admin/inbox" ? (unread > 0 ? String(unread) : "") : (fallback ?? "");
+  return n ? <span className="adm-badge">{n}</span> : null;
 }
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
@@ -73,6 +80,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   if (!ready) return <div className="adm-shell" aria-busy="true" style={{ minHeight: "100vh" }} />;
 
   return (
+    <InboxProvider>
     <div className="adm-shell">
       <div className="adm-scrim" data-open={drawer} onClick={() => setDrawer(false)} aria-hidden="true" />
       <aside className="adm-side" data-open={drawer} aria-label="Admin navigation">
@@ -96,7 +104,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                       <Link href={it.href} className="adm-link" aria-current={current.href === it.href ? "page" : undefined}>
                         <Icon />
                         {it.label}
-                        {it.badge && <span className="adm-badge">{it.badge}</span>}
+                        <NavBadge href={it.href} fallback={it.badge} />
                       </Link>
                     </li>
                   );
@@ -180,5 +188,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </main>
       </div>
     </div>
+    </InboxProvider>
   );
 }

@@ -245,6 +245,7 @@ test.describe("admin inbox on mobile", () => {
   test("list and enquiry fit the screen and rows still show who wrote", async ({ page }) => {
     await signIn(page);
     await expect(rows(page).first().getByText("Sarah Whitfield")).toBeVisible();
+    await expect(page.getByRole("searchbox", { name: "Search enquiries" })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await page.goto("/admin/inbox/enq-1009");
     await expect(page.getByRole("heading", { level: 2, name: /Shipment tracking/ })).toBeVisible();

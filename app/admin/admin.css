@@ -776,7 +776,7 @@
     width: 44px;
     justify-content: center;
   }
-  .adm-search {
+  .adm-top .adm-search {
     display: none;
   }
   .adm-content {

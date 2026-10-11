@@ -2,42 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-/**
- * Placeholder reviews copied from the reference site. Replace these with real Techclues reviews
- * (and a real Trustpilot link) before launch.
- */
 const REVIEWS = [
-  { q: "Great communication and clear project updates from beginning to end. We always knew what stage the app was in.", ini: "A", name: "Abernathy", stars: 5, verified: true },
-  { q: "We appreciated their focus on building only the most important features. It saved time and kept the project streamlined.", ini: "MC", name: "Micheal Chong", stars: 5, verified: true },
-  { q: "The development team did an excellent job building our first mobile prototype. The UI was simple but functional, which is exactly what we needed.", ini: "AB", name: "Alan beith", stars: 5, verified: true },
-  { q: "Amazing, wonderful people.. particularly Naqvi and Huzaifa, available to help you almost anytime day & night, truly amazing team to work with, not to mention a very costs effective service. I will recommend them to anyone!", ini: "MR", name: "Mohammed Rofique", stars: 5, verified: false },
-  { q: "Dealt with Naqvi from start to finish and very happy with the service provided. Went through everything in detail when I needed it", ini: "ML", name: "Mr A Lockley", stars: 4, verified: false },
-  { q: "The team understood our requirements quickly and delivered a good first version of our app.", ini: "JB", name: "John Beckett", stars: 5, verified: true },
-  { q: "Worked with Vebryx for a small fitness studio app (class booking + login) took a bit of back and forth to get the flow right, but final version works smoothly.", ini: "TK", name: "Tom Kmiec", stars: 4, verified: true },
-  { q: "The company is really good, great products great customer services", ini: "AH", name: "Asim Hussain Esq", stars: 5, verified: false },
-  { q: "It’s excellent and very friendly services. I recommend for all thank you vebryx. You nailed it 👏🏻keep it up @Naqvi bro 😎", ini: "FB", name: "Faizan Bashir", stars: 5, verified: false },
-  { q: "How detailed and attentive..Trusted and results driven and also the level of patience they have no matter my complaints 😩😁", ini: "O", name: "Oluwatosin", stars: 5, verified: false },
+  { q: "The TechClues team always make sure to deliver the project on time, and they are very professional about product development. From development to deployment, they made sure my idea became a product.", ini: "Z", name: "Zeeshan", role: "COO, Qatar" },
+  { q: "I am satisfied with the web development services the TechClues team has provided. They have good UI/UX experience, which helped our site rank on Google and improved my ROI.", ini: "SM", name: "Shoaib Masood", role: "Islamabad dental clinic" },
+  { q: "Picktiles was a really hard startup to get going, but their confidence in building a product from scratch is undeniably professional. I highly recommend them to any startup looking for technology consultants.", ini: "K", name: "Khurram", role: "CEO, Pakistan" },
+  { q: "They automated my whole car business using web technologies, and built applications for the whole HR system that help my staff manage everything from inventory to sales.", ini: "AS", name: "Abbay Singh", role: "Affordable Autos, Canada" },
 ];
 
 const INTERVAL_MS = 7000;
-const STAR_PATH =
-  "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z";
-
-function Stars({ n }: { n: number }) {
-  return (
-    <span className="flex gap-0.5" role="img" aria-label={`${n} out of 5 stars`}>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <span key={i} className="relative grid place-items-center overflow-hidden bg-[#dcdce6] size-4">
-          <span className="absolute inset-y-0 left-0 bg-[#00b67a]" style={{ width: i < n ? "100%" : "0%" }} />
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative fill-white text-white size-2.5" aria-hidden="true">
-            <path d={STAR_PATH} />
-          </svg>
-        </span>
-      ))}
-    </span>
-  );
-}
-
 /** Rotating review card with progress bars; pauses while the card is hovered. */
 export default function TestimonialsRotator() {
   const [index, setIndex] = useState(0);
@@ -71,19 +43,10 @@ export default function TestimonialsRotator() {
             <span>
               <span className="flex items-center gap-2 text-[16px] font-medium text-ink">
                 {r.name}
-                {r.verified && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#e6f7f0] px-2 py-0.5 text-[12px] font-medium text-[#00875a]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-3.5" aria-hidden="true">
-                      <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-                      <path d="m16 9-5.5 5.5L8 12" />
-                    </svg>
-                    Verified
-                  </span>
-                )}
+                
               </span>
               <span className="mt-1 flex items-center gap-2 text-[14px] text-muted">
-                <Stars n={r.stars} />
-                Trustpilot
+                {r.role}
               </span>
             </span>
           </figcaption>

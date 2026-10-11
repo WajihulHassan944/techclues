@@ -92,3 +92,14 @@ Pages read: Home, About, Contact, Services (template), Portfolio, Blogs. Everyth
 - Contact points copied from Vebryx: phone +44 7446 478755, info@/sales@vebryx.co.uk, the Glasgow address and map pin, "Glasgow" in metadata and the manifest.
 - Social links (LinkedIn, Instagram, Facebook, Google), the Trustpilot badge with its "4.3" rating and review link, and the Vebryx case studies with their imagery.
 - Team and about-page story: Vebryx's founders and history to be replaced with TechClues' (Khashir Khalil, Hassam Ul Haq, Hassham Ul Haq and the 2022 to 2025 journey).
+
+## Rename status (done)
+
+Vebryx has been replaced with TechClues across pages, metadata, canonicals, emails, forms, legal pages and tests.
+
+- Contact details: Birmingham head office, Rawalpindi production studio (contact map pins moved), +44 7472 411699 (phone and WhatsApp), info@techclues.co.uk.
+- About page: TechClues' 2022 to 2025 journey, team section (three founders, initials instead of photos), offices, "Successful jobs / Products delivered" stats.
+- Home and service pages: four TechClues testimonials, stats (280+ successful jobs, 200+ products delivered, 20+ team members); Trustpilot rating badges removed.
+- Footer: social icons removed (no confirmed profile URLs) and company registration lines removed (no company number supplied).
+
+Still Vebryx-specific and not replaced (need your decision): the two case studies (Infinite Running League, Odogwu) and the "1,000+ sign-ups" / "60% Dentora" figures that cite them; the "Shopify Partner" badge and Shopify FAQ answer; photos under public/images/company; the Scotland-specific AI funding blog post; legal company name and number; social profile links.

@@ -66,7 +66,7 @@ test.describe("how we work page", () => {
       await expect(steps.nth(i)).toContainText(name);
       await expect(steps.nth(i)).toContainText(String(i + 1).padStart(2, "0"));
       await expect(steps.nth(i)).toContainText("You");
-      await expect(steps.nth(i)).toContainText("Vebryx");
+      await expect(steps.nth(i)).toContainText("TechClues");
     }
     await expect(steps.nth(4)).toContainText("Weekly demos");
     await expect(steps.nth(4)).toContainText("Typically weeks 4–7");

@@ -24,7 +24,7 @@ type Svc = {
 const COMMON_SECTIONS = [
   "Why it matters", "What's included", "Pricing", "Know before you start", "__COMPARE__", "What you receive", "Technologies",
   "Talk to us", "Benefits", "Industry experience", "Your product partner", "Case study", "What clients say", "How it works",
-  "Why Vebryx", "Questions", "Related insights", "Start your project",
+  "Why TechClues", "Questions", "Related insights", "Start your project",
 ];
 const sections = (compare: string | null, extraAfterIncluded?: string) =>
   COMMON_SECTIONS.flatMap((s) => (s === "__COMPARE__" ? (compare ? [compare] : []) : s === "What's included" && extraAfterIncluded ? [s, extraAfterIncluded] : [s]));
@@ -32,7 +32,7 @@ const sections = (compare: string | null, extraAfterIncluded?: string) =>
 const PAGES: Svc[] = [
   {
     slug: "mvp-development",
-    title: "MVP Development Services for UK Startups | Vebryx",
+    title: "MVP Development Services for UK Startups | TechClues",
     kicker: "MVP development for UK startups",
     headline: "Turn your idea into a product people actually want.",
     serviceCard: "MVPs & Custom Platforms",
@@ -55,7 +55,7 @@ const PAGES: Svc[] = [
   },
   {
     slug: "prototype-to-production",
-    title: "Make Your AI-Built App Production-Ready | Vebryx",
+    title: "Make Your AI-Built App Production-Ready | TechClues",
     kicker: "AI-built app to production, for UK founders",
     headline: "Your AI-built app, ready for real users.",
     serviceCard: "Prototype to Production",
@@ -78,7 +78,7 @@ const PAGES: Svc[] = [
   },
   {
     slug: "low-code-no-code",
-    title: "No-Code & Low-Code Development Agency UK | Vebryx",
+    title: "No-Code & Low-Code Development Agency UK | TechClues",
     kicker: "No-code and low-code development",
     headline: "A working product in days, not months.",
     serviceCard: "Low-Code / No-Code",
@@ -101,7 +101,7 @@ const PAGES: Svc[] = [
   },
   {
     slug: "performance-marketing",
-    title: "Performance Marketing Agency for UK Startups | Vebryx",
+    title: "Performance Marketing Agency for UK Startups | TechClues",
     kicker: "Performance marketing for startups",
     headline: "Find your first users, then keep them coming.",
     serviceCard: "Performance Marketing",
@@ -124,8 +124,8 @@ const PAGES: Svc[] = [
   },
   {
     slug: "web-mobile-apps",
-    title: "App Development Company in Glasgow & the UK | Vebryx",
-    kicker: "App development in Glasgow and across the UK",
+    title: "App Development Company in Birmingham & the UK | TechClues",
+    kicker: "App development in Birmingham and across the UK",
     headline: "Web and mobile apps that feel fast and work everywhere.",
     serviceCard: "Web & Mobile Apps",
     sections: sections("Native, cross-platform or web app?", "How your app is built"),
@@ -147,7 +147,7 @@ const PAGES: Svc[] = [
   },
   {
     slug: "ecommerce-marketplace-development",
-    title: "E-commerce & Marketplace Development UK | Vebryx",
+    title: "E-commerce & Marketplace Development UK | TechClues",
     kicker: "E-commerce and marketplace development",
     headline: "An online shop or marketplace that's easy to buy from, and easy to run.",
     serviceCard: "E-commerce & Marketplaces",
@@ -164,13 +164,13 @@ const PAGES: Svc[] = [
     tech: ["Shopify", "WooCommerce", "Stripe", "Xero"],
     faqFirst: "How much does an online store or marketplace cost?",
     faqOther: "Are you a Shopify Partner?",
-    faqOtherAnswer: "Vebryx is a Shopify Partner",
+    faqOtherAnswer: "TechClues is a Shopify Partner",
     faqCount: 8,
     minImages: 4,
   },
   {
     slug: "ui-ux-design",
-    title: "UI/UX Design & Prototyping Agency in Glasgow | Vebryx",
+    title: "UI/UX Design & Prototyping Agency in Birmingham | TechClues",
     kicker: "UI/UX design and prototyping",
     headline: "Design that users understand in seconds.",
     serviceCard: "UI/UX & Prototyping",
@@ -193,7 +193,7 @@ const PAGES: Svc[] = [
   },
   {
     slug: "brand-strategy",
-    title: "Branding Agency for Startups in Glasgow | Vebryx",
+    title: "Branding Agency for Startups in Birmingham | TechClues",
     kicker: "Brand strategy and identity for startups",
     headline: "A brand that makes people trust you from the first click.",
     serviceCard: "Strategy & Brand Identity",

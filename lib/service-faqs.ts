@@ -155,7 +155,7 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
       },
       {
           "q": "Are you a Shopify Partner?",
-          "a": "Yes. Vebryx is a Shopify Partner. We design, build and set up Shopify stores, and build on WooCommerce or custom code where that fits you better."
+          "a": "Yes. TechClues is a Shopify Partner. We design, build and set up Shopify stores, and build on WooCommerce or custom code where that fits you better."
       },
       {
           "q": "Should I use Shopify, WooCommerce or a custom build?",
@@ -389,7 +389,7 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
   "partners": [
       {
           "q": "Who can join?",
-          "a": "Anyone who meets businesses that need software, apps, AI, design or marketing: agencies without a development team, freelancers, business advisers, accountants, startup communities and past clients. We approve each partner. Vebryx staff can't take part."
+          "a": "Anyone who meets businesses that need software, apps, AI, design or marketing: agencies without a development team, freelancers, business advisers, accountants, startup communities and past clients. We approve each partner. TechClues staff can't take part."
       },
       {
           "q": "What do I earn?",
@@ -397,7 +397,7 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
       },
       {
           "q": "How do I register a referral?",
-          "a": "Use the \"Refer a client\" form on this page, or email sales@vebryx.co.uk with you and the client both copied, before their first call with us. Only refer people who have agreed to us contacting them. We confirm in writing whether the referral is registered, and the commission it qualifies for."
+          "a": "Use the \"Refer a client\" form on this page, or email info@techclues.co.uk with you and the client both copied, before their first call with us. Only refer people who have agreed to us contacting them. We confirm in writing whether the referral is registered, and the commission it qualifies for."
       },
       {
           "q": "When does a referral count?",
@@ -426,7 +426,7 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
   ],
   "faq-getting-started": [
       {
-          "q": "What does Vebryx do?",
+          "q": "What does TechClues do?",
           "a": "We design and build digital products: MVPs, custom platforms, web and mobile apps, and the brand and interface around them. Most of our work is taking an idea to something real people can use."
       },
       {
@@ -451,7 +451,7 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
       },
       {
           "q": "Do you work with clients outside the UK?",
-          "a": "Yes. We're based in Glasgow and work with founders elsewhere over calls and shared documents; the process doesn't change."
+          "a": "Yes. We're based in Birmingham and work with founders elsewhere over calls and shared documents; the process doesn't change."
       },
       {
           "q": "How do I know whether to build an MVP or the full product?",
@@ -695,7 +695,7 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
   "faq-working-together": [
       {
           "q": "Where are you based?",
-          "a": "Glasgow, at 40 Plantation Square. We work with clients across the UK and beyond, and we're happy to meet in person if you're nearby."
+          "a": "Birmingham, at 125 Hazelville Road. We work with clients across the UK and beyond, and we're happy to meet in person if you're nearby."
       },
       {
           "q": "Who will I work with day to day?",
@@ -723,7 +723,7 @@ export const serviceFaqs: Record<string, AccordionItem[]> = {
       },
       {
           "q": "How do we reach you?",
-          "a": "Email info@vebryx.co.uk, call +44 7446 478755, or book the free strategy call. During a project you'll have a shared channel with the team."
+          "a": "Email info@techclues.co.uk, call +44 7472 411699, or book the free strategy call. During a project you'll have a shared channel with the team."
       }
   ],
   "faq-fit": [

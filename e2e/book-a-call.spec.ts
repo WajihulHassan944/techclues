@@ -29,11 +29,10 @@ const nextBtn = (page: Page) => page.locator('button[aria-label^="Next: book"]:n
 test.describe("book a call page", () => {
   test("renders the intro, steps and trust badge with metadata", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Book a free MVP strategy call | Vebryx");
+    await expect(page).toHaveTitle("Book a free MVP strategy call | TechClues");
     await expect(page.locator("h1")).toHaveText("Let's talk aboutyour idea.");
     const main = page.locator("main");
-    for (const t of ["Free MVP strategy call.", "30 minutes", "Video call", "Free, no obligation", "We review your idea", "We define your MVP strategy", "We deliver your roadmap", "4.3", "Trustpilot", "Instant confirmation and a calendar invite by email"]) await expect(main).toContainText(t);
-    await expect(page.locator('a[href="https://uk.trustpilot.com/review/vebryx.co.uk"]')).toHaveCount(1);
+    for (const t of ["Free MVP strategy call.", "30 minutes", "Video call", "Free, no obligation", "We review your idea", "We define your MVP strategy", "We deliver your roadmap", "Instant confirmation and a calendar invite by email"]) await expect(main).toContainText(t);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });

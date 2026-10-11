@@ -3,10 +3,10 @@
 import { useState } from "react";
 
 const FAQS = [
-  { q: "What does Vebryx do?", a: "We're an MVP studio in Glasgow. We help founders validate ideas, then design, build and scale them." },
+  { q: "What does TechClues do?", a: "We're an MVP studio in Birmingham. We help founders validate ideas, then design, build and scale them." },
   { q: "How much does an MVP cost?", a: "A Validation MVP starts from £2,500, a Lean MVP from £5,000 and a Custom or SaaS platform from £10,000, with your price agreed before any work starts. Try our cost calculator for an instant estimate." },
   { q: "How long does it take to build an MVP?", a: "A Validation MVP takes 1–2 weeks and a Lean MVP 2–4 weeks. A Custom or SaaS platform takes around 8 weeks, agreed up front." },
-  { q: "How does Vebryx develop an MVP?", a: "Through eight phases: Ignition, Compass, Pillar, Canvas, Forge, Bridge, Sentinel and Everest, from first idea to deployment." },
+  { q: "How does TechClues develop an MVP?", a: "Through eight phases: Ignition, Compass, Pillar, Canvas, Forge, Bridge, Sentinel and Everest, from first idea to deployment." },
   { q: "Can you turn an MVP into a full product?", a: "Yes. We build on scalable foundations from day one, so nothing gets thrown away." },
   { q: "How do you support products after launch?", a: "Ongoing support, maintenance and growth marketing once you're live." },
 ];

@@ -19,10 +19,10 @@ function ease(t: number) {
   return ((ay * u + by) * u + cy) * u;
 }
 
-/** Counts the "Vebryx in numbers" figures up from zero the first time they scroll into view. */
+/** Counts the "TechClues in numbers" figures up from zero the first time they scroll into view. */
 export default function CountUp() {
   useEffect(() => {
-    const section = document.querySelector<HTMLElement>('section[aria-label="Vebryx in numbers"]');
+    const section = document.querySelector<HTMLElement>('section[aria-label="TechClues in numbers"]');
     if (!section) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 

@@ -33,12 +33,12 @@ const scrollTo = (page: Page, sel: string, viewportFraction: number) =>
 test.describe("about page", () => {
   test("renders with metadata, hero, stats and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("About Vebryx | MVP Development Studio in Glasgow");
+    await expect(page).toHaveTitle("About TechClues | MVP Development Studio in Birmingham");
     await expect(page.locator("h1")).toContainText("We're where ideas start.");
-    await expect(page.getByText("An MVP studio in Glasgow. We help founders test ideas with real users, then build the ones that work.")).toBeVisible();
+    await expect(page.getByText("An MVP studio in Birmingham. We help founders test ideas with real users, then build the ones that work.")).toBeVisible();
     await expect(page.getByText("Build less. Learn faster. Launch what people want.")).toBeVisible();
-    const glance = page.locator('section[aria-label="Vebryx at a glance"]');
-    for (const t of ["23+", "Products shipped", "4.3", "Rating on Trustpilot", "2–4 weeks", "Glasgow"]) await expect(glance).toContainText(t);
+    const glance = page.locator('section[aria-label="TechClues at a glance"]');
+    for (const t of ["200+", "Products delivered", "280+", "Successful jobs", "2–4 weeks", "Birmingham"]) await expect(glance).toContainText(t);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -46,7 +46,7 @@ test.describe("about page", () => {
   test("has every section in order", async ({ page }) => {
     await open(page);
     const labels = await page.locator("main section[aria-label]").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
-    expect(labels).toEqual(["Vebryx at a glance", "Our story", "Building together", "Our promises", "Vebryx in the community", "Start your project"]);
+    expect(labels).toEqual(["TechClues at a glance", "Our story", "Building together", "Our promises", "Our team", "Our global presence", "Start your project"]);
   });
 
   test("hero entrance animation settles into the visible state", async ({ page }) => {
@@ -127,11 +127,10 @@ test.describe("about page", () => {
   test("promises, community and call-to-action content is there", async ({ page }) => {
     await open(page);
     const promises = page.locator('section[aria-label="Our promises"]');
-    for (const t of ["You'll always know where things stand", "We'll tell you what not to build", "A working first version, fast", "We see it through to something that works", "Abernathy"])
+    for (const t of ["You'll always know where things stand", "We'll tell you what not to build", "A working first version, fast", "We see it through to something that works", "Zeeshan", "Shoaib Masood", "Khurram", "Abbay Singh"])
       await expect(promises).toContainText(t);
-    await expect(promises.getByRole("link", { name: /Read every review/ })).toHaveAttribute("href", "https://uk.trustpilot.com/review/vebryx.co.uk");
-    const community = page.locator('section[aria-label="Vebryx in the community"]');
-    for (const t of ["Part of Scotland's tech community.", "Glasgow, UK", "Karachi, PK", "ScotlandIS", "Site of the Day"]) await expect(community).toContainText(t);
+    const community = page.locator('section[aria-label="Our global presence"]');
+    for (const t of ["Based in the UK, working worldwide.", "Birmingham, UK", "Rawalpindi, PK", "125 Hazelville Road, Birmingham, England", "Crown Plaza, Rawalpindi"]) await expect(community).toContainText(t);
     await expect(page.locator('section[aria-label="Start your project"]')).toHaveCount(1);
   });
 

@@ -34,7 +34,7 @@ async function fillStep1(page: Page) {
 test.describe("grant funding page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Grant Application Support for UK Tech Projects | Vebryx");
+    await expect(page).toHaveTitle("Grant Application Support for UK Tech Projects | TechClues");
     await expect(page.locator("h1")).toContainText("Could your project be");
     await expect(page.locator("h1")).toContainText("grant-funded?");
     for (const t of ["Eligibility checks", "Business case", "Budgets and costs", "Application review", "Tell us about the business and the project", "We check what could fit", "We prepare the application with you"]) await expect(page.locator("main")).toContainText(t);

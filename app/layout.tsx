@@ -10,7 +10,7 @@ import FloatingUi from "@/components/FloatingUi";
 import ClientNav from "@/components/ClientNav";
 
 export const metadata: Metadata = {
-  title: "Custom Software Development Company in Glasgow | Vebryx",
+  title: "Custom Software Development Company in Birmingham | TechClues",
   description:
     "MVP development studio helping founders validate, build and launch digital products.",
   manifest: "/manifest.webmanifest",

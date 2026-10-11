@@ -34,7 +34,7 @@ async function open(page: Page) {
 test.describe("industries page", () => {
   test("renders with the right metadata, intro and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Industries We Serve | Sector Software & MVPs | Vebryx");
+    await expect(page).toHaveTitle("Industries We Serve | Sector Software & MVPs | TechClues");
     await expect(page.locator("h1")).toContainText("Built for your sector.");
     await expect(page.locator("h1")).toContainText("Not just your screen.");
     await expect(page.locator("main").getByText("Eight sectors where we know the users, the rules and what good looks like.")).toBeVisible();

@@ -53,7 +53,7 @@ async function dismissCookies(page: Page) {
 test.describe("homepage", () => {
   test("renders the page with correct metadata, no console errors and no overflow", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle(/Custom Software Development Company in Glasgow/);
+    await expect(page).toHaveTitle(/Custom Software Development Company in Birmingham/);
     await expect(page.locator("h1")).toContainText("Launch-ready MVPs.");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
@@ -129,9 +129,9 @@ test.describe("homepage", () => {
   test("stat counters count up to their final values", async ({ page }) => {
     await open(page);
     await dismissCookies(page);
-    const nums = page.locator('section[aria-label="Vebryx in numbers"] p > span');
-    await page.locator('section[aria-label="Vebryx in numbers"]').scrollIntoViewIfNeeded();
-    await expect(nums).toHaveText(["4", "4.3", "23", "1,000", "12"], { timeout: 6_000 });
+    const nums = page.locator('section[aria-label="TechClues in numbers"] p > span');
+    await page.locator('section[aria-label="TechClues in numbers"]').scrollIntoViewIfNeeded();
+    await expect(nums).toHaveText(["4", "280", "200", "20", "12"], { timeout: 6_000 });
   });
 
   test("stack tabs lift a layer, dim the rest and reset", async ({ page }) => {
@@ -265,17 +265,17 @@ test.describe("homepage", () => {
     const section = page.locator('section[aria-label="Testimonials"]');
     const quote = section.locator("blockquote");
     await section.scrollIntoViewIfNeeded();
-    await expect(quote).toContainText("Great communication and clear project updates");
-    await expect(section.getByRole("button", { name: /^Show review/ })).toHaveCount(10);
+    await expect(quote).toContainText("deliver the project on time");
+    await expect(section.getByRole("button", { name: /^Show review/ })).toHaveCount(4);
     await section.getByRole("button", { name: "Show review 3" }).click();
-    await expect(quote).toContainText("first mobile prototype");
+    await expect(quote).toContainText("Picktiles was a really hard startup");
     await section.getByRole("button", { name: "Next review" }).click();
-    await expect(quote).toContainText("Amazing, wonderful people");
+    await expect(quote).toContainText("automated my whole car business");
     await section.getByRole("button", { name: "Previous review" }).click();
-    await expect(quote).toContainText("first mobile prototype");
-    await section.getByRole("button", { name: "Show review 10" }).click();
+    await expect(quote).toContainText("Picktiles was a really hard startup");
+    await section.getByRole("button", { name: "Show review 4" }).click();
     await section.getByRole("button", { name: "Next review" }).click();
-    await expect(quote).toContainText("Great communication"); // wraps around
+    await expect(quote).toContainText("deliver the project on time"); // wraps around
     // Hovering the card pauses the progress bar
     await section.locator('[class*="rounded-[28px]"]').first().hover();
     await expect(section.locator(".testimonial-bar")).toHaveCSS("animation-play-state", "paused");
@@ -290,15 +290,15 @@ test.describe("homepage", () => {
     await section.scrollIntoViewIfNeeded();
     await page.mouse.move(5, 5);
     await section.getByRole("button", { name: "Show review 1", exact: true }).click();
-    await expect(section.locator("blockquote")).toContainText("Great communication");
+    await expect(section.locator("blockquote")).toContainText("deliver the project on time");
     await page.mouse.move(5, 5); // the click left the pointer over the card, which pauses rotation
-    await expect(section.locator("blockquote")).toContainText("We appreciated their focus", { timeout: 12_000 });
+    await expect(section.locator("blockquote")).toContainText("I am satisfied with the web development services", { timeout: 12_000 });
   });
 
   test("FAQ accordion opens one answer at a time", async ({ page }) => {
     await open(page);
     await dismissCookies(page);
-    const q1 = page.getByRole("button", { name: "What does Vebryx do?" });
+    const q1 = page.getByRole("button", { name: "What does TechClues do?" });
     const q2 = page.getByRole("button", { name: "How much does an MVP cost?" });
     await q1.scrollIntoViewIfNeeded();
     await expect(q1).toHaveAttribute("aria-expanded", "true");
@@ -337,7 +337,7 @@ test.describe("homepage", () => {
     expect(page.url()).toBe(before);
     await dialog.getByRole("button", { name: "Close" }).click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.locator(".chat-launcher")).toContainText("Ask Vebryx");
+    await expect(page.locator(".chat-launcher")).toContainText("Ask TechClues");
   });
 
   test("contact dock expands on hover and uses placeholder links", async ({ page }) => {

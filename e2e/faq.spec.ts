@@ -22,7 +22,7 @@ async function open(page: Page) {
 
 // [section id, label, number of questions, first question, second question]
 const CATEGORIES: [string, string, number, string, string][] = [
-  ["getting-started", "Getting started", 8, "What does Vebryx do?", "How do I start a project with you?"],
+  ["getting-started", "Getting started", 8, "What does TechClues do?", "How do I start a project with you?"],
   ["pricing", "Pricing & payments", 9, "How much does an MVP cost?", "How accurate is the cost calculator?"],
   ["process", "Timelines & process", 9, "How quickly can you launch?", "What are the stages of a project?"],
   ["mvp", "MVPs & validation", 7, "What exactly is an MVP?", ""],
@@ -37,7 +37,7 @@ const CATEGORIES: [string, string, number, string, string][] = [
 test.describe("faq page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("FAQ | Costs, Timelines & How We Build | Vebryx");
+    await expect(page).toHaveTitle("FAQ | Costs, Timelines & How We Build | TechClues");
     await expect(page.locator("h1")).toContainText("Questions,");
     await expect(page.locator("h1")).toContainText("answered straight.");
     await expect(page.getByText("Costs, timelines, ownership and what happens after launch. If yours isn't here, ask us on the call.")).toBeVisible();
@@ -78,7 +78,7 @@ test.describe("faq page", () => {
     await gs.scrollIntoViewIfNeeded();
     await gs.getByRole("button", { name: "What happens on the first call?" }).click();
     await expect(gs.getByRole("button", { name: "What happens on the first call?" })).toHaveAttribute("aria-expanded", "true");
-    await expect(gs.getByRole("button", { name: "What does Vebryx do?" })).toHaveAttribute("aria-expanded", "false");
+    await expect(gs.getByRole("button", { name: "What does TechClues do?" })).toHaveAttribute("aria-expanded", "false");
     await expect(gs.locator("button[aria-expanded=true]")).toHaveCount(1);
     // other categories are untouched
     await expect(page.locator("#pricing button[aria-expanded=true]")).toHaveCount(1);

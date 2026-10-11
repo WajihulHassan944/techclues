@@ -53,7 +53,7 @@ async function run(page: Page, goal: string, platform: string, feats: string[], 
 test.describe("MVP cost calculator", () => {
   test("renders the page, shell and static sections without errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("MVP Cost Calculator UK | Estimate Your App Build | Vebryx");
+    await expect(page).toHaveTitle("MVP Cost Calculator UK | Estimate Your App Build | TechClues");
     await expect(page.locator("h1")).toHaveText("What will your MVP cost?");
     await expect(page.getByText("Step 1 of 6")).toBeVisible();
     await expect(page.getByText("Add your details to unlock your instant estimate.")).toBeVisible();

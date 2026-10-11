@@ -35,7 +35,7 @@ async function open(page: Page) {
 test.describe("services page", () => {
   test("renders with the right metadata, intro and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Services | MVP Development, Apps, Design & Growth | Vebryx");
+    await expect(page).toHaveTitle("Services | MVP Development, Apps, Design & Growth | TechClues");
     await expect(page.locator("h1")).toContainText("Everything your");
     await expect(page.locator("h1")).toContainText("product needs.");
     await expect(page.getByText("From validating the idea to growing after launch, one team takes care of it all.")).toBeVisible();

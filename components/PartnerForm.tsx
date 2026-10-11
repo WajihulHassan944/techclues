@@ -219,7 +219,7 @@ export default function PartnerForm() {
                 .
               </>
             ) : (
-              "The client has agreed to Vebryx contacting them about this project."
+              "The client has agreed to TechClues contacting them about this project."
             )}
             {errors.agreed && <span className="mt-1 block text-[13px] text-[#b42318]">{errors.agreed}</span>}
           </span>

@@ -99,7 +99,7 @@ export default function CareersForm() {
             <a className="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:decoration-brand" href="/privacy-policy">
               privacy policy
             </a>
-            , and to Vebryx keeping my details to consider me for work.
+            , and to TechClues keeping my details to consider me for work.
           </span>
         </label>
         <div className="mt-7">

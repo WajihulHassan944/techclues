@@ -37,7 +37,7 @@ const SECTIONS: [string, string][] = [
 test.describe("privacy policy page", () => {
   test("renders with metadata, heading, date and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Privacy Policy | Vebryx");
+    await expect(page).toHaveTitle("Privacy Policy | TechClues");
     await expect(page.locator("h1")).toHaveText("Privacy policy");
     await expect(page.getByText("Last updated", { exact: false }).first()).toBeVisible();
     await expect(page.locator("time")).toHaveAttribute("datetime", "2026-10-09");
@@ -79,10 +79,10 @@ test.describe("privacy policy page", () => {
   test("contact details and cross-links are right", async ({ page }) => {
     await open(page);
     const c = page.locator("#contact-us").locator("xpath=following::ul[1]");
-    await expect(c).toContainText("Vebryx Limited");
-    await expect(c).toContainText("40 Plantation Square, Glasgow, G51 1TQ, United Kingdom");
-    await expect(c).toContainText("SC879816 (registered in Scotland)");
-    await expect(page.locator("main").getByRole("link", { name: "info@vebryx.co.uk" }).first()).toHaveAttribute("href", "mailto:info@vebryx.co.uk");
+    await expect(c).toContainText("TechClues:");
+    await expect(c).toContainText("125 Hazelville Road, Birmingham, England, United Kingdom");
+    await expect(c).toContainText("+44 7472 411699");
+    await expect(page.locator("main").getByRole("link", { name: "info@techclues.co.uk" }).first()).toHaveAttribute("href", "mailto:info@techclues.co.uk");
     await expect(page.locator('main a[href="/terms-conditions"]').first()).toBeVisible();
     await expect(page.locator('main a[href="/contact"]').first()).toBeVisible();
   });

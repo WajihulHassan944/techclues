@@ -40,7 +40,7 @@ const SECTIONS: [string, string][] = [
 test.describe("terms and conditions page", () => {
   test("renders with metadata, heading, date and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Terms & Conditions | Vebryx");
+    await expect(page).toHaveTitle("Terms & Conditions | TechClues");
     await expect(page.locator("h1")).toHaveText("Terms & conditions");
     await expect(page.getByText("Last updated", { exact: false }).first()).toBeVisible();
     await expect(page.locator("time")).toHaveAttribute("datetime", "2026-02-04");
@@ -81,7 +81,7 @@ test.describe("terms and conditions page", () => {
 
   test("contact details and cross-links are right", async ({ page }) => {
     await open(page);
-    await expect(page.locator("main").getByRole("link", { name: "info@vebryx.co.uk" }).first()).toHaveAttribute("href", "mailto:info@vebryx.co.uk");
+    await expect(page.locator("main").getByRole("link", { name: "info@techclues.co.uk" }).first()).toHaveAttribute("href", "mailto:info@techclues.co.uk");
     await expect(page.locator('main a[href="/privacy-policy"]').first()).toBeVisible();
     await expect(page.locator('main a[href="/contact"]').first()).toBeVisible();
   });

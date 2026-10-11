@@ -25,7 +25,7 @@ const GRID = 'section[aria-label="All case studies"]';
 test.describe("case studies page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page, "/case-studies");
-    await expect(page).toHaveTitle("Case Studies | MVPs & Products Built by Vebryx");
+    await expect(page).toHaveTitle("Case Studies | MVPs & Products Built by TechClues");
     await expect(page.locator("h1")).toContainText("Ideas we turned");
     await expect(page.locator("h1")).toContainText("into products.");
     await expect(page.getByText("A look at how we've helped founders validate, design and launch real products.")).toBeVisible();
@@ -112,7 +112,7 @@ test.describe("case studies page", () => {
   test("results strip and call to action are present", async ({ page }) => {
     await open(page, "/case-studies");
     const r = page.locator('section[aria-label="Results"]');
-    for (const t of ["23+", "1,000+", "60%", "4.3"]) await expect(r).toContainText(t);
+    for (const t of ["200+", "1,000+", "60%", "280+"]) await expect(r).toContainText(t);
     await expect(page.locator('section[aria-label="Start your project"]')).toHaveCount(1);
   });
 
@@ -130,7 +130,7 @@ type Study = { slug: string; title: string; heading: string; client: string; sec
 const STUDIES: Study[] = [
   {
     slug: "infinite-running-league",
-    title: "Infinite Running League Case Study | Vebryx",
+    title: "Infinite Running League Case Study | TechClues",
     heading: "The first relay running league platform",
     client: "Infinite Running League",
     sector: "Sports & fitness",
@@ -141,7 +141,7 @@ const STUDIES: Study[] = [
   },
   {
     slug: "odogwu",
-    title: "Odogwu Foods Case Study | Vebryx",
+    title: "Odogwu Foods Case Study | TechClues",
     heading: "A custom online grocery store for African and Afro-Caribbean food",
     client: "Odogwu Foods",
     sector: "Retail & e-commerce",

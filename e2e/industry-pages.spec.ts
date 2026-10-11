@@ -25,7 +25,7 @@ const SECTIONS = [
 const SECTORS: Sector[] = [
   {
     slug: "healthcare-medical",
-    title: "Healthcare Software Development in the UK | Vebryx",
+    title: "Healthcare Software Development in the UK | TechClues",
     kicker: "Healthcare software development",
     headline: "Digital care that's secure, reliable and easy to use.",
     name: "Healthcare & medical",
@@ -40,7 +40,7 @@ const SECTORS: Sector[] = [
   },
   {
     slug: "retail-ecommerce",
-    title: "Ecommerce & Retail Software Development UK | Vebryx",
+    title: "Ecommerce & Retail Software Development UK | TechClues",
     kicker: "Ecommerce and retail software development",
     headline: "Commerce experiences that sell, on every screen.",
     name: "Retail & e-commerce",
@@ -55,7 +55,7 @@ const SECTORS: Sector[] = [
   },
   {
     slug: "pre-seed-seed-startups",
-    title: "Product Development for Pre-seed & Seed Startups | Vebryx",
+    title: "Product Development for Pre-seed & Seed Startups | TechClues",
     kicker: "Product development for pre-seed and seed startups",
     headline: "From idea to investor-ready product.",
     name: "Pre-seed & seed startups",
@@ -69,7 +69,7 @@ const SECTORS: Sector[] = [
   },
   {
     slug: "saas-startups",
-    title: "SaaS Development for UK Startups | Vebryx",
+    title: "SaaS Development for UK Startups | TechClues",
     kicker: "SaaS development for startups",
     headline: "SaaS products built to launch fast and scale well.",
     name: "SaaS startups",
@@ -84,7 +84,7 @@ const SECTORS: Sector[] = [
   },
   {
     slug: "logistics-transportation",
-    title: "Logistics Software Development in the UK | Vebryx",
+    title: "Logistics Software Development in the UK | TechClues",
     kicker: "Logistics software development",
     headline: "Logistics software that keeps every part of the operation moving.",
     name: "Logistics & transportation",
@@ -99,7 +99,7 @@ const SECTORS: Sector[] = [
   },
   {
     slug: "education-consulting",
-    title: "Edtech & Consulting Software Development UK | Vebryx",
+    title: "Edtech & Consulting Software Development UK | TechClues",
     kicker: "Edtech and consulting software development",
     headline: "Share your expertise at scale.",
     name: "Education & consulting",
@@ -114,7 +114,7 @@ const SECTORS: Sector[] = [
   },
   {
     slug: "recruitment-staffing",
-    title: "Recruitment Software Development in the UK | Vebryx",
+    title: "Recruitment Software Development in the UK | TechClues",
     kicker: "Recruitment software development",
     headline: "Place better candidates, faster.",
     name: "Recruitment & staffing",
@@ -129,7 +129,7 @@ const SECTORS: Sector[] = [
   },
   {
     slug: "industry-manufacturing",
-    title: "Manufacturing Software Development in the UK | Vebryx",
+    title: "Manufacturing Software Development in the UK | TechClues",
     kicker: "Manufacturing software development",
     headline: "Modern software for the factory floor.",
     name: "Industry & manufacturing",

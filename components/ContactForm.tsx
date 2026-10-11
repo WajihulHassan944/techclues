@@ -120,7 +120,7 @@ export default function ContactForm() {
             <a className="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:decoration-brand" href="/privacy-policy">
               privacy policy
             </a>
-            , and to Vebryx contacting me about this enquiry.
+            , and to TechClues contacting me about this enquiry.
           </span>
         </label>
         <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">

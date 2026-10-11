@@ -23,7 +23,7 @@ async function open(page: Page, path: string) {
 test.describe("blog page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page, "/blog");
-    await expect(page).toHaveTitle("MVP & Startup Insights | Vebryx Blog");
+    await expect(page).toHaveTitle("MVP & Startup Insights | TechClues Blog");
     await expect(page.locator("h1")).toContainText("Notes for founders");
     await expect(page.locator("h1")).toContainText("who build.");
     await expect(page.getByText("Practical guides on validating ideas, product strategy and building MVPs that work.")).toBeVisible();
@@ -90,7 +90,7 @@ type Post = { slug: string; title: string; h1: string; category: string; date: s
 const POSTS: Post[] = [
   {
     slug: "mvp-software-development-age-of-ai",
-    title: "MVP Software Development in the Age of AI | Vebryx",
+    title: "MVP Software Development in the Age of AI | TechClues",
     h1: "MVP Software Development in the Age of AI",
     category: "AI",
     date: "6 October 2026",
@@ -102,7 +102,7 @@ const POSTS: Post[] = [
   },
   {
     slug: "ai-funding-uk-scotland",
-    title: "AI Funding for UK & Scottish Businesses (2026) | Vebryx",
+    title: "AI Funding for UK & Scottish Businesses (2026) | TechClues",
     h1: "Funding for AI projects in the UK and Scotland",
     category: "Funding",
     date: "25 September 2026",
@@ -114,7 +114,7 @@ const POSTS: Post[] = [
   },
   {
     slug: "mvp-cost-uk",
-    title: "MVP Cost in UK and How Much Startups Should Budget | Vebryx",
+    title: "MVP Cost in UK and How Much Startups Should Budget | TechClues",
     h1: "How much does an MVP cost in the UK?",
     category: "Costs",
     date: "26 August 2026",
@@ -136,7 +136,7 @@ for (const p of POSTS) {
       await expect(page).toHaveTitle(p.title);
       await expect(page.locator("h1")).toHaveText(p.h1);
       const head = page.locator("main").first();
-      for (const t of [p.category, p.date, p.read, "Vebryx team"]) await expect(head).toContainText(t);
+      for (const t of [p.category, p.date, p.read, "TechClues team"]) await expect(head).toContainText(t);
       await expect(page.getByRole("link", { name: "Blog", exact: true }).first()).toHaveAttribute("href", "/blog");
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
       expect(errors).toEqual([]);

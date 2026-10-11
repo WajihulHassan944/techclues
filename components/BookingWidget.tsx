@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, type ComponentProps, type CSSProp
 
 const TITLE = "Free MVP strategy call";
 const DURATION = 30;
-const EMAIL = "info@vebryx.co.uk";
+const EMAIL = "info@techclues.co.uk";
 const PRIVACY = "/privacy-policy";
 const WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const cn = (...a: (string | false | undefined | null)[]) => a.filter(Boolean).join(" ");
@@ -402,7 +402,7 @@ function Widget() {
       const start = new Date(slot!);
       const end = new Date(start.getTime() + DURATION * 6e4);
       const stamp = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-      const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Vebryx//Booking//EN", "BEGIN:VEVENT", `DTSTART:${stamp(start)}`, `DTEND:${stamp(end)}`, `SUMMARY:${TITLE}`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+      const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//TechClues//Booking//EN", "BEGIN:VEVENT", `DTSTART:${stamp(start)}`, `DTEND:${stamp(end)}`, `SUMMARY:${TITLE}`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
       setBooked({
         name: form.name.trim(),
         email: form.email.trim(),
@@ -547,7 +547,7 @@ function Widget() {
               <CalendarPlus className="size-4" />
               Add to Google Calendar
             </a>
-            <a href={booked.icsUrl} download="vebryx-call.ics" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-ink/15 px-6 text-[14px] font-medium text-ink transition-colors duration-300 hover:border-ink">
+            <a href={booked.icsUrl} download="techclues-call.ics" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-ink/15 px-6 text-[14px] font-medium text-ink transition-colors duration-300 hover:border-ink">
               <Download className="size-4" />
               Apple or Outlook calendar
             </a>

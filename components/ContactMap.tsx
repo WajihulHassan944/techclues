@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-const ZONES = ["Europe/London", "Asia/Karachi"]; // Glasgow, Karachi
+const ZONES = ["Europe/London", "Asia/Karachi"]; // Birmingham, Rawalpindi
 
 const sw = (el: Element | null | undefined, on: boolean, onCls: string, offCls: string) => {
   if (!el) return;

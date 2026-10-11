@@ -23,11 +23,11 @@ async function open(page: Page, path = "/zero-one") {
 test.describe("ZERO.ONE page", () => {
   test("renders the hero with metadata and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("ZERO.ONE | Build & Test Your Core Feature in a Week | Vebryx");
+    await expect(page).toHaveTitle("ZERO.ONE | Build & Test Your Core Feature in a Week | TechClues");
     await expect(page.locator("h1")).toContainText("ZERO.ONE");
     await expect(page.locator("h1")).toContainText("From idea to something real.");
     const main = page.locator("main");
-    for (const t of ["From Vebryx", "£499", "1 week", "Build → Test → Learn", "4 projects a month · £499 off any build booked within 30 days", "Who it's for", "Two ways to find out", "Why now", "Good ideas don't stay open for long."]) await expect(main).toContainText(t);
+    for (const t of ["From TechClues", "£499", "1 week", "Build → Test → Learn", "4 projects a month · £499 off any build booked within 30 days", "Who it's for", "Two ways to find out", "Why now", "Good ideas don't stay open for long."]) await expect(main).toContainText(t);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });

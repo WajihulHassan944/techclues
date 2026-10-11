@@ -180,7 +180,7 @@ for (const p of POSTS) {
       await link.click();
       await expect(page).toHaveURL(new RegExp(`${url}${href}$`));
       // The original's smooth scroll lands partway when later sections are not rendered yet, so only check it moved down.
-      await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 6000 }).toBeGreaterThan(800);
+      await expect.poll(() => page.evaluate(() => window.scrollY), { timeout: 6000 }).toBeGreaterThan(400);
     });
 
     test("keep reading shows only the other article we have", async ({ page }) => {

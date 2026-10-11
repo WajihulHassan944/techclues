@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { ADMIN_EMAIL, AUTH_KEY, NAV, itemFor } from "./nav";
 import InboxProvider, { useInbox } from "./InboxProvider";
 import BookingsProvider, { useBookings } from "./BookingsProvider";
+import BlogProvider from "./BlogProvider";
 import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSearch, IconSettings, IconShield, IconSpark } from "./icons";
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {
@@ -86,6 +87,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   return (
     <InboxProvider>
     <BookingsProvider>
+    <BlogProvider>
     <div className="adm-shell">
       <div className="adm-scrim" data-open={drawer} onClick={() => setDrawer(false)} aria-hidden="true" />
       <aside className="adm-side" data-open={drawer} aria-label="Admin navigation">
@@ -193,6 +195,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </main>
       </div>
     </div>
+    </BlogProvider>
     </BookingsProvider>
     </InboxProvider>
   );

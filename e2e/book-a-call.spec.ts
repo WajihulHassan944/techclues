@@ -85,7 +85,7 @@ test.describe("book a call page", () => {
     await expect(times(page).first()).not.toHaveText(before!);
   });
 
-  test("details step validates, goes back, and confirms without sending anything", async ({ page }) => {
+  test("details step validates, goes back, and confirms by booking through the API", async ({ page }) => {
     await open(page);
     await expect(days(page).first()).toBeVisible({ timeout: 10_000 });
     await times(page).nth(1).click();
@@ -110,7 +110,7 @@ test.describe("book a call page", () => {
     await expect(page.getByRole("heading", { name: "You're booked, Sam." })).toBeVisible({ timeout: 8000 });
     await expect(page.getByText("sam@example.com")).toBeVisible();
     for (const t of ["30 minutes", "Add to Google Calendar", "Apple or Outlook calendar", "Reschedule or cancel"]) await expect(page.locator("main")).toContainText(t);
-    expect(posts).toEqual([]);
+    expect(posts.some((u) => u.includes("/api/public/bookings"))).toBe(true);
   });
 
   test("name and email are prefilled from the query string", async ({ page }) => {

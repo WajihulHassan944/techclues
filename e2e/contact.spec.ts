@@ -88,9 +88,8 @@ test.describe("contact page", () => {
     expect(await form.evaluate((f) => (f as HTMLFormElement).checkValidity())).toBe(true);
     await form.getByRole("button", { name: "Send enquiry" }).click();
     await expect(page).toHaveURL(/\/contact$/);
-    await expect(form.getByText("We reply within a few hours.")).toBeVisible();
-    await expect(form.getByRole("link", { name: "terms & conditions" })).toHaveAttribute("href", "/terms-conditions");
-    await expect(form.getByRole("link", { name: "privacy policy" })).toHaveAttribute("href", "/privacy-policy");
+    await expect(page.getByText("Thanks — we've got your message.")).toBeVisible();
+    await expect(page.getByText("We reply within a few hours.")).toBeVisible();
   });
 
   test("map starts on Birmingham and hovering Rawalpindi moves the highlight", async ({ page }) => {

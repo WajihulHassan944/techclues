@@ -1,9 +1,12 @@
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { reseed } from "./helpers/backend";
+
+test.describe.configure({ mode: "serial" });
 
 async function signIn(page: Page, to = "/admin/newsletter") {
   await page.goto("/admin/login");
-  await page.locator("#adm-password").fill("x");
+  await page.locator("#adm-password").fill(process.env.E2E_ADMIN_PASSWORD ?? "");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/admin$/);
   if (to !== "/admin") await page.goto(to);
@@ -15,6 +18,7 @@ const tileValue = async (p: Page, label: string) => Number(await tile(p, label).
 
 test.describe("admin newsletter", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
   });
 
@@ -150,6 +154,7 @@ test.describe("admin newsletter", () => {
 test.describe("admin newsletter on mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
   test("fits the screen", async ({ page }) => {
+    reseed();
     await signIn(page);
     await expect(rows(page).first()).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

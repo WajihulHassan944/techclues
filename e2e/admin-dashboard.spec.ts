@@ -1,8 +1,11 @@
 import { test, expect, type Page } from "@playwright/test";
+import { openEnquiryByText, reseed } from "./helpers/backend";
+
+test.describe.configure({ mode: "serial" });
 
 async function signIn(page: Page, to = "/admin") {
   await page.goto("/admin/login");
-  await page.locator("#adm-password").fill("x");
+  await page.locator("#adm-password").fill(process.env.E2E_ADMIN_PASSWORD ?? "");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/admin$/);
   if (to !== "/admin") await page.goto(to);
@@ -12,6 +15,7 @@ const value = async (p: Page, label: RegExp | string) => Number(await tile(p, la
 
 test.describe("admin dashboard", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
   });
 
@@ -35,7 +39,7 @@ test.describe("admin dashboard", () => {
   });
 
   test("tiles update when enquiries are read or answered", async ({ page }) => {
-    await page.goto("/admin/inbox/enq-1001");
+    await openEnquiryByText(page, "Sarah Whitfield");
     await page.getByRole("textbox", { name: "Your reply" }).fill("Thanks Sarah, we'll call you tomorrow.");
     await page.getByRole("button", { name: /Send reply/ }).click();
     await expect(page.getByRole("status").filter({ hasText: "Reply sent" })).toBeVisible();
@@ -54,7 +58,8 @@ test.describe("admin dashboard", () => {
     await expect(items.first()).toContainText("5 days");
     await expect(card).toContainText("and 3 more in the inbox");
     await items.first().getByRole("link").click();
-    await expect(page).toHaveURL(/\/admin\/inbox\/enq-1011$/);
+    await expect(page).toHaveURL(/\/admin\/inbox\/[a-f0-9]{24}$/);
+    await expect(page.getByRole("heading", { level: 2, name: /Grant support/ })).toBeVisible();
   });
 
   test("upcoming calls lists the next bookings", async ({ page }) => {
@@ -131,6 +136,8 @@ test.describe("admin dashboard", () => {
 
 test.describe("admin dashboard on mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
+  test.beforeEach(() => reseed());
+
   test("fits the screen", async ({ page }) => {
     await signIn(page);
     await expect(page.getByRole("heading", { level: 2 })).toBeVisible();

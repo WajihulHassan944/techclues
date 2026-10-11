@@ -1,8 +1,11 @@
 import { test, expect, type Page } from "@playwright/test";
+import { reseed } from "./helpers/backend";
+
+test.describe.configure({ mode: "serial" });
 
 async function signIn(page: Page, to = "/admin/bookings") {
   await page.goto("/admin/login");
-  await page.locator("#adm-password").fill("x");
+  await page.locator("#adm-password").fill(process.env.E2E_ADMIN_PASSWORD ?? "");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/admin$/);
   if (to !== "/admin") await page.goto(to);
@@ -16,6 +19,7 @@ const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart
 
 test.describe("admin bookings: list", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
   });
 
@@ -53,6 +57,7 @@ test.describe("admin bookings: list", () => {
 
 test.describe("admin bookings: call details", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
   });
 
@@ -68,7 +73,7 @@ test.describe("admin bookings: call details", () => {
     await expect(d.getByRole("link", { name: "+44 7766 301288" })).toHaveAttribute("href", "tel:+447766301288");
     await expect(d.getByRole("link", { name: /meet\.google\.com/ })).toHaveAttribute("href", /meet\.google\.com/);
     await expect(d).toContainText("Decision maker. Bring the dispatch-system integration questions.");
-    await expect(d.getByRole("link", { name: "Open their enquiry" })).toHaveAttribute("href", "/admin/inbox/enq-1009");
+    await expect(d.getByRole("link", { name: "Open their enquiry" })).toHaveAttribute("href", /\/admin\/inbox\/[a-f0-9]{24}$/);
     await expect(d.getByText("Booked on the website (Book a call)")).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(d).toHaveCount(0);
@@ -143,6 +148,7 @@ test.describe("admin bookings: call details", () => {
 
 test.describe("admin bookings: calendar", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
     await page.getByRole("button", { name: "Calendar", exact: true }).click();
   });
@@ -179,6 +185,7 @@ test.describe("admin bookings: calendar", () => {
 
 test.describe("admin bookings: availability", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
     await page.getByRole("tab", { name: "Availability" }).click();
   });

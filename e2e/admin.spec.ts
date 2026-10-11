@@ -9,9 +9,11 @@ const errorsOf = (page: Page) => {
   return errors;
 };
 
+const TEST_ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? "";
+
 async function signIn(page: Page) {
   await page.goto("/admin/login");
-  await page.locator("#adm-password").fill("anything");
+  await page.locator("#adm-password").fill(TEST_ADMIN_PASSWORD);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/admin$/);
   await expect(page.getByRole("navigation", { name: "Main" })).toBeVisible();
@@ -50,7 +52,7 @@ test.describe("admin: sign in", () => {
     await page.getByRole("button", { name: "Hide password" }).click();
     await expect(pw).toHaveAttribute("type", "password");
     await page.getByRole("button", { name: "Forgot password?" }).click();
-    await expect(page.getByRole("status")).toContainText("any email and password will sign you in");
+    await expect(page.getByRole("status")).toContainText("isn't wired up yet");
   });
 
   test("signing in opens the dashboard, and the panel stays closed without signing in", async ({ page }) => {

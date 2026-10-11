@@ -1,8 +1,11 @@
 import { test, expect, type Page } from "@playwright/test";
+import { openPostByText, reseed } from "./helpers/backend";
+
+test.describe.configure({ mode: "serial" });
 
 async function signIn(page: Page, to = "/admin/blog") {
   await page.goto("/admin/login");
-  await page.locator("#adm-password").fill("x");
+  await page.locator("#adm-password").fill(process.env.E2E_ADMIN_PASSWORD ?? "");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/admin$/);
   if (to !== "/admin") await page.goto(to);
@@ -15,7 +18,7 @@ const status = (p: Page) => p.locator(".adm-editbar .adm-pstatus");
 
 async function newPost(page: Page) {
   await page.goto("/admin/blog/new");
-  await expect(page).toHaveURL(/\/admin\/blog\/post-\d+$/);
+  await expect(page).toHaveURL(/\/admin\/blog\/[a-f0-9]{24}$/);
   await expect(page.locator("#post-title")).toBeVisible();
 }
 async function fillRequired(page: Page, title = "A brand new idea") {
@@ -28,6 +31,7 @@ async function fillRequired(page: Page, title = "A brand new idea") {
 
 test.describe("admin blog: posts", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
   });
 
@@ -72,7 +76,7 @@ test.describe("admin blog: posts", () => {
     await page.getByRole("button", { name: /Actions for How much does an MVP cost/ }).click();
     await expect(page.getByRole("menuitem", { name: "View on the site" })).toHaveAttribute("href", "/blog/mvp-cost-uk");
     await page.getByRole("menuitem", { name: "Duplicate" }).click();
-    await expect(page).toHaveURL(/\/admin\/blog\/post-\d+$/);
+    await expect(page).toHaveURL(/\/admin\/blog\/[a-f0-9]{24}$/);
     await expect(page.locator("#post-title")).toHaveValue("How much does an MVP cost in the UK? (copy)");
     await expect(page.locator("#post-slug")).toHaveValue("mvp-cost-uk-copy");
     await expect(status(page)).toHaveText("Draft");
@@ -127,8 +131,11 @@ test.describe("admin blog: posts", () => {
 });
 
 test.describe("admin blog: editor", () => {
+  test.beforeEach(() => reseed());
+
   test("opens a published post with its body, settings, checklist and contents list", async ({ page }) => {
-    await signIn(page, "/admin/blog/post-1003");
+    await signIn(page);
+    await openPostByText(page, "How much does an MVP cost");
     await expect(page.locator("#post-title")).toHaveValue("How much does an MVP cost in the UK?");
     await expect(page.locator("#post-slug")).toHaveValue("mvp-cost-uk");
     await expect(status(page)).toHaveText("Published");
@@ -230,7 +237,8 @@ test.describe("admin blog: editor", () => {
   });
 
   test("an address used by another post is flagged and blocks publishing", async ({ page }) => {
-    await signIn(page, "/admin/blog/post-1004");
+    await signIn(page);
+    await openPostByText(page, "Prototype vs MVP");
     await page.locator("#post-slug").fill("mvp-cost-uk");
     await expect(page.getByText("Already used")).toBeVisible();
     await page.getByRole("textbox", { name: "Short summary" }).fill("Summary");
@@ -239,13 +247,14 @@ test.describe("admin blog: editor", () => {
   });
 
   test("changes to a live post need saving: unsaved warning, leave dialog, then saved", async ({ page }) => {
-    await signIn(page, "/admin/blog/post-1003");
+    await signIn(page);
+    const id = await openPostByText(page, "How much does an MVP cost");
     await page.locator("#post-title").fill("How much does an MVP cost in the UK in 2026?");
     await expect(page.getByText("Unsaved changes")).toBeVisible();
     await page.getByRole("button", { name: "Posts" }).click();
     const dlg = page.getByRole("dialog", { name: "Leave without saving?" });
     await dlg.getByRole("button", { name: "Keep editing" }).click();
-    await expect(page).toHaveURL(/post-1003$/);
+    await expect(page).toHaveURL(new RegExp(`${id}$`));
     await page.getByRole("button", { name: "Update post" }).click();
     await expect(page.getByText("All changes saved")).toBeVisible();
     await page.getByRole("button", { name: "Posts" }).click();
@@ -254,7 +263,8 @@ test.describe("admin blog: editor", () => {
   });
 
   test("the search preview, counters and contents list update as you type", async ({ page }) => {
-    await signIn(page, "/admin/blog/post-1004");
+    await signIn(page);
+    await openPostByText(page, "Prototype vs MVP");
     await page.locator("#post-seo-title").fill("Prototype or MVP? | TechClues");
     await page.locator("#post-seo-desc").fill("A short, clear description of the post.");
     await expect(page.locator(".adm-serp")).toContainText("Prototype or MVP? | TechClues");
@@ -264,7 +274,8 @@ test.describe("admin blog: editor", () => {
   });
 
   test("preview shows the article on desktop and phone widths", async ({ page }) => {
-    await signIn(page, "/admin/blog/post-1003");
+    await signIn(page);
+    await openPostByText(page, "How much does an MVP cost");
     await page.getByRole("button", { name: "Preview" }).click();
     const dlg = page.getByRole("dialog", { name: "Preview" });
     await expect(dlg.getByRole("heading", { level: 1 })).toHaveText("How much does an MVP cost in the UK?");
@@ -278,17 +289,19 @@ test.describe("admin blog: editor", () => {
   });
 
   test("a post can be deleted from the editor after confirming", async ({ page }) => {
-    await signIn(page, "/admin/blog/post-1006");
+    await signIn(page);
+    const id = await openPostByText(page, "No-code or custom code");
     await page.getByRole("button", { name: "Delete this post" }).click();
     await page.getByRole("dialog", { name: "Delete this post?" }).getByRole("button", { name: "Delete post" }).click();
     await expect(page).toHaveURL(/\/admin\/blog$/);
     await expect(posts(page)).toHaveCount(5);
-    await page.goto("/admin/blog/post-1006");
+    await page.goto(`/admin/blog/${id}`);
     await expect(page.getByRole("heading", { name: "Post not found" })).toBeVisible();
   });
 
   test("a cover image can be set from an address and described", async ({ page }) => {
-    await signIn(page, "/admin/blog/post-1004");
+    await signIn(page);
+    await openPostByText(page, "Prototype vs MVP");
     await page.locator("#post-cover-url").fill("/images/services/mvp.jpg");
     await page.locator("#post-cover-alt").fill("Founders at a whiteboard");
     await expect(page.locator(".adm-cover")).toHaveAttribute("src", "/images/services/mvp.jpg");
@@ -298,12 +311,14 @@ test.describe("admin blog: editor", () => {
 
 test.describe("admin blog on mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
+  test.beforeEach(() => reseed());
+
   test("list and editor fit the screen", async ({ page }) => {
     await signIn(page);
     const fits = () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
     await expect(posts(page).first()).toBeVisible();
     expect(await fits()).toBe(true);
-    await page.goto("/admin/blog/post-1002");
+    await openPostByText(page, "Funding for AI projects");
     await expect(editor(page)).toBeVisible();
     expect(await fits()).toBe(true);
   });

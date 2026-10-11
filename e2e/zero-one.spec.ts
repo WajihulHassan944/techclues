@@ -86,7 +86,7 @@ test.describe("ZERO.ONE page", () => {
     await expect(form.getByRole("button", { name: /Brief sent/ })).toBeVisible();
     const link = form.locator('[data-cta="zero-one-book-call"]');
     await expect(link).toHaveAttribute("href", /^\/book-a-call\?name=Sam\+Taylor&email=sam%40example\.com&company=Acme&notes=ZERO\.ONE/);
-    expect(posts).toEqual([]);
+    expect(posts.some((u) => u.includes("/api/public/zero-one"))).toBe(true);
     await link.click();
     await expect(page).toHaveURL(/\/book-a-call\?/);
     await expect(page.getByRole("heading", { name: "Choose a time" })).toBeVisible({ timeout: 10_000 });

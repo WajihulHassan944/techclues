@@ -1,9 +1,14 @@
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { openEnquiryByText, reseed } from "./helpers/backend";
+
+test.describe.configure({ mode: "serial" });
+
+const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? "";
 
 async function signIn(page: Page, to = "/admin/settings") {
   await page.goto("/admin/login");
-  await page.locator("#adm-password").fill("x");
+  await page.locator("#adm-password").fill(ADMIN_PASSWORD);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/admin$/);
   if (to !== "/admin") await page.goto(to);
@@ -13,6 +18,7 @@ const toast = (p: Page, text: string | RegExp) => p.getByRole("status").filter({
 
 test.describe("admin settings: notifications", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
   });
 
@@ -60,6 +66,7 @@ test.describe("admin settings: notifications", () => {
 
 test.describe("admin settings: reply templates", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
     await tab(page, "Reply templates").click();
   });
@@ -82,10 +89,10 @@ test.describe("admin settings: reply templates", () => {
     await dlg.getByRole("button", { name: "Save template" }).click();
     await expect(page.locator(".adm-tpls li")).toHaveCount(9);
     await expect(page.locator(".adm-tpls li").filter({ hasText: "Fixed price quote" })).toContainText("Contact form");
-    await page.goto("/admin/inbox/enq-1001"); // a contact-form enquiry
+    await openEnquiryByText(page, "Sarah Whitfield"); // a contact-form enquiry
     await page.getByRole("combobox", { name: "Insert a saved reply" }).selectOption({ label: "Fixed price quote" });
     await expect(page.getByRole("textbox", { name: "Your reply" })).toHaveValue("Hi Sarah,\n\nHere is the fixed price we discussed.");
-    await page.goto("/admin/inbox/enq-1002"); // a calculator enquiry: not offered
+    await openEnquiryByText(page, "Daniel Okafor"); // a calculator enquiry: not offered
     await expect(page.getByRole("combobox", { name: "Insert a saved reply" }).locator("option", { hasText: "Fixed price quote" })).toHaveCount(0);
     await page.goto("/admin/settings");
     await tab(page, "Reply templates").click();
@@ -110,7 +117,7 @@ test.describe("admin settings: reply templates", () => {
     await page.locator("#st-sig").fill("Kind regards,\nKhashir\nTechClues");
     await page.getByRole("button", { name: "Save signature" }).click();
     await expect(toast(page, "Signature saved")).toBeVisible();
-    await page.goto("/admin/inbox/enq-1001");
+    await openEnquiryByText(page, "Sarah Whitfield");
     await expect(page.getByLabel("Signature added to your reply")).toContainText("Khashir");
     await page.getByRole("textbox", { name: "Your reply" }).fill("Thanks!");
     await page.getByRole("button", { name: /Send reply/ }).click();
@@ -120,6 +127,7 @@ test.describe("admin settings: reply templates", () => {
 
 test.describe("admin settings: password and security", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
     await tab(page, "Password & security").click();
   });
@@ -128,7 +136,7 @@ test.describe("admin settings: password and security", () => {
     await page.getByRole("button", { name: "Change password" }).click();
     await expect(page.getByText("Enter your current password.")).toBeVisible();
     await expect(page.getByText("Use at least 12 characters.")).toBeVisible();
-    await page.getByLabel("Current password").fill("old-password");
+    await page.getByLabel("Current password").fill(ADMIN_PASSWORD);
     await page.getByLabel("New password", { exact: true }).fill("short");
     await expect(page.getByRole("img", { name: "Password strength: Too short" })).toBeVisible();
     await page.getByLabel("New password", { exact: true }).fill("Correct-Horse-Battery-9!");
@@ -147,7 +155,7 @@ test.describe("admin settings: password and security", () => {
     await page.getByRole("checkbox", { name: "Show passwords" }).check();
     await expect(page.getByLabel("New password", { exact: true })).toHaveAttribute("type", "text");
     const devices = page.getByRole("list", { name: "Signed-in devices" });
-    await expect(devices.locator("li")).toHaveCount(3);
+    await expect(devices.locator("li")).toHaveCount(1); // real session tracking isn't implemented — see "Where you're signed in"
     await expect(devices).toContainText("This device");
     await expect(page.getByRole("switch", { name: "Two-step sign-in" })).toBeDisabled();
   });
@@ -162,6 +170,7 @@ test.describe("admin settings: password and security", () => {
 
 test.describe("admin settings: privacy and data", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
     await tab(page, "Privacy & data").click();
   });
@@ -208,18 +217,19 @@ test.describe("admin settings: privacy and data", () => {
 });
 
 test.describe("admin settings: activity log", () => {
+  test.beforeEach(() => reseed());
+
   test("records what is done in the panel, filters, exports and clears", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/inbox/enq-1001");
+    await openEnquiryByText(page, "Sarah Whitfield");
     await page.getByRole("textbox", { name: "Your reply" }).fill("Thanks Sarah.");
     await page.getByRole("button", { name: /Send reply/ }).click();
     await expect(toast(page, "Reply sent")).toBeVisible();
     await page.goto("/admin/settings");
     await tab(page, "Activity log").click();
     const log = page.getByRole("list", { name: "Activity" });
-    await expect(log.locator("li").first()).toContainText("Replied to Sarah Whitfield (Tutoring marketplace: MVP and web app)");
-    await expect(log).toContainText("Signed in from this device");
-    await expect(log).toContainText("Published “How much does an MVP cost in the UK?”");
+    await expect(log.locator("li").first()).toContainText("Replied to Sarah Whitfield's enquiry");
+    await expect(log).toContainText("Signed in");
     await page.getByRole("button", { name: "Inbox", exact: true }).click();
     for (const t of await log.locator("li small").allTextContents()) expect(t).toMatch(/^Inbox/);
     await page.getByRole("button", { name: "Everything" }).click();

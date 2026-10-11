@@ -1,8 +1,13 @@
 import { test, expect, type Page } from "@playwright/test";
+import { openEnquiryByText, reseed } from "./helpers/backend";
+
+// The real backend persists data across tests (unlike the old per-test-isolated localStorage
+// sample data), so every describe block that mutates data reseeds first and runs serially.
+test.describe.configure({ mode: "serial" });
 
 async function signIn(page: Page, to = "/admin/inbox") {
   await page.goto("/admin/login");
-  await page.locator("#adm-password").fill("x");
+  await page.locator("#adm-password").fill(process.env.E2E_ADMIN_PASSWORD ?? "");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/admin$/);
   if (to !== "/admin") await page.goto(to);
@@ -13,6 +18,7 @@ const navBadge = (p: Page) => p.getByRole("navigation", { name: "Main" }).getByR
 
 test.describe("admin inbox: list", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
   });
 
@@ -100,11 +106,15 @@ test.describe("admin inbox: list", () => {
 });
 
 test.describe("admin inbox: enquiry", () => {
-  test("opening an enquiry shows the submission, details and marks it read", async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page);
+  });
+
+  test("opening an enquiry shows the submission, details and marks it read", async ({ page }) => {
     await expect(navBadge(page)).toHaveText("5");
     await rows(page).filter({ hasText: "Daniel Okafor" }).locator("a").click();
-    await expect(page).toHaveURL(/\/admin\/inbox\/enq-1002$/);
+    await expect(page).toHaveURL(/\/admin\/inbox\/[a-f0-9]{24}$/);
     await expect(page.getByRole("heading", { level: 2, name: /Estimate: fleet maintenance/ })).toBeVisible();
     const sub = page.getByRole("article", { name: "Original submission" });
     await expect(sub).toContainText("daniel@fleetwise.io");
@@ -116,15 +126,15 @@ test.describe("admin inbox: enquiry", () => {
   });
 
   test("shows attachments for applications and the verdict for idea tests", async ({ page }) => {
-    await signIn(page, "/admin/inbox/enq-1008");
+    await openEnquiryByText(page, "Luca Moretti");
     await expect(page.getByRole("list", { name: "Attachments" })).toContainText("Luca-Moretti-CV.pdf");
-    await page.goto("/admin/inbox/enq-1003");
+    await openEnquiryByText(page, "Priya Nair");
     await expect(page.getByText("Verdict shown to the visitor")).toBeVisible();
     await expect(page.getByText("Weak point: Rover and Facebook groups are free and familiar")).toBeVisible();
   });
 
   test("a saved reply is inserted and sent: message, status, toast and draft clean-up", async ({ page }) => {
-    await signIn(page, "/admin/inbox/enq-1002");
+    await openEnquiryByText(page, "Daniel Okafor");
     const select = page.getByRole("combobox", { name: "Insert a saved reply" });
     await expect(select.locator("option", { hasText: "Estimate follow-up" })).toHaveCount(1);
     await expect(select.locator("option", { hasText: "Careers acknowledgement" })).toHaveCount(0);
@@ -141,11 +151,11 @@ test.describe("admin inbox: enquiry", () => {
     await expect(sent).toContainText("TechClues team");
     await expect(page.locator(".adm-statusrow .adm-status")).toHaveText("Replied");
     await page.reload();
-    await expect(page.locator(".adm-msg-us")).toHaveCount(1); // kept in this browser
+    await expect(page.locator(".adm-msg-us")).toHaveCount(1); // persisted server-side
   });
 
   test("an unsent draft is kept when leaving and coming back", async ({ page }) => {
-    await signIn(page, "/admin/inbox/enq-1001");
+    await openEnquiryByText(page, "Sarah Whitfield");
     await page.getByRole("textbox", { name: "Your reply" }).fill("Half-written reply");
     await expect(page.getByText("Draft saved")).toBeVisible();
     await page.getByRole("link", { name: "Inbox", exact: true }).first().click();
@@ -154,7 +164,7 @@ test.describe("admin inbox: enquiry", () => {
   });
 
   test("status can be changed and private notes added", async ({ page }) => {
-    await signIn(page, "/admin/inbox/enq-1001");
+    await openEnquiryByText(page, "Sarah Whitfield");
     await page.getByRole("combobox", { name: "Change status" }).selectOption("qualified");
     await expect(page.locator(".adm-statusrow .adm-status")).toHaveText("Qualified");
     await page.getByRole("textbox", { name: "Add a note" }).fill("Call on Friday");
@@ -164,28 +174,32 @@ test.describe("admin inbox: enquiry", () => {
   });
 
   test("an existing conversation and note are shown, and other enquiries from the same person are linked", async ({ page }) => {
-    await signIn(page, "/admin/inbox/enq-1009");
+    await openEnquiryByText(page, "James Carter");
     await expect(page.locator(".adm-msg-us")).toHaveCount(2);
     await expect(page.getByText("Thanks. We use Mandata.")).toBeVisible();
     await expect(page.locator(".adm-notes")).toContainText("Decision maker is James");
   });
 
   test("previous and next move through the list, and an unknown id shows a not-found message", async ({ page }) => {
-    await signIn(page, "/admin/inbox/enq-1002");
-    await expect(page.getByRole("link", { name: "Newer enquiry" })).toHaveAttribute("href", "/admin/inbox/enq-1001");
-    await expect(page.getByRole("link", { name: "Older enquiry" })).toHaveAttribute("href", "/admin/inbox/enq-1003");
+    // Default sort is newest first: Sarah Whitfield (1st), Daniel Okafor (2nd), Priya Nair (3rd).
+    const sarahId = await openEnquiryByText(page, "Sarah Whitfield");
+    const priyaId = await openEnquiryByText(page, "Priya Nair");
+    const danielId = await openEnquiryByText(page, "Daniel Okafor");
+    await expect(page.getByRole("link", { name: "Newer enquiry" })).toHaveAttribute("href", `/admin/inbox/${sarahId}`);
+    await expect(page.getByRole("link", { name: "Older enquiry" })).toHaveAttribute("href", `/admin/inbox/${priyaId}`);
     await page.getByRole("link", { name: "Older enquiry" }).click();
-    await expect(page).toHaveURL(/enq-1003$/);
-    await page.goto("/admin/inbox/enq-9999");
+    await expect(page).toHaveURL(new RegExp(`${priyaId}$`));
+    void danielId;
+    await page.goto("/admin/inbox/000000000000000000000000");
     await expect(page.getByRole("heading", { name: "Enquiry not found" })).toBeVisible();
   });
 
   test("marking as spam goes back to the inbox, and the enquiry is in spam with a banner and no reply box", async ({ page }) => {
-    await signIn(page, "/admin/inbox/enq-1001");
+    const id = await openEnquiryByText(page, "Sarah Whitfield");
     await page.getByRole("button", { name: "Mark as spam" }).click();
     await expect(page).toHaveURL(/\/admin\/inbox$/);
     await expect(rows(page)).toHaveCount(13);
-    await page.goto("/admin/inbox/enq-1001");
+    await page.goto(`/admin/inbox/${id}`);
     await expect(page.getByRole("status").filter({ hasText: "This enquiry is in spam." })).toBeVisible();
     await expect(page.getByRole("region", { name: "Reply" })).toHaveCount(0);
     await page.getByRole("button", { name: "Not spam" }).click();
@@ -195,10 +209,11 @@ test.describe("admin inbox: enquiry", () => {
 
 test.describe("admin inbox: spam and trash", () => {
   test.beforeEach(async ({ page }) => {
+    reseed();
     await signIn(page, "/admin/inbox/spam");
   });
 
-  test("lists spam and trash with counts, blocked senders and the sample reset", async ({ page }) => {
+  test("lists spam and trash with counts and blocked senders", async ({ page }) => {
     await expect(page).toHaveTitle("Spam & trash | TechClues admin");
     await expect(page.getByRole("tab", { name: /^Spam/ })).toContainText("2");
     await expect(page.getByRole("tab", { name: /^Trash/ })).toContainText("1");
@@ -224,12 +239,12 @@ test.describe("admin inbox: spam and trash", () => {
     await page.getByRole("button", { name: "Empty spam" }).click();
     await page.getByRole("button", { name: "Yes, delete" }).click();
     await expect(page.getByRole("heading", { name: "Nothing in spam" })).toBeVisible();
-    await page.getByRole("button", { name: "Restore the sample enquiries" }).click();
-    await expect(rows(page)).toHaveCount(2);
+    // Real deletes are permanent now — reseed() in the next test's beforeEach restores the data,
+    // rather than a client-side "restore sample data" button (removed along with localStorage).
   });
 
   test("blocking a sender from an enquiry lists them, and they can be unblocked", async ({ page }) => {
-    await page.goto("/admin/inbox/enq-1001");
+    await openEnquiryByText(page, "Sarah Whitfield");
     await page.getByRole("button", { name: "Block this sender" }).click();
     await expect(page.getByRole("button", { name: "Sender blocked" })).toBeDisabled();
     await page.goto("/admin/inbox/spam");
@@ -242,12 +257,14 @@ test.describe("admin inbox: spam and trash", () => {
 
 test.describe("admin inbox on mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
+  test.beforeEach(() => reseed());
+
   test("list and enquiry fit the screen and rows still show who wrote", async ({ page }) => {
     await signIn(page);
     await expect(rows(page).first().getByText("Sarah Whitfield")).toBeVisible();
     await expect(page.getByRole("searchbox", { name: "Search enquiries" })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    await page.goto("/admin/inbox/enq-1009");
+    await openEnquiryByText(page, "James Carter");
     await expect(page.getByRole("heading", { level: 2, name: /Shipment tracking/ })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });

@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { seedBookings } from "@/lib/admin/bookings-seed";
 import { initials, snippet } from "@/lib/admin/format";
 import { SOURCE_KEYS, type SourceKey } from "@/lib/admin/inbox-types";
 import { RANGES, buildBuckets, sumBuckets, type Range } from "@/lib/admin/stats";
 import { ColumnChart, SourceBars, Spark } from "./charts";
 import { SourcePill, needsReply } from "./EnquiryList";
 import { useInbox } from "./InboxProvider";
+import { useBookings } from "./BookingsProvider";
+import { dateKey, fmtKey, fmtTime } from "@/lib/admin/tz";
 import { IconArrowRight, IconCalendar, IconInbox } from "./icons";
 
 const waiting = (iso: string, now: number) => {
@@ -25,11 +26,11 @@ const greeting = (now: number) => {
 };
 
 function callWhen(iso: string, now: number) {
-  const d = new Date(iso);
-  const time = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" }).format(d);
-  const dayDiff = Math.round((new Date(d).setHours(0, 0, 0, 0) - new Date(now).setHours(0, 0, 0, 0)) / 86_400_000);
-  const day = dayDiff === 0 ? "Today" : dayDiff === 1 ? "Tomorrow" : new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short" }).format(d);
-  return { day, time, dayDiff };
+  const key = dateKey(iso);
+  const today = dateKey(now);
+  const dayDiff = Math.round((Date.parse(key) - Date.parse(today)) / 86_400_000);
+  const day = dayDiff === 0 ? "Today" : dayDiff === 1 ? "Tomorrow" : fmtKey(key, { weekday: "short", day: "numeric", month: "short" });
+  return { day, time: fmtTime(iso), dayDiff };
 }
 
 function Tile({ label, value, note, href, children }: { label: string; value: string; note: React.ReactNode; href?: string; children?: React.ReactNode }) {
@@ -58,7 +59,7 @@ export default function Dashboard() {
   const [range, setRange] = useState<Range>("30d");
   const [chartTable, setChartTable] = useState(false);
   const [sourceTable, setSourceTable] = useState(false);
-  const bookings = useMemo(() => seedBookings(now), [now]);
+  const { bookings } = useBookings();
   const cfg = RANGES.find((r) => r.key === range)!;
 
   const buckets = useMemo(() => buildBuckets(state.enquiries, now, cfg.days, cfg.bucket), [state.enquiries, now, cfg]);
@@ -237,13 +238,13 @@ export default function Dashboard() {
             <ul className="adm-mlist adm-calls">
               {upcoming.slice(0, 4).map((b) => {
                 const w = callWhen(b.start, now);
-                const end = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" }).format(new Date(new Date(b.start).getTime() + b.minutes * 60_000));
+                const end = fmtTime(new Date(new Date(b.start).getTime() + b.minutes * 60_000));
                 return (
                   <li key={b.id}>
                     <Link href="/admin/bookings">
                       <span className={`adm-datechip${w.dayDiff <= 1 ? " adm-datechip-soon" : ""}`}>
-                        <small>{new Intl.DateTimeFormat("en-GB", { month: "short" }).format(new Date(b.start))}</small>
-                        <b>{new Date(b.start).getDate()}</b>
+                        <small>{fmtKey(dateKey(b.start), { month: "short" })}</small>
+                        <b>{Number(dateKey(b.start).slice(8))}</b>
                       </span>
                       <span className="adm-mlist-main">
                         <strong>{b.name}</strong>

@@ -12,7 +12,7 @@ export const NAV: NavGroup[] = [
     items: [
       { href: "/admin/inbox", label: "Inbox", icon: IconInbox },
       { href: "/admin/inbox/spam", label: "Spam & trash", icon: IconBan, title: "Spam & trash" },
-      { href: "/admin/bookings", label: "Bookings", icon: IconCalendar, badge: "3" },
+      { href: "/admin/bookings", label: "Bookings", icon: IconCalendar },
     ],
   },
   {

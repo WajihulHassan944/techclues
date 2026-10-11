@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ADMIN_EMAIL, AUTH_KEY, NAV, itemFor } from "./nav";
 import InboxProvider, { useInbox } from "./InboxProvider";
+import BookingsProvider, { useBookings } from "./BookingsProvider";
 import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSearch, IconSettings, IconShield, IconSpark } from "./icons";
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {
@@ -27,7 +28,10 @@ function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void,
 
 function NavBadge({ href, fallback }: { href: string; fallback?: string }) {
   const { unread } = useInbox();
-  const n = href === "/admin/inbox" ? (unread > 0 ? String(unread) : "") : (fallback ?? "");
+  const { bookings } = useBookings();
+  const [now] = useState(() => Date.now());
+  const soon = bookings.filter((b) => b.status === "confirmed" && new Date(b.start).getTime() > now && new Date(b.start).getTime() < now + 7 * 86_400_000).length;
+  const n = href === "/admin/inbox" ? (unread > 0 ? String(unread) : "") : href === "/admin/bookings" ? (soon > 0 ? String(soon) : "") : (fallback ?? "");
   return n ? <span className="adm-badge">{n}</span> : null;
 }
 
@@ -81,6 +85,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
   return (
     <InboxProvider>
+    <BookingsProvider>
     <div className="adm-shell">
       <div className="adm-scrim" data-open={drawer} onClick={() => setDrawer(false)} aria-hidden="true" />
       <aside className="adm-side" data-open={drawer} aria-label="Admin navigation">
@@ -188,6 +193,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </main>
       </div>
     </div>
+    </BookingsProvider>
     </InboxProvider>
   );
 }

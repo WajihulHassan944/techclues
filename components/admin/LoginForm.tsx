@@ -49,7 +49,6 @@ export default function LoginForm() {
       <div className="adm-login-card adm-fadein">
         <img src="/images/techclues-logo.png" alt="TechClues" width={216} height={34} />
         <h1>Admin sign in</h1>
-        <p className="adm-sub">Manage enquiries, bookings and the blog.</p>
         <form className="adm-form" onSubmit={submit} noValidate>
           <div className="adm-field">
             <label htmlFor="adm-email">Email</label>

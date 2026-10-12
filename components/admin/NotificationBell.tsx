@@ -3,11 +3,16 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api/client";
+import { preload } from "@/lib/admin/prefetch";
 import { useAdminRealtime } from "@/lib/pusher/client";
 import { fmtWhen } from "@/lib/admin/format";
 import { IconBell } from "./icons";
 
 type ApiNotification = { _id: string; type: string; message: string; link?: string; read: boolean; at: string };
+
+export function preloadNotifications(force = false) {
+  return preload("admin-notifications", () => api.get<{ items: ApiNotification[]; unread: number }>("/api/admin/notifications"), force);
+}
 
 export default function NotificationBell() {
   const router = useRouter();
@@ -17,9 +22,8 @@ export default function NotificationBell() {
   const [now] = useState(() => Date.now());
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  const load = useCallback(() => {
-    api
-      .get<{ items: ApiNotification[]; unread: number }>("/api/admin/notifications")
+  const load = useCallback((force = false) => {
+    preloadNotifications(force)
       .then((r) => {
         setItems(r.items);
         setUnread(r.unread);
@@ -31,7 +35,7 @@ export default function NotificationBell() {
     load();
   }, [load]);
 
-  useAdminRealtime({ "notification.created": () => load() });
+  useAdminRealtime({ "notification.created": () => load(true) });
 
   useEffect(() => {
     if (!open) return;
@@ -50,7 +54,7 @@ export default function NotificationBell() {
   const markAllRead = () => {
     setUnread(0);
     setItems((l) => l.map((i) => ({ ...i, read: true })));
-    api.post("/api/admin/notifications/read-all").catch(() => load());
+    api.post("/api/admin/notifications/read-all").catch(() => load(true));
   };
 
   const openItem = (n: ApiNotification) => {

@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api/client";
+import { preload } from "@/lib/admin/prefetch";
 import type { Availability } from "@/lib/admin/availability";
 import type { Booking, BookingStatus } from "@/lib/admin/bookings-types";
 import { fmtKey, dateKey, fmtTime } from "@/lib/admin/tz";
@@ -48,15 +49,24 @@ function mapBooking(b: ApiBooking): Booking {
   };
 }
 
+export function preloadBookings(force = false) {
+  return preload(
+    "admin-bookings",
+    () =>
+      Promise.all([
+        api.get<{ items: ApiBooking[] }>("/api/admin/bookings?pageSize=500"),
+        api.get<Availability>("/api/admin/bookings/availability"),
+      ]),
+    force,
+  );
+}
+
 export default function BookingsProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useInbox();
   const [state, setState] = useState<State | null>(null);
 
-  const load = useCallback(async () => {
-    const [list, av] = await Promise.all([
-      api.get<{ items: ApiBooking[] }>("/api/admin/bookings?pageSize=500"),
-      api.get<Availability>("/api/admin/bookings/availability"),
-    ]);
+  const load = useCallback(async (force = false) => {
+    const [list, av] = await preloadBookings(force);
     setState({ bookings: list.items.map(mapBooking), availability: av });
   }, []);
 
@@ -68,7 +78,7 @@ export default function BookingsProvider({ children }: { children: React.ReactNo
     if (!state) return null;
     const patch = (id: string, fn: (b: Booking) => Booking) => setState((s) => (s ? { ...s, bookings: s.bookings.map((b) => (b.id === id ? fn(b) : b)) } : s));
     const now = () => new Date().toISOString();
-    const refresh = () => load().catch(() => toast("Couldn't refresh bookings"));
+    const refresh = () => load(true).catch(() => toast("Couldn't refresh bookings"));
     return {
       bookings: state.bookings,
       availability: state.availability,

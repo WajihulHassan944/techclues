@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api/client";
+import { preload } from "@/lib/admin/prefetch";
 import { initials, snippet } from "@/lib/admin/format";
 import { SOURCE_KEYS, type SourceKey } from "@/lib/admin/inbox-types";
 import { RANGES, type Range } from "@/lib/admin/stats";
@@ -65,6 +66,11 @@ function Tile({ label, value, note, href, children }: { label: string; value: st
   );
 }
 
+/** Kicked off early by AdminShell so the dashboard's own mount-time fetch hits a warm cache. */
+export function preloadDashboardStats(range: Range = "30d", force = false) {
+  return preload(`admin-dashboard-stats-${range}`, () => api.get<DashboardStats>(`/api/admin/dashboard/stats?range=${range}`), force);
+}
+
 export default function Dashboard() {
   const { unread } = useInbox();
   const [now] = useState(() => Date.now());
@@ -76,8 +82,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     let live = true;
-    api
-      .get<DashboardStats>(`/api/admin/dashboard/stats?range=${range}`)
+    preloadDashboardStats(range)
       .then((s) => live && setStats(s))
       .catch(() => {});
     return () => {

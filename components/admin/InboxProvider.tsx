@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/lib/api/client";
 import { getAdminEmail } from "@/lib/api/auth";
+import { preload } from "@/lib/admin/prefetch";
 import type { Enquiry, Folder, InboxState, StatusKey } from "@/lib/admin/inbox-types";
 
 type Ctx = {
@@ -47,16 +48,26 @@ function mapEnquiry(d: ApiEnquiry): Enquiry {
   };
 }
 
+/** Kicked off early by AdminShell so this provider's own mount-time load() hits a warm cache. */
+export function preloadInbox(force = false) {
+  return preload(
+    "admin-inbox",
+    () =>
+      Promise.all([
+        api.get<{ items: ApiEnquiry[] }>("/api/admin/inbox?pageSize=500"),
+        api.get<{ email: string; at: string }[]>("/api/admin/inbox/blocked"),
+      ]),
+    force,
+  );
+}
+
 export default function InboxProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<InboxState | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const timer = useRef<number | undefined>(undefined);
 
-  const load = useCallback(async () => {
-    const [list, blocked] = await Promise.all([
-      api.get<{ items: ApiEnquiry[] }>("/api/admin/inbox?pageSize=500"),
-      api.get<{ email: string; at: string }[]>("/api/admin/inbox/blocked"),
-    ]);
+  const load = useCallback(async (force = false) => {
+    const [list, blocked] = await preloadInbox(force);
     setState({ enquiries: list.items.map(mapEnquiry), blocked });
   }, []);
 
@@ -78,7 +89,7 @@ export default function InboxProvider({ children }: { children: React.ReactNode 
   const ctx = useMemo<Ctx | null>(() => {
     if (!state) return null;
     const refresh = () => {
-      load().catch(() => toast("Couldn't refresh the inbox"));
+      load(true).catch(() => toast("Couldn't refresh the inbox"));
     };
     return {
       state,

@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api/client";
+import { preload } from "@/lib/admin/prefetch";
 import { EMAIL_RE, type SubSource, type SubStatus, type Subscriber } from "@/lib/admin/newsletter";
 import { useInbox } from "./InboxProvider";
 
@@ -29,12 +30,16 @@ export const useNewsletter = () => {
 type ApiSubscriber = Omit<Subscriber, "id"> & { _id: string };
 const mapSub = (s: ApiSubscriber): Subscriber => ({ ...s, id: s._id });
 
+export function preloadNewsletter(force = false) {
+  return preload("admin-newsletter", () => api.get<{ items: ApiSubscriber[] }>("/api/admin/newsletter?pageSize=1000"), force);
+}
+
 export default function NewsletterProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useInbox();
   const [subs, setSubs] = useState<Subscriber[] | null>(null);
 
-  const load = useCallback(async () => {
-    const list = await api.get<{ items: ApiSubscriber[] }>("/api/admin/newsletter?pageSize=1000");
+  const load = useCallback(async (force = false) => {
+    const list = await preloadNewsletter(force);
     setSubs(list.items.map(mapSub));
   }, []);
 
@@ -45,7 +50,7 @@ export default function NewsletterProvider({ children }: { children: React.React
   const ctx = useMemo<Ctx | null>(() => {
     if (!subs) return null;
     const has = (email: string) => subs.some((s) => s.email.toLowerCase() === email.toLowerCase());
-    const refresh = () => load().catch(() => toast("Couldn't refresh subscribers"));
+    const refresh = () => load(true).catch(() => toast("Couldn't refresh subscribers"));
     return {
       subs,
       add: (email, name, source) => {

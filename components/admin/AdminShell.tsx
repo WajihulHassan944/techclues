@@ -5,15 +5,34 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { getAdminEmail, logout as apiLogout, restoreSession } from "@/lib/api/auth";
 import { NAV, itemFor } from "./nav";
-import InboxProvider, { useInbox } from "./InboxProvider";
-import BookingsProvider, { useBookings } from "./BookingsProvider";
-import BlogProvider from "./BlogProvider";
-import NewsletterProvider, { useNewsletter } from "./NewsletterProvider";
-import SettingsProvider from "./SettingsProvider";
+import InboxProvider, { preloadInbox, useInbox } from "./InboxProvider";
+import BookingsProvider, { preloadBookings, useBookings } from "./BookingsProvider";
+import BlogProvider, { preloadBlog } from "./BlogProvider";
+import NewsletterProvider, { preloadNewsletter, useNewsletter } from "./NewsletterProvider";
+import SettingsProvider, { preloadSettings } from "./SettingsProvider";
+import { preloadDashboardStats } from "./Dashboard";
 import { useAdminRealtime } from "@/lib/pusher/client";
 import { IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSettings, IconShield } from "./icons";
 import SearchBox from "./SearchBox";
-import NotificationBell from "./NotificationBell";
+import NotificationBell, { preloadNotifications } from "./NotificationBell";
+
+/**
+ * Every admin provider nests inside the previous one and only renders its children once its
+ * own data has loaded (see e.g. InboxProvider's `if (!ctx) return <div aria-busy ... />`), so
+ * their mount-time fetches would otherwise run as a strict chain — each one waiting for every
+ * provider before it — instead of in parallel. Firing them all here, before any provider has
+ * even mounted, lets them race over the network together; each provider's own load() then just
+ * awaits the already in-flight (or already resolved) request via the shared prefetch cache.
+ */
+function prefetchAdminData() {
+  preloadInbox();
+  preloadBookings();
+  preloadBlog();
+  preloadNewsletter();
+  preloadSettings();
+  preloadNotifications();
+  preloadDashboardStats();
+}
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {
   useEffect(() => {
@@ -84,7 +103,10 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     restoreSession().then((ok) => {
       if (!ok) router.replace("/admin/login");
-      else setReady(true);
+      else {
+        prefetchAdminData();
+        setReady(true);
+      }
     });
   }, [router]);
 

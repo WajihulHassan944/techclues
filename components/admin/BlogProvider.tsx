@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api/client";
+import { preload } from "@/lib/admin/prefetch";
 import { slugify, type Author, type Category, type Post } from "@/lib/admin/blog-types";
 import { useInbox } from "./InboxProvider";
 
@@ -44,16 +45,25 @@ const mapPost = (p: ApiPost): Post => ({ ...p, id: p._id, seoTitle: p.seoTitle ?
 const mapCategory = (c: ApiCategory): Category => ({ id: c._id, name: c.name });
 const mapAuthor = (a: ApiAuthor): Author => ({ id: a._id, name: a.name, role: a.role });
 
+export function preloadBlog(force = false) {
+  return preload(
+    "admin-blog",
+    () =>
+      Promise.all([
+        api.get<{ items: ApiPost[] }>("/api/admin/blog/posts?pageSize=500"),
+        api.get<ApiCategory[]>("/api/admin/blog/categories"),
+        api.get<ApiAuthor[]>("/api/admin/blog/authors"),
+      ]),
+    force,
+  );
+}
+
 export default function BlogProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useInbox();
   const [state, setState] = useState<State | null>(null);
 
-  const load = useCallback(async () => {
-    const [posts, categories, authors] = await Promise.all([
-      api.get<{ items: ApiPost[] }>("/api/admin/blog/posts?pageSize=500"),
-      api.get<ApiCategory[]>("/api/admin/blog/categories"),
-      api.get<ApiAuthor[]>("/api/admin/blog/authors"),
-    ]);
+  const load = useCallback(async (force = false) => {
+    const [posts, categories, authors] = await preloadBlog(force);
     setState({ posts: posts.items.map(mapPost), categories: categories.map(mapCategory), authors: authors.map(mapAuthor) });
   }, []);
 
@@ -74,7 +84,7 @@ export default function BlogProvider({ children }: { children: React.ReactNode }
 
   const ctx = useMemo<Ctx | null>(() => {
     if (!state) return null;
-    const refresh = () => load().catch(() => toast("Couldn't refresh the blog"));
+    const refresh = () => load(true).catch(() => toast("Couldn't refresh the blog"));
     return {
       posts: state.posts,
       categories: state.categories,

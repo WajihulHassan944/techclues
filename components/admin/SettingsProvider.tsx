@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api/client";
+import { preload } from "@/lib/admin/prefetch";
 import { DEFAULT_SETTINGS, type Settings } from "@/lib/admin/settings-defaults";
 import { useInbox } from "./InboxProvider";
 
@@ -14,12 +15,16 @@ export const useSettings = () => {
   return c;
 };
 
+export function preloadSettings(force = false) {
+  return preload("admin-settings", () => api.get<Settings>("/api/admin/settings"), force);
+}
+
 export default function SettingsProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useInbox();
   const [settings, setSettings] = useState<Settings | null>(null);
 
-  const load = useCallback(async () => {
-    const s = await api.get<Settings>("/api/admin/settings");
+  const load = useCallback(async (force = false) => {
+    const s = await preloadSettings(force);
     setSettings({ ...DEFAULT_SETTINGS, ...s });
   }, []);
 
@@ -29,7 +34,7 @@ export default function SettingsProvider({ children }: { children: React.ReactNo
 
   const ctx = useMemo<Ctx | null>(() => {
     if (!settings) return null;
-    const refresh = () => load().catch(() => toast("Couldn't refresh settings"));
+    const refresh = () => load(true).catch(() => toast("Couldn't refresh settings"));
     return {
       settings,
       update: (patch, message) => {

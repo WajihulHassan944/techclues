@@ -1,16 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { api } from "@/lib/api/client";
 import { initials, snippet } from "@/lib/admin/format";
 import { SOURCE_KEYS, type SourceKey } from "@/lib/admin/inbox-types";
-import { RANGES, buildBuckets, sumBuckets, type Range } from "@/lib/admin/stats";
+import { RANGES, type Range } from "@/lib/admin/stats";
 import { ColumnChart, SourceBars, Spark } from "./charts";
-import { SourcePill, needsReply } from "./EnquiryList";
+import { SourcePill } from "./EnquiryList";
 import { useInbox } from "./InboxProvider";
-import { useBookings } from "./BookingsProvider";
 import { dateKey, fmtKey, fmtTime } from "@/lib/admin/tz";
 import { IconArrowRight, IconCalendar, IconInbox } from "./icons";
+
+type ApiNeedsReply = { _id: string; name: string; subject: string; source: SourceKey; received: string };
+type ApiUpcomingCall = { _id: string; name: string; topic: string; start: string; minutes: number };
+type DashboardStats = {
+  total: number;
+  previousTotal: number;
+  spark: number[];
+  bySource: Record<SourceKey, number>;
+  buckets: { start: string; end: string; total: number; bySource: Record<SourceKey, number> }[];
+  needsReply: ApiNeedsReply[];
+  upcomingCalls: ApiUpcomingCall[];
+};
 
 const waiting = (iso: string, now: number) => {
   const m = Math.max(1, Math.round((now - new Date(iso).getTime()) / 60_000));
@@ -54,35 +66,40 @@ function Tile({ label, value, note, href, children }: { label: string; value: st
 }
 
 export default function Dashboard() {
-  const { state, unread } = useInbox();
+  const { unread } = useInbox();
   const [now] = useState(() => Date.now());
   const [range, setRange] = useState<Range>("30d");
   const [chartTable, setChartTable] = useState(false);
   const [sourceTable, setSourceTable] = useState(false);
-  const { bookings } = useBookings();
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const cfg = RANGES.find((r) => r.key === range)!;
 
-  const buckets = useMemo(() => buildBuckets(state.enquiries, now, cfg.days, cfg.bucket), [state.enquiries, now, cfg]);
-  const previous = useMemo(() => buildBuckets(state.enquiries, now, cfg.days, cfg.bucket, cfg.days), [state.enquiries, now, cfg]);
-  const total = sumBuckets(buckets);
-  const before = sumBuckets(previous);
-  const delta = before ? Math.round(((total - before) / before) * 100) : 0;
-  const spark = useMemo(() => buildBuckets(state.enquiries, now, 12, 1).map((b) => b.total), [state.enquiries, now]);
+  useEffect(() => {
+    let live = true;
+    api
+      .get<DashboardStats>(`/api/admin/dashboard/stats?range=${range}`)
+      .then((s) => live && setStats(s))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [range]);
 
-  const bySource = useMemo(() => {
-    const t = Object.fromEntries(SOURCE_KEYS.map((k) => [k, 0])) as Record<SourceKey, number>;
-    for (const b of buckets) for (const k of SOURCE_KEYS) t[k] += b.bySource[k];
-    return t;
-  }, [buckets]);
+  const buckets = useMemo(() => (stats?.buckets ?? []).map((b) => ({ ...b, start: new Date(b.start), end: new Date(b.end) })), [stats]);
+  const total = stats?.total ?? 0;
+  const before = stats?.previousTotal ?? 0;
+  const delta = before ? Math.round(((total - before) / before) * 100) : 0;
+  const spark = stats?.spark ?? [];
+  const bySource = stats?.bySource ?? (Object.fromEntries(SOURCE_KEYS.map((k) => [k, 0])) as Record<SourceKey, number>);
 
   const waitingList = useMemo(
-    () =>
-      state.enquiries
-        .filter((e) => e.folder === "inbox" && needsReply(e))
-        .sort((a, b) => a.received.localeCompare(b.received)),
-    [state.enquiries],
+    () => (stats?.needsReply ?? []).map((e) => ({ id: e._id, name: e.name, subject: e.subject, source: e.source, received: e.received })),
+    [stats],
   );
-  const upcoming = useMemo(() => bookings.filter((b) => b.status === "confirmed" && new Date(b.start).getTime() > now).sort((a, b) => a.start.localeCompare(b.start)), [bookings, now]);
+  const upcoming = useMemo(
+    () => (stats?.upcomingCalls ?? []).map((b) => ({ id: b._id, name: b.name, topic: b.topic, start: b.start, minutes: b.minutes })).sort((a, b) => a.start.localeCompare(b.start)),
+    [stats],
+  );
   const thisWeek = upcoming.filter((b) => new Date(b.start).getTime() < now + 7 * 86_400_000);
   const next = upcoming[0];
   const nextWhen = next ? callWhen(next.start, now) : null;
@@ -265,9 +282,6 @@ export default function Dashboard() {
           {upcoming.length > 4 && <p className="adm-more">and {upcoming.length - 4} more booked</p>}
         </section>
       </div>
-      <p className="adm-muted adm-sample">
-        Sample data. Enquiries from the last two weeks come from the inbox; older history and the calls are examples.
-      </p>
     </div>
   );
 }

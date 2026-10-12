@@ -171,8 +171,11 @@ export function SourceBars({ totals, table }: { totals: Record<SourceKey, number
 export function Spark({ points }: { points: number[] }) {
   const w = 120;
   const h = 36;
+  if (points.length === 0) {
+    return <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} className="adm-spark" aria-hidden="true" />;
+  }
   const max = Math.max(1, ...points);
-  const xy = points.map((v, i) => [(i / (points.length - 1)) * (w - 8) + 4, h - 6 - (v / max) * (h - 12)] as const);
+  const xy = points.map((v, i) => [(i / Math.max(1, points.length - 1)) * (w - 8) + 4, h - 6 - (v / max) * (h - 12)] as const);
   const [lx, ly] = xy[xy.length - 1];
   return (
     <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} className="adm-spark" role="img" aria-label={`Trend: ${points.join(", ")}`}>

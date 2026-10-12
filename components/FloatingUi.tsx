@@ -11,6 +11,9 @@ import CookieManage from "./generated/CookieManage";
 
 type Cookie = "banner" | "manage" | "closed";
 
+/** localStorage key holding the visitor's cookie choice, so the banner only shows once. */
+const CONSENT_KEY = "tc-cookie-consent";
+
 /** Fixed-position widgets: contact dock, enquiry chat panel and the cookie banner. */
 export default function FloatingUi() {
   const [cookie, setCookie] = useState<Cookie>("banner");
@@ -20,6 +23,17 @@ export default function FloatingUi() {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setChatOpen(false);
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Rendering the banner by default (rather than reading localStorage in the initial
+  // useState) keeps server and client markup identical on first paint, avoiding a
+  // hydration mismatch — this effect corrects it a frame later if a choice was saved.
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(CONSENT_KEY)) setCookie("closed");
+    } catch {
+      // Private browsing / blocked storage — fall back to showing the banner each visit.
+    }
   }, []);
 
   const onCookieClick = (e: React.MouseEvent) => {
@@ -33,7 +47,19 @@ export default function FloatingUi() {
       (btn.firstElementChild as HTMLElement | null)?.style.setProperty("transform", on ? "translateX(20px)" : "none");
       return;
     }
-    setCookie(btn.textContent?.trim() === "Manage" ? "manage" : "closed");
+    const label = btn.textContent?.trim();
+    if (label === "Manage") {
+      setCookie("manage");
+      return;
+    }
+    // Accept all / Reject all / Save choices — all three are a final decision: persist it
+    // so the banner doesn't come back on the next page or reload.
+    try {
+      localStorage.setItem(CONSENT_KEY, label === "Reject all" ? "rejected" : "accepted");
+    } catch {
+      // Private browsing / blocked storage — the choice just won't stick across reloads.
+    }
+    setCookie("closed");
   };
 
   const onChatClick = (e: React.MouseEvent) => {

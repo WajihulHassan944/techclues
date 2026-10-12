@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from "react";
+import { api, ApiError } from "@/lib/api/client";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const BUSINESS_TYPES = ["Limited company", "LLP", "Sole trader", "Partnership", "Charity or CIC", "Not registered yet"];
@@ -92,6 +93,9 @@ export default function GrantForm() {
   const [step, setStep] = useState(0);
   const [v, setV] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
+  const [website, setWebsite] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [error, setError] = useState("");
   const title = useRef<HTMLParagraphElement>(null);
   const form = useRef<HTMLFormElement>(null);
   const moved = useRef(false);
@@ -113,7 +117,7 @@ export default function GrantForm() {
     setStep(n);
   };
 
-  function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const next: Record<string, string> = {};
     for (const [k, msg] of REQUIRED[step]) {
@@ -126,11 +130,32 @@ export default function GrantForm() {
       form.current?.querySelector<HTMLElement>(`[data-field="${first}"]`)?.focus();
       return;
     }
-    if (step < STEPS.length - 1) go(step + 1);
-    // On the last step nothing is sent yet.
+    if (step < STEPS.length - 1) {
+      go(step + 1);
+      return;
+    }
+    setStatus("submitting");
+    setError("");
+    try {
+      await api.post("/api/public/grant", { ...v, website }, { auth: false });
+      setStatus("success");
+    } catch (err) {
+      setStatus("error");
+      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+    }
   }
 
   const val = (k: string) => v[k] ?? "";
+
+  if (status === "success") {
+    return (
+      <div className="scroll-mt-28 rounded-[24px] bg-[#f6f7fb] p-8 text-center" role="status">
+        <p className="text-[20px] font-medium text-ink">Thanks — we&apos;ll check your options.</p>
+        <p className="mt-2 text-[15px] text-ink-soft">We reply within a few hours.</p>
+      </div>
+    );
+  }
+
   return (
     <form ref={form} data-form="grant" data-clarity-mask="True" onSubmit={submit} noValidate className="scroll-mt-28 rounded-[24px] bg-[#f6f7fb] p-5 sm:p-7">
       <p className="text-[19px] font-medium tracking-[-0.01em] text-ink">Check your funding options</p>
@@ -216,6 +241,21 @@ export default function GrantForm() {
           </>
         )}
       </div>
+      <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-px w-px opacity-0"
+      />
+      {status === "error" && (
+        <p role="alert" className="mt-4 rounded-xl bg-[#fdecec] px-4 py-3 text-[14px] text-[#b42318]">
+          {error}
+        </p>
+      )}
       <div className="mt-7 flex items-center gap-3">
         {step > 0 && (
           <button type="button" onClick={() => go(step - 1)} className="group inline-flex h-13 shrink-0 items-center gap-1.5 rounded-full px-4 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink">
@@ -228,10 +268,11 @@ export default function GrantForm() {
         )}
         <button
           type="submit"
+          disabled={status === "submitting"}
           data-cta={step === STEPS.length - 1 ? "grant-check" : undefined}
           className="group inline-flex h-13 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-white transition-all duration-300 hover:bg-brand hover:shadow-[0_12px_30px_-10px_rgba(0,100,255,0.7)] active:scale-[0.99] disabled:cursor-wait disabled:opacity-70"
         >
-          {step === STEPS.length - 1 ? "Check my options" : "Continue"}
+          {step === STEPS.length - 1 ? (status === "submitting" ? "Checking…" : "Check my options") : "Continue"}
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
             <path d="M5 12h14" />
             <path d="m12 5 7 7-7 7" />

@@ -74,7 +74,7 @@ export default function EnquiryDetail({ id }: { id: string }) {
   const send = () => {
     const body = reply.trim();
     if (!body) return;
-    sendReply(id, `${body}\n\n${SIGNATURE}`);
+    sendReply(id, body);
     setReply("");
     setSaved(false);
   };

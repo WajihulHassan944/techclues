@@ -28,7 +28,7 @@ function rng(seed: number) {
 }
 
 /** Average enquiries per weekday for each source: the shape of a small agency's inbox. */
-const RATE: Record<SourceKey, number> = { contact: 0.5, calculator: 0.35, "kill-my-idea": 0.25, grant: 0.15, "partner-refer": 0.07, "partner-join": 0.05, "zero-one": 0.1, careers: 0.08 };
+const RATE: Record<SourceKey, number> = { contact: 0.5, calculator: 0.35, "kill-my-idea": 0.25, grant: 0.15, "partner-refer": 0.07, "partner-join": 0.05, "zero-one": 0.1, careers: 0.08, chat: 0.1 };
 const REAL_DAYS = 15; // the last two weeks come from the actual inbox; older days are sample history
 
 const empty = (): Record<SourceKey, number> => Object.fromEntries(SOURCE_KEYS.map((k) => [k, 0])) as Record<SourceKey, number>;

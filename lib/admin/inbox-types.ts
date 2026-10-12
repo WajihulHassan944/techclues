@@ -1,4 +1,4 @@
-export type SourceKey = "contact" | "calculator" | "kill-my-idea" | "grant" | "partner-refer" | "partner-join" | "zero-one" | "careers";
+export type SourceKey = "contact" | "calculator" | "kill-my-idea" | "grant" | "partner-refer" | "partner-join" | "zero-one" | "careers" | "chat";
 export type StatusKey = "new" | "replied" | "qualified" | "won" | "lost";
 export type Folder = "inbox" | "spam" | "trash";
 
@@ -11,6 +11,7 @@ export const SOURCES: Record<SourceKey, { label: string; page: string }> = {
   "partner-join": { label: "Partner: application", page: "/partners" },
   "zero-one": { label: "ZERO.ONE brief", page: "/zero-one" },
   careers: { label: "Careers", page: "/careers" },
+  chat: { label: "Chat widget", page: "/" },
 };
 export const SOURCE_KEYS = Object.keys(SOURCES) as SourceKey[];
 

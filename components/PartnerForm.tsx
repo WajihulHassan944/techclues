@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { api, ApiError } from "@/lib/api/client";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const KINDS = ["Design or marketing agency", "Freelancer", "Business adviser or accountant", "Startup community or accelerator", "Past client", "Something else"];
@@ -66,6 +67,9 @@ export default function PartnerForm() {
   const [v, setV] = useState<Record<string, string>>({});
   const [agreed, setAgreed] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [honeypot, setHoneypot] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [error, setError] = useState("");
   const set = (k: string, val: string) => {
     setV((o) => ({ ...o, [k]: val }));
     if (errors[k]) setErrors((o) => ({ ...o, [k]: "" }));
@@ -87,15 +91,26 @@ export default function PartnerForm() {
           ["projectType", "Choose the type of project.", (x) => !!x],
         ];
 
-  function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const next: Record<string, string> = {};
     for (const [k, msg, ok] of rules) if (!ok(get(k))) next[k] = msg;
     if (!agreed) next.agreed = mode === "join" ? "Please confirm you've read the programme rules." : "Please confirm the client has agreed to be contacted.";
     setErrors(next);
     const first = Object.keys(next)[0];
-    if (first) e.currentTarget.querySelector<HTMLElement>(`[data-field="${first}"]`)?.focus();
-    // Passing the checks does not send anything yet.
+    if (first) {
+      e.currentTarget.querySelector<HTMLElement>(`[data-field="${first}"]`)?.focus();
+      return;
+    }
+    setStatus("submitting");
+    setError("");
+    try {
+      await api.post("/api/public/partner", { mode, ...v, honeypot }, { auth: false });
+      setStatus("success");
+    } catch (err) {
+      setStatus("error");
+      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+    }
   }
 
   const chips = (field: string, options: string[], error?: string) => (
@@ -118,6 +133,15 @@ export default function PartnerForm() {
       {error && <p className="mt-1.5 text-[13px] text-[#b42318]">{error}</p>}
     </fieldset>
   );
+
+  if (status === "success") {
+    return (
+      <div className="rounded-[24px] bg-[#f6f7fb] p-8 text-center" role="status">
+        <p className="text-[20px] font-medium text-ink">{mode === "join" ? "Thanks — we've got your application." : "Thanks — we've got the referral."}</p>
+        <p className="mt-2 text-[15px] text-ink-soft">We reply within a few hours.</p>
+      </div>
+    );
+  }
 
   return (
     <form data-form={mode === "join" ? "partner" : "partner_referral"} data-clarity-mask="True" onSubmit={submit} noValidate className="rounded-[24px] bg-[#f6f7fb] p-5 sm:p-7">
@@ -225,12 +249,27 @@ export default function PartnerForm() {
           </span>
         </label>
       </div>
+      <input
+        type="text"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-px w-px opacity-0"
+      />
+      {status === "error" && (
+        <p role="alert" className="mt-4 rounded-xl bg-[#fdecec] px-4 py-3 text-[14px] text-[#b42318]">
+          {error}
+        </p>
+      )}
       <button
         type="submit"
+        disabled={status === "submitting"}
         data-cta={mode === "join" ? "partner-apply" : "partner-refer"}
         className="group mt-6 inline-flex h-13 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-white transition-all duration-300 hover:bg-brand hover:shadow-[0_12px_30px_-10px_rgba(0,100,255,0.7)] active:scale-[0.99] disabled:cursor-wait disabled:opacity-70"
       >
-        {mode === "join" ? "Apply to join" : "Send the referral"}
+        {status === "submitting" ? "Sending…" : mode === "join" ? "Apply to join" : "Send the referral"}
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
           <path d="M5 12h14" />
           <path d="m12 5 7 7-7 7" />

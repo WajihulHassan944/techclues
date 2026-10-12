@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ACTIVITY_LABEL, clearActivity, logActivity, useActivity, type ActivityKind } from "@/lib/admin/activity";
 import { fmtWhen } from "@/lib/admin/format";
 import { DEFAULT_SETTINGS, type Settings } from "@/lib/admin/settings-defaults";
@@ -290,6 +290,8 @@ const strength = (p: string) => {
 };
 const STRENGTH = ["Too short", "Weak", "Fair", "Good", "Strong", "Very strong"];
 
+type ApiSession = { id: string; device: string; ip?: string; createdAt: string; lastUsedAt: string; current: boolean };
+
 function Security() {
   const { settings, refresh } = useSettings();
   const { toast } = useInbox();
@@ -301,7 +303,15 @@ function Security() {
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [now] = useState(() => Date.now());
+  const [sessions, setSessions] = useState<ApiSession[]>([]);
   const s = strength(next);
+
+  const loadSessions = () => {
+    api.get<ApiSession[]>("/api/auth/sessions").then(setSessions).catch(() => {});
+  };
+  useEffect(() => {
+    loadSessions();
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -317,6 +327,7 @@ function Security() {
       await changePassword(cur, next);
       toast("Password changed — other sessions were signed out");
       refresh();
+      loadSessions();
       setCur("");
       setNext("");
       setAgain("");
@@ -327,11 +338,26 @@ function Security() {
     }
   };
 
-  const signOutEverywhere = () => {
+  const logOut = () => {
     apiLogout().finally(() => router.replace("/admin/login"));
   };
 
-  const sessions = [{ id: "this", device: "This device", where: "Signed in now", current: true }];
+  const signOutOthers = () => {
+    api
+      .post("/api/auth/sessions/revoke-others")
+      .then(() => {
+        toast("Every other session was signed out");
+        loadSessions();
+      })
+      .catch(() => toast("Couldn't sign out other sessions"));
+  };
+
+  const signOutOne = (id: string) => {
+    api
+      .delete(`/api/auth/sessions/${id}`)
+      .then(() => setSessions((l) => l.filter((x) => x.id !== id)))
+      .catch(() => toast("Couldn't sign out that session"));
+  };
 
   return (
     <div className="adm-avail">
@@ -380,15 +406,29 @@ function Security() {
                 <li key={x.id}>
                   <span>
                     <strong>{x.device}</strong>
-                    <small>{x.where}</small>
+                    <small>
+                      {x.current ? "Signed in now" : `Last active ${fmtWhen(x.lastUsedAt, now)}`}
+                      {x.ip ? ` · ${x.ip}` : ""}
+                    </small>
                   </span>
-                  {x.current && <span className="adm-substatus adm-substatus-subscribed">This device</span>}
+                  {x.current ? (
+                    <span className="adm-substatus adm-substatus-subscribed">This device</span>
+                  ) : (
+                    <button type="button" className="adm-mini" onClick={() => signOutOne(x.id)}>
+                      Sign out
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
-            <button type="button" className="adm-mini adm-mini-danger" onClick={signOutEverywhere}>
-              Sign out of every device
-            </button>
+            <div className="adm-dlg-foot-btns" style={{ marginTop: 10 }}>
+              <button type="button" className="adm-mini adm-mini-danger" onClick={signOutOthers} disabled={sessions.filter((x) => !x.current).length === 0}>
+                Sign out all other sessions
+              </button>
+              <button type="button" className="adm-mini" onClick={logOut}>
+                Log out of this device
+              </button>
+            </div>
           </section>
           <section className="adm-panel" aria-labelledby="st-s3">
             <h3 id="st-s3">Two-step sign-in</h3>

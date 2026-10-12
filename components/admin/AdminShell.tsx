@@ -11,7 +11,8 @@ import BlogProvider from "./BlogProvider";
 import NewsletterProvider, { useNewsletter } from "./NewsletterProvider";
 import SettingsProvider from "./SettingsProvider";
 import { useAdminRealtime } from "@/lib/pusher/client";
-import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSearch, IconSettings, IconShield } from "./icons";
+import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSettings, IconShield } from "./icons";
+import SearchBox from "./SearchBox";
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {
   useEffect(() => {
@@ -156,11 +157,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           </button>
           <h1>{current.title ?? current.label}</h1>
           <div className="adm-top-spacer" />
-          <label className="adm-search">
-            <span className="sr-only">Search the admin panel</span>
-            <IconSearch />
-            <input type="search" placeholder="Search enquiries, posts, people…" onKeyDown={(e) => e.key === "Enter" && e.preventDefault()} />
-          </label>
+          <SearchBox />
           <Link href="/" target="_blank" rel="noopener" className="adm-site-link">
             <span>View site</span>
             <IconExternal />

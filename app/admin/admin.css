@@ -1505,3 +1505,6 @@ button.adm-calcell:hover { border-color: rgb(0 100 255 / 0.4); }
 @media (max-width: 760px) { .adm-checkgrid { grid-template-columns: minmax(0, 1fr); } }
 
 .adm-pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 20px; border-top: 1px solid rgb(14 15 49 / 0.08); font-size: 14px; color: var(--color-muted); }
+
+.adm-search-pop { left: 0; right: auto; width: 100%; min-width: 320px; max-height: 420px; overflow-y: auto; }
+.adm-search-pop .adm-pop-item { height: auto; min-height: 44px; padding: 8px 14px; }

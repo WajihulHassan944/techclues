@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api/client";
 
-export type ActivityKind = "inbox" | "bookings" | "blog" | "newsletter" | "settings" | "security";
+export type ActivityKind = "inbox" | "bookings" | "blog" | "faq" | "newsletter" | "settings" | "security";
 export type Activity = { id: string; at: string; kind: ActivityKind; text: string };
 
-export const ACTIVITY_LABEL: Record<ActivityKind, string> = { inbox: "Inbox", bookings: "Bookings", blog: "Blog", newsletter: "Newsletter", settings: "Settings", security: "Sign-ins" };
+export const ACTIVITY_LABEL: Record<ActivityKind, string> = { inbox: "Inbox", bookings: "Bookings", blog: "Blog", faq: "FAQs", newsletter: "Newsletter", settings: "Settings", security: "Sign-ins" };
 
 type ApiActivity = { _id: string; at: string; kind: ActivityKind; text: string };
 const mapActivity = (a: ApiActivity): Activity => ({ id: a._id, at: a.at, kind: a.kind, text: a.text });

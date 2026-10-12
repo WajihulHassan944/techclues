@@ -5,7 +5,7 @@ import { useState } from "react";
 export type AccordionItem = { q: string; a: string };
 
 /** FAQ accordion used on the content pages: one answer open at a time, the first open by default. */
-export default function Accordion({ items }: { items: AccordionItem[] }) {
+export default function Accordion({ items = [] }: { items?: AccordionItem[] }) {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <ul className="border-t border-ink/10">

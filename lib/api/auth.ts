@@ -1,4 +1,5 @@
 import { api, setAccessToken } from "./client";
+import { disconnectRealtime } from "@/lib/pusher/client";
 
 /** In-memory only, same lifetime as the access token — re-derived via /auth/me after a refresh. */
 let adminEmail: string | null = null;
@@ -17,6 +18,7 @@ export async function logout() {
   } finally {
     setAccessToken(null);
     adminEmail = null;
+    disconnectRealtime();
   }
 }
 

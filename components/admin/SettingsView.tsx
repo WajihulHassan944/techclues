@@ -11,7 +11,7 @@ import type { Template } from "@/lib/admin/templates";
 import { dateKey } from "@/lib/admin/tz";
 import { ADMIN_EMAIL } from "./nav";
 import { changePassword, logout as apiLogout } from "@/lib/api/auth";
-import { ApiError } from "@/lib/api/client";
+import { api, ApiError } from "@/lib/api/client";
 import { useBookings } from "./BookingsProvider";
 import Dialog from "./Dialog";
 import { useInbox } from "./InboxProvider";
@@ -409,6 +409,9 @@ function Security() {
 }
 
 /* ---------------- privacy & data ---------------- */
+type PrivacyRecord = { _id: string; subject?: string; topic?: string; email: string };
+type PrivacyFindResult = { enquiries: PrivacyRecord[]; bookings: PrivacyRecord[]; subscriptions: PrivacyRecord[] };
+
 function Privacy() {
   const { settings, update } = useSettings();
   const inbox = useInbox();
@@ -418,51 +421,68 @@ function Privacy() {
   const [months, setMonths] = useState(settings.retention.enquiryMonths);
   const [query, setQuery] = useState("");
   const [found, setFound] = useState<string | null>(null);
+  const [result, setResult] = useState<PrivacyFindResult | null>(null);
+  const [looking, setLooking] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [erasing, setErasing] = useState(false);
   const [now] = useState(() => Date.now());
   const dirty = spam !== settings.retention.spamDays || months !== settings.retention.enquiryMonths;
 
-  const email = found?.toLowerCase() ?? "";
-  const person = useMemo(
-    () => ({
-      enquiries: inbox.state.enquiries.filter((e) => e.email.toLowerCase() === email),
-      calls: bookings.bookings.filter((b) => b.email.toLowerCase() === email),
-      subs: news.subs.filter((s) => s.email.toLowerCase() === email),
-    }),
-    [inbox.state.enquiries, bookings.bookings, news.subs, email],
-  );
-  const total = person.enquiries.length + person.calls.length + person.subs.length;
+  const total = result ? result.enquiries.length + result.bookings.length + result.subscriptions.length : 0;
+
+  const lookUp = async (email: string) => {
+    setLooking(true);
+    setFound(email);
+    try {
+      const r = await api.get<PrivacyFindResult>(`/api/admin/privacy/find?email=${encodeURIComponent(email)}`);
+      setResult(r);
+    } catch {
+      inbox.toast("Couldn't look that up — please try again");
+      setFound(null);
+    } finally {
+      setLooking(false);
+    }
+  };
 
   const exportData = () => {
-    downloadText(`data-${email.replace(/[^a-z0-9]+/g, "-")}-${dateKey(now)}.json`, JSON.stringify({ exportedAt: new Date().toISOString(), email, enquiries: person.enquiries, bookings: person.calls, newsletter: person.subs }, null, 2), "application/json");
-    inbox.toast(`Exported everything held about ${email}`);
-    logActivity("settings", `Exported the data held about ${email}`);
+    downloadText(`data-${found!.replace(/[^a-z0-9]+/g, "-")}-${dateKey(now)}.json`, JSON.stringify({ exportedAt: new Date().toISOString(), email: found, ...result }, null, 2), "application/json");
+    inbox.toast(`Exported everything held about ${found}`);
+    logActivity("settings", `Exported the data held about ${found}`);
   };
-  const wipe = () => {
-    inbox.deleteForever(person.enquiries.map((e) => e.id));
-    bookings.deleteByEmail(email);
-    news.deleteByEmail(email);
-    logActivity("settings", `Deleted everything held about ${email}`);
-    setConfirm(false);
-    setFound(null);
-    setQuery("");
+  const wipe = async () => {
+    setErasing(true);
+    try {
+      await api.delete(`/api/admin/privacy/erase?email=${encodeURIComponent(found!)}`);
+      inbox.refresh();
+      bookings.refresh();
+      news.refresh();
+      logActivity("settings", `Deleted everything held about ${found}`);
+      setConfirm(false);
+      setFound(null);
+      setResult(null);
+      setQuery("");
+    } catch {
+      inbox.toast("Couldn't erase that person's data — please try again");
+    } finally {
+      setErasing(false);
+    }
   };
 
   return (
     <div className="adm-avail">
       <section className="adm-panel" aria-labelledby="st-p1">
         <h3 id="st-p1">Find everything held about a person</h3>
-        <p className="adm-muted">For access and deletion requests under UK GDPR. Searches enquiries, calls and newsletter sign-ups by email address.</p>
-        <form className="adm-inlineadd adm-inlineadd-lg" onSubmit={(e) => { e.preventDefault(); if (query.trim()) setFound(query.trim()); }}>
+        <p className="adm-muted">For access and deletion requests under UK GDPR. Searches enquiries, bookings and newsletter sign-ups by email address, across everyone — not just what's loaded on screen.</p>
+        <form className="adm-inlineadd adm-inlineadd-lg" onSubmit={(e) => { e.preventDefault(); if (query.trim()) lookUp(query.trim()); }}>
           <label className="sr-only" htmlFor="pv-email">
             Email address to look up
           </label>
           <input id="pv-email" type="email" className="adm-input adm-input-sm" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="name@example.com" />
-          <button type="submit" className="adm-mini" disabled={!query.trim()}>
-            Look up
+          <button type="submit" className="adm-mini" disabled={!query.trim() || looking}>
+            {looking ? "Looking up…" : "Look up"}
           </button>
         </form>
-        {found !== null && (
+        {found !== null && !looking && result && (
           <div className="adm-found" role="region" aria-label={`Data held about ${found}`}>
             {total === 0 ? (
               <p className="adm-muted">Nothing is held about {found}.</p>
@@ -470,15 +490,15 @@ function Privacy() {
               <>
                 <ul className="adm-foundlist">
                   <li>
-                    <strong>{person.enquiries.length}</strong> {person.enquiries.length === 1 ? "enquiry" : "enquiries"}
-                    {person.enquiries.length > 0 && <small>{person.enquiries.map((e) => e.subject).join(" · ")}</small>}
+                    <strong>{result.enquiries.length}</strong> {result.enquiries.length === 1 ? "enquiry" : "enquiries"}
+                    {result.enquiries.length > 0 && <small>{result.enquiries.map((e) => e.subject).join(" · ")}</small>}
                   </li>
                   <li>
-                    <strong>{person.calls.length}</strong> {person.calls.length === 1 ? "call" : "calls"}
-                    {person.calls.length > 0 && <small>{person.calls.map((b) => b.topic).join(" · ")}</small>}
+                    <strong>{result.bookings.length}</strong> {result.bookings.length === 1 ? "call" : "calls"}
+                    {result.bookings.length > 0 && <small>{result.bookings.map((b) => b.topic).join(" · ")}</small>}
                   </li>
                   <li>
-                    <strong>{person.subs.length}</strong> newsletter {person.subs.length === 1 ? "record" : "records"}
+                    <strong>{result.subscriptions.length}</strong> newsletter {result.subscriptions.length === 1 ? "record" : "records"}
                   </li>
                 </ul>
                 <div className="adm-dlg-foot-btns">
@@ -532,17 +552,17 @@ function Privacy() {
           onClose={() => setConfirm(false)}
           footer={
             <span className="adm-dlg-foot-btns" style={{ marginLeft: "auto" }}>
-              <button type="button" className="adm-mini" onClick={() => setConfirm(false)}>
+              <button type="button" className="adm-mini" onClick={() => setConfirm(false)} disabled={erasing}>
                 Keep it
               </button>
-              <button type="button" className="adm-btn adm-btn-sm adm-btn-danger" onClick={wipe}>
-                Delete for good
+              <button type="button" className="adm-btn adm-btn-sm adm-btn-danger" onClick={wipe} disabled={erasing}>
+                {erasing ? "Deleting…" : "Delete for good"}
               </button>
             </span>
           }
         >
           <p className="adm-muted">
-            {person.enquiries.length} {person.enquiries.length === 1 ? "enquiry" : "enquiries"}, {person.calls.length} {person.calls.length === 1 ? "call" : "calls"} and {person.subs.length} newsletter {person.subs.length === 1 ? "record" : "records"} will be removed completely. This can&apos;t be undone.
+            {result?.enquiries.length ?? 0} {result?.enquiries.length === 1 ? "enquiry" : "enquiries"}, {result?.bookings.length ?? 0} {result?.bookings.length === 1 ? "call" : "calls"} and {result?.subscriptions.length ?? 0} newsletter {result?.subscriptions.length === 1 ? "record" : "records"} will be removed completely. This can&apos;t be undone.
           </p>
         </Dialog>
       )}

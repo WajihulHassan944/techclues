@@ -9,11 +9,13 @@ type Ctx = {
   subs: Subscriber[];
   /** Adds one address. Returns an error message, or "" on success. */
   add: (email: string, name: string, source: SubSource) => string;
-  /** Adds many addresses; returns how many were new, already there, or invalid. */
-  addMany: (emails: string[], source: SubSource) => { added: number; existing: number; invalid: number };
+  /** Adds many addresses in one request; returns how many were new, already there, or invalid. */
+  addMany: (emails: string[], source: SubSource) => Promise<{ added: number; existing: number; invalid: number }>;
   setStatus: (ids: string[], status: SubStatus) => void;
   remove: (ids: string[]) => void;
   deleteByEmail: (email: string) => void;
+  /** Downloads every subscriber as CSV, built server-side (not limited to what's loaded). */
+  exportCsv: () => Promise<void>;
   refresh: () => void;
 };
 
@@ -61,30 +63,11 @@ export default function NewsletterProvider({ children }: { children: React.React
           });
         return "";
       },
-      addMany: (emails, source) => {
-        const seen = new Set(subs.map((s) => s.email.toLowerCase()));
-        const fresh: Subscriber[] = [];
-        let existing = 0;
-        let invalid = 0;
-        emails.forEach((raw, i) => {
-          const e = raw.trim();
-          if (!e) return;
-          if (!EMAIL_RE.test(e)) return void invalid++;
-          if (seen.has(e.toLowerCase())) return void existing++;
-          seen.add(e.toLowerCase());
-          fresh.push({ id: `pending-${Date.now()}-${i}`, email: e, source, at: new Date().toISOString(), status: "subscribed" });
-        });
-        if (fresh.length) {
-          setSubs((l) => (l ? [...fresh, ...l] : l));
-          toast(`${fresh.length} ${fresh.length === 1 ? "subscriber" : "subscribers"} imported`);
-          Promise.all(fresh.map((s) => api.post("/api/admin/newsletter", { email: s.email, source })))
-            .then(() => refresh())
-            .catch(() => {
-              toast("Some subscribers may not have saved — refreshing");
-              refresh();
-            });
-        }
-        return { added: fresh.length, existing, invalid };
+      addMany: async (emails, source) => {
+        const result = await api.post<{ added: number; existing: number; invalid: number }>("/api/admin/newsletter/add-many", { emails, source });
+        if (result.added > 0) toast(`${result.added} ${result.added === 1 ? "subscriber" : "subscribers"} imported`);
+        await refresh();
+        return result;
       },
       setStatus: (ids, status) => {
         const set = new Set(ids);
@@ -109,6 +92,16 @@ export default function NewsletterProvider({ children }: { children: React.React
       deleteByEmail: (email) => {
         setSubs((l) => (l ? l.filter((s) => s.email.toLowerCase() !== email.toLowerCase()) : l));
         api.post("/api/admin/newsletter/delete-by-email", { email }).catch(() => refresh());
+      },
+      exportCsv: async () => {
+        const csv = await api.get<string>("/api/admin/newsletter/export");
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `techclues-subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
       },
       refresh,
     };

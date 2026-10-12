@@ -97,6 +97,7 @@ function ImportDialog({ onClose }: { onClose: () => void }) {
   const [text, setText] = useState("");
   const [consent, setConsent] = useState(false);
   const [result, setResult] = useState<null | { added: number; existing: number; invalid: number }>(null);
+  const [importing, setImporting] = useState(false);
   const list = text.split(/[\n,;]+/).map((x) => x.trim()).filter(Boolean);
   return (
     <Dialog
@@ -113,8 +114,18 @@ function ImportDialog({ onClose }: { onClose: () => void }) {
               <button type="button" className="adm-mini" onClick={onClose}>
                 Cancel
               </button>
-              <button type="button" className="adm-btn adm-btn-sm" disabled={!consent || list.length === 0} onClick={() => setResult(addMany(list, "import"))}>
-                Import {list.length || ""} {list.length === 1 ? "address" : "addresses"}
+              <button
+                type="button"
+                className="adm-btn adm-btn-sm"
+                disabled={!consent || list.length === 0 || importing}
+                onClick={() => {
+                  setImporting(true);
+                  addMany(list, "import")
+                    .then(setResult)
+                    .finally(() => setImporting(false));
+                }}
+              >
+                {importing ? "Importing…" : `Import ${list.length || ""} ${list.length === 1 ? "address" : "addresses"}`}
               </button>
             </>
           )}
@@ -142,7 +153,7 @@ function ImportDialog({ onClose }: { onClose: () => void }) {
 }
 
 export default function NewsletterView() {
-  const { subs, setStatus, remove } = useNewsletter();
+  const { subs, setStatus, remove, exportCsv } = useNewsletter();
   const { toast } = useInbox();
   const [now] = useState(() => Date.now());
   const [period, setPeriod] = useState<(typeof PERIODS)[number]["key"]>("30d");
@@ -187,7 +198,7 @@ export default function NewsletterView() {
   const allOn = visible.length > 0 && visible.every((r) => selected.includes(r.id));
   const clear = () => setPicked([]);
 
-  const exportCsv = (list: Subscriber[]) => {
+  const exportSelectedCsv = (list: Subscriber[]) => {
     downloadText(`techclues-subscribers-${dateKey(Date.now())}.csv`, subscribersCsv(list));
     toast(`Exported ${list.length} ${list.length === 1 ? "subscriber" : "subscribers"}`);
   };
@@ -275,8 +286,8 @@ export default function NewsletterView() {
             <button type="button" className="adm-mini" onClick={() => setDialog("import")}>
               Import
             </button>
-            <button type="button" className="adm-mini" onClick={() => exportCsv(rows)} disabled={rows.length === 0}>
-              Export CSV ({rows.length})
+            <button type="button" className="adm-mini" onClick={() => { exportCsv(); toast("Exporting everyone on the list"); }} disabled={subs.length === 0}>
+              Export CSV ({subs.length})
             </button>
             <button type="button" className="adm-btn adm-btn-sm" onClick={() => setDialog("add")}>
               <IconPlus /> Add subscriber
@@ -326,7 +337,7 @@ export default function NewsletterView() {
             </label>
             {selected.length > 0 && (
               <div className="adm-bulk-actions">
-                <button type="button" className="adm-mini" onClick={() => exportCsv(rows.filter((r) => selected.includes(r.id)))}>
+                <button type="button" className="adm-mini" onClick={() => exportSelectedCsv(rows.filter((r) => selected.includes(r.id)))}>
                   Export selected
                 </button>
                 <button type="button" className="adm-mini" onClick={() => { setStatus(selected, "unsubscribed"); clear(); }}>

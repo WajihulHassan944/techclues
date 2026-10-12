@@ -9,7 +9,6 @@ import { SOURCES, SOURCE_KEYS, type SourceKey } from "@/lib/admin/inbox-types";
 import { EMAIL_RE, downloadText } from "@/lib/admin/newsletter";
 import type { Template } from "@/lib/admin/templates";
 import { dateKey } from "@/lib/admin/tz";
-import { ADMIN_EMAIL } from "./nav";
 import { changePassword, logout as apiLogout } from "@/lib/api/auth";
 import { api, ApiError } from "@/lib/api/client";
 import { useBookings } from "./BookingsProvider";
@@ -114,7 +113,7 @@ function Notifications() {
           </div>
           <div className="adm-field">
             <label htmlFor="st-addr">From address</label>
-            <input id="st-addr" className="adm-input" value={ADMIN_EMAIL} readOnly aria-readonly="true" />
+            <input id="st-addr" className="adm-input" value={settings.recipients[0] ?? ""} readOnly aria-readonly="true" />
           </div>
         </div>
         <p className="adm-muted">Replies from the inbox are sent from this address, so people can answer you directly.</p>

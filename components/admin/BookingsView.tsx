@@ -8,7 +8,7 @@ import AvailabilityPanel from "./AvailabilityPanel";
 import { BookingBadge, BookingDrawer, CancelDialog, RescheduleDialog, effectiveStatus, isPast, rangeText } from "./BookingDialogs";
 import { useBookings } from "./BookingsProvider";
 import { IconCalendar, IconSearch, IconVideo } from "./icons";
-import type { Booking } from "@/lib/admin/bookings-seed";
+import type { Booking } from "@/lib/admin/bookings-types";
 
 type Sub = "upcoming" | "past" | "cancelled";
 

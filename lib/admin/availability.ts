@@ -1,5 +1,5 @@
 import { addDays, dateKey, toMin, weekday, zoned } from "./tz";
-import type { Booking } from "./bookings-seed";
+import type { Booking } from "./bookings-types";
 
 export type Availability = {
   slotMinutes: number;

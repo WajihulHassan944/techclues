@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/lib/api/client";
+import { getAdminEmail } from "@/lib/api/auth";
 import type { Enquiry, Folder, InboxState, StatusKey } from "@/lib/admin/inbox-types";
 
 type Ctx = {
@@ -130,7 +131,7 @@ export default function InboxProvider({ children }: { children: React.ReactNode 
           .then((updated) => {
             const u = updated as ApiEnquiry;
             patch([id], () => mapEnquiry(u));
-            toast("Reply sent from techcluesltd@gmail.com");
+            toast(`Reply sent from ${getAdminEmail() ?? "your account"}`);
           })
           .catch(() => toast("Couldn't send the reply — please try again"));
       },

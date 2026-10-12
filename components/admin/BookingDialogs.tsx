@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { slotsForDay } from "@/lib/admin/availability";
-import type { Booking } from "@/lib/admin/bookings-seed";
+import type { Booking } from "@/lib/admin/bookings-types";
 import { fmtWhen, initials } from "@/lib/admin/format";
 import { addDays, dateKey, fmtKey, fmtTime, monthGrid, monthTitle } from "@/lib/admin/tz";
 import { useBookings } from "./BookingsProvider";

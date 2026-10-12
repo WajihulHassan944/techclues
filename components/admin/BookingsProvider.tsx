@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api/client";
 import type { Availability } from "@/lib/admin/availability";
-import type { Booking, BookingStatus } from "@/lib/admin/bookings-seed";
+import type { Booking, BookingStatus } from "@/lib/admin/bookings-types";
 import { fmtKey, dateKey, fmtTime } from "@/lib/admin/tz";
 import { useInbox } from "./InboxProvider";
 

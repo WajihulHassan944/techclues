@@ -3,16 +3,17 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { logout as apiLogout, restoreSession } from "@/lib/api/auth";
-import { ADMIN_EMAIL, NAV, itemFor } from "./nav";
+import { getAdminEmail, logout as apiLogout, restoreSession } from "@/lib/api/auth";
+import { NAV, itemFor } from "./nav";
 import InboxProvider, { useInbox } from "./InboxProvider";
 import BookingsProvider, { useBookings } from "./BookingsProvider";
 import BlogProvider from "./BlogProvider";
 import NewsletterProvider, { useNewsletter } from "./NewsletterProvider";
 import SettingsProvider from "./SettingsProvider";
 import { useAdminRealtime } from "@/lib/pusher/client";
-import { IconBell, IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSettings, IconShield } from "./icons";
+import { IconChevronDown, IconClose, IconExternal, IconLogout, IconMenu, IconSettings, IconShield } from "./icons";
 import SearchBox from "./SearchBox";
+import NotificationBell from "./NotificationBell";
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {
   useEffect(() => {
@@ -75,8 +76,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const [drawer, setDrawer] = useState(false);
-  const [menu, setMenu] = useState<"bell" | "user" | null>(null);
-  const bellRef = useRef<HTMLDivElement>(null);
+  const [menu, setMenu] = useState<"user" | null>(null);
   const userRef = useRef<HTMLDivElement>(null);
   const current = itemFor(path);
 
@@ -100,7 +100,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     };
   }, [drawer]);
 
-  useOutside(bellRef, () => setMenu(null), menu === "bell");
   useOutside(userRef, () => setMenu(null), menu === "user");
 
   const logout = () => {
@@ -162,24 +161,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             <span>View site</span>
             <IconExternal />
           </Link>
-          <div className="adm-pop-wrap" ref={bellRef}>
-            <button type="button" className="adm-icon-btn" aria-label="Notifications" aria-haspopup="true" aria-expanded={menu === "bell"} onClick={() => setMenu(menu === "bell" ? null : "bell")}>
-              <IconBell />
-              <span className="adm-dot" />
-            </button>
-            {menu === "bell" && (
-              <div className="adm-pop" role="dialog" aria-label="Notifications">
-                <p className="adm-pop-head">
-                  Notifications
-                  <strong>New enquiries appear here</strong>
-                </p>
-                <div className="adm-pop-empty">
-                  <IconBell />
-                  Nothing new yet. When a form is submitted, you&apos;ll see it here and get an email at {ADMIN_EMAIL}.
-                </div>
-              </div>
-            )}
-          </div>
+          <NotificationBell />
           <div className="adm-pop-wrap" ref={userRef}>
             <button type="button" className="adm-avatar-btn" aria-haspopup="true" aria-expanded={menu === "user"} aria-label="Account menu" onClick={() => setMenu(menu === "user" ? null : "user")}>
               <span className="adm-avatar">TC</span>
@@ -192,7 +174,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               <div className="adm-pop" role="menu" aria-label="Account">
                 <p className="adm-pop-head">
                   Signed in as
-                  <strong>{ADMIN_EMAIL}</strong>
+                  <strong>{getAdminEmail() ?? "Admin"}</strong>
                 </p>
                 <Link href="/admin/settings" className="adm-pop-item" role="menuitem">
                   <IconSettings /> Settings

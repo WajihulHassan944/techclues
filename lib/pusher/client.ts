@@ -36,7 +36,7 @@ function getChannel(): Channel | null {
   return channel;
 }
 
-export type AdminEvent = "enquiry.created" | "booking.created" | "booking.updated" | "subscriber.created" | "reply.sent";
+export type AdminEvent = "enquiry.created" | "booking.created" | "booking.updated" | "subscriber.created" | "reply.sent" | "notification.created";
 
 /** Subscribes to the admin realtime channel for as long as the component is mounted. */
 export function useAdminRealtime(handlers: Partial<Record<AdminEvent, (data: unknown) => void>>) {

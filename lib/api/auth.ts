@@ -12,12 +12,12 @@ export async function login(email: string, password: string) {
   return res;
 }
 
-// The API's serverless function allows up to 30s to finish (cold starts can take a while to
+// The API's serverless function allows up to 45s to finish (cold starts can take a while to
 // connect to Mongo). apiFetch's default 10s client timeout would abort the request well before
 // that — and an aborted /auth/logout never gets to apply the server's cookie-clearing response,
 // so the refresh cookie survives and the login page's own session check silently signs back in.
 // Use a timeout longer than the function's own budget so the client always gets a real answer.
-const SLOW_BACKEND_TIMEOUT_MS = 35_000;
+const SLOW_BACKEND_TIMEOUT_MS = 50_000;
 
 export async function logout() {
   try {

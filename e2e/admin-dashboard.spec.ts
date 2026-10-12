@@ -34,7 +34,9 @@ test.describe("admin dashboard", () => {
     await expect(tile(page, "Calls coming up")).toContainText("Next:");
     await expect(tile(page, "Unread")).toHaveAttribute("href", "/admin/inbox");
     await expect(tile(page, "Calls coming up")).toHaveAttribute("href", "/admin/bookings");
-    await expect(tile(page, /^Enquiries, last/)).toContainText(/vs the previous 30 days/);
+    // The seed data's oldest enquiry is under 2 weeks old, so the previous-30-days window is
+    // genuinely empty — "No earlier period to compare" is the correct state, not a fake delta.
+    await expect(tile(page, /^Enquiries, last/)).toContainText("No earlier period to compare");
     await expect(tile(page, /^Enquiries, last/).getByRole("img", { name: /^Trend:/ })).toBeVisible();
   });
 
@@ -86,7 +88,9 @@ test.describe("admin dashboard", () => {
     await expect(page.getByRole("region", { name: "Where enquiries come from" })).toContainText("Last 7 days");
     await page.getByRole("tab", { name: "13 weeks" }).click();
     await expect(bars).toHaveCount(13);
-    expect(await value(page, /^Enquiries, last/)).toBeGreaterThan(total30);
+    // Real data only now (no fake historical padding beyond ~2 weeks), and the seed data's oldest
+    // enquiry is under 2 weeks old, so the 91-day total is simply equal to the 30-day total.
+    expect(await value(page, /^Enquiries, last/)).toBeGreaterThanOrEqual(total30);
     await expect(page.getByRole("region", { name: "Enquiries over time" })).toContainText("by week");
   });
 

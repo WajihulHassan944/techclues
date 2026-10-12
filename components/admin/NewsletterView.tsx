@@ -286,8 +286,16 @@ export default function NewsletterView() {
             <button type="button" className="adm-mini" onClick={() => setDialog("import")}>
               Import
             </button>
-            <button type="button" className="adm-mini" onClick={() => { exportCsv(); toast("Exporting everyone on the list"); }} disabled={subs.length === 0}>
-              Export CSV ({subs.length})
+            <button
+              type="button"
+              className="adm-mini"
+              onClick={() => {
+                exportCsv({ status: tab === "all" ? undefined : tab, source: source || undefined, search: query || undefined });
+                toast(`Exported ${rows.length} ${rows.length === 1 ? "subscriber" : "subscribers"}`);
+              }}
+              disabled={rows.length === 0}
+            >
+              Export CSV ({rows.length})
             </button>
             <button type="button" className="adm-btn adm-btn-sm" onClick={() => setDialog("add")}>
               <IconPlus /> Add subscriber

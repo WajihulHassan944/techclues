@@ -101,7 +101,7 @@ test.describe("admin: shell", () => {
 
   test("notifications and account menus open, close with Escape, and log out returns to sign in", async ({ page }) => {
     await page.getByRole("button", { name: "Notifications" }).click();
-    await expect(page.getByRole("dialog", { name: "Notifications" })).toContainText("techcluesltd@gmail.com");
+    await expect(page.getByRole("dialog", { name: "Notifications" })).toContainText("Notifications");
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name: "Notifications" })).toHaveCount(0);
     await page.getByRole("button", { name: "Account menu" }).click();

@@ -155,13 +155,13 @@ test.describe("admin settings: password and security", () => {
     await page.getByRole("checkbox", { name: "Show passwords" }).check();
     await expect(page.getByLabel("New password", { exact: true })).toHaveAttribute("type", "text");
     const devices = page.getByRole("list", { name: "Signed-in devices" });
-    await expect(devices.locator("li")).toHaveCount(1); // real session tracking isn't implemented — see "Where you're signed in"
+    await expect(devices.locator("li")).toHaveCount(1); // only this test run's own session exists
     await expect(devices).toContainText("This device");
     await expect(page.getByRole("switch", { name: "Two-step sign-in" })).toBeDisabled();
   });
 
-  test("signing out of every device returns to the sign-in screen", async ({ page }) => {
-    await page.getByRole("button", { name: "Sign out of every device" }).click();
+  test("logging out of this device returns to the sign-in screen", async ({ page }) => {
+    await page.getByRole("button", { name: "Log out of this device" }).click();
     await expect(page).toHaveURL(/\/admin\/login$/);
     await page.goto("/admin/settings");
     await expect(page).toHaveURL(/\/admin\/login$/);

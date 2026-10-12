@@ -14,8 +14,8 @@ type Ctx = {
   setStatus: (ids: string[], status: SubStatus) => void;
   remove: (ids: string[]) => void;
   deleteByEmail: (email: string) => void;
-  /** Downloads every subscriber as CSV, built server-side (not limited to what's loaded). */
-  exportCsv: () => Promise<void>;
+  /** Downloads subscribers as CSV, built server-side (not limited to what's loaded), honouring the given filter. */
+  exportCsv: (filter?: { status?: SubStatus; source?: SubSource; search?: string }) => Promise<void>;
   refresh: () => void;
 };
 
@@ -93,8 +93,13 @@ export default function NewsletterProvider({ children }: { children: React.React
         setSubs((l) => (l ? l.filter((s) => s.email.toLowerCase() !== email.toLowerCase()) : l));
         api.post("/api/admin/newsletter/delete-by-email", { email }).catch(() => refresh());
       },
-      exportCsv: async () => {
-        const csv = await api.get<string>("/api/admin/newsletter/export");
+      exportCsv: async (filter) => {
+        const params = new URLSearchParams();
+        if (filter?.status) params.set("status", filter.status);
+        if (filter?.source) params.set("source", filter.source);
+        if (filter?.search) params.set("search", filter.search);
+        const qs = params.toString();
+        const csv = await api.get<string>(`/api/admin/newsletter/export${qs ? `?${qs}` : ""}`);
         const blob = new Blob([csv], { type: "text/csv" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");

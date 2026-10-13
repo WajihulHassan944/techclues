@@ -122,10 +122,20 @@ export default function BookingsProvider({ children }: { children: React.ReactNo
       saveAvailability: (av) => {
         setState((s) => (s ? { ...s, availability: av } : s));
         toast("Availability saved");
-        api.patch("/api/admin/bookings/availability", av).catch(() => {
-          toast("Couldn't save availability");
-          refresh();
-        });
+        const { slotMinutes, bufferMinutes, noticeHours, windowDays, meetingLink, days } = av;
+        api
+          .patch("/api/admin/bookings/availability", {
+            slotMinutes,
+            bufferMinutes,
+            noticeHours,
+            windowDays,
+            meetingLink,
+            days,
+          })
+          .catch(() => {
+            toast("Couldn't save availability");
+            refresh();
+          });
       },
       blockDay: (date, reason) => {
         setState((s) => (s ? { ...s, availability: { ...s.availability, blocked: [...s.availability.blocked.filter((x) => x.date !== date), { date, reason }].sort((a, b) => a.date.localeCompare(b.date)) } } : s));

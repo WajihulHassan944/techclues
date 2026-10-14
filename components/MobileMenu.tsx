@@ -18,6 +18,7 @@ const ITEMS: Item[] = [
       { label: "UI/UX & Prototyping", href: "/services/ui-ux-design" },
       { label: "Low-Code / No-Code", href: "/services/low-code-no-code" },
       { label: "Staff Augmentation", href: "/services/staff-augmentation" },
+      { label: "Game Development", href: "/services/game-development" },
       { label: "E-commerce & Marketplaces", href: "/services/ecommerce-marketplace-development" },
       { label: "Performance Marketing", href: "/services/performance-marketing" },
       { label: "All services", href: "/services" },

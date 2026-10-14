@@ -43,7 +43,17 @@ function Select({ label, options, error, ...rest }: { label: string; options: st
  * "Tell us the seat you need filled" form. Front-end only for now: it validates, then shows the
  * thank-you state. Submission to the backend is wired up separately.
  */
-export default function StaffSeatForm() {
+export type LeadFormConfig = {
+  formName?: string;
+  needLabel?: string;
+  needOptions?: string[];
+  needError?: string;
+  briefLabel?: string;
+  extras?: boolean; // company size + timeline selects
+  companyLabel?: string;
+};
+
+export default function StaffSeatForm({ formName = "staff-augmentation", needLabel = "What do you need?", needOptions = NEEDS, needError = "Choose what you need.", briefLabel = "The role, stack, and timeline", extras = true, companyLabel = "Company" }: LeadFormConfig = {}) {
   const [v, setV] = useState({ first: "", last: "", company: "", need: "", email: "", code: "+44", phone: "", brief: "", size: "", timeline: "", consent: false, marketing: false, website: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
@@ -54,7 +64,7 @@ export default function StaffSeatForm() {
     const err: Record<string, string> = {};
     if (!v.first.trim()) err.first = "Add your first name.";
     if (!v.last.trim()) err.last = "Add your last name.";
-    if (!v.need) err.need = "Choose what you need.";
+    if (!v.need) err.need = needError;
     if (!EMAIL.test(v.email.trim())) err.email = "Check your work email.";
     if (!v.consent) err.consent = "We need your consent to reply.";
     setErrors(err);
@@ -75,11 +85,11 @@ export default function StaffSeatForm() {
   }
 
   return (
-    <form data-form="staff-augmentation" data-clarity-mask="True" noValidate onSubmit={submit} className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+    <form data-form={formName} data-clarity-mask="True" noValidate onSubmit={submit} className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
       <Field label="First name" name="first" autoComplete="given-name" value={v.first} onChange={(e) => set("first", e.target.value)} error={errors.first} />
       <Field label="Last name" name="last" autoComplete="family-name" value={v.last} onChange={(e) => set("last", e.target.value)} error={errors.last} />
-      <Field label="Company" name="company" autoComplete="organization" value={v.company} onChange={(e) => set("company", e.target.value)} />
-      <Select label="What do you need?" name="need" options={NEEDS} value={v.need} onChange={(e) => set("need", e.target.value)} error={errors.need} />
+      <Field label={companyLabel} name="company" autoComplete="organization" value={v.company} onChange={(e) => set("company", e.target.value)} />
+      <Select label={needLabel} name="need" options={needOptions} value={v.need} onChange={(e) => set("need", e.target.value)} error={errors.need} />
       <Field label="Work email" name="email" type="email" autoComplete="email" value={v.email} onChange={(e) => set("email", e.target.value)} error={errors.email} />
       <div className="grid gap-4" style={{ gridTemplateColumns: "120px minmax(0,1fr)" }}>
         <label className="group block">
@@ -95,11 +105,15 @@ export default function StaffSeatForm() {
         <Field label="Phone number" name="phone" type="tel" autoComplete="tel-national" value={v.phone} onChange={(e) => set("phone", e.target.value)} />
       </div>
       <label className="group block sm:col-span-2">
-        <span className="text-[13px] text-muted transition-colors group-focus-within:text-brand">The role, stack, and timeline</span>
+        <span className="text-[13px] text-muted transition-colors group-focus-within:text-brand">{briefLabel}</span>
         <textarea name="brief" rows={3} value={v.brief} onChange={(e) => set("brief", e.target.value)} className="mt-2 w-full resize-y border-b border-ink/15 bg-transparent py-2 text-[17px] text-ink transition-colors focus:border-brand focus:outline-none" />
       </label>
-      <Select label="Company size" name="size" options={SIZES} value={v.size} onChange={(e) => set("size", e.target.value)} />
-      <Select label="Timeline to start" name="timeline" options={TIMELINES} value={v.timeline} onChange={(e) => set("timeline", e.target.value)} />
+      {extras && (
+        <>
+          <Select label="Company size" name="size" options={SIZES} value={v.size} onChange={(e) => set("size", e.target.value)} />
+          <Select label="Timeline to start" name="timeline" options={TIMELINES} value={v.timeline} onChange={(e) => set("timeline", e.target.value)} />
+        </>
+      )}
       <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={v.website} onChange={(e) => set("website", e.target.value)} className="absolute -left-[9999px] h-0 w-0 opacity-0" />
       <div className="grid gap-3 sm:col-span-2">
         <label className="flex items-start gap-3 text-[14px] leading-snug text-ink-soft">

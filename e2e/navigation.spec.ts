@@ -52,7 +52,7 @@ test.describe("client-side navigation", () => {
     await page.goto("/services");
     await rejectCookies(page);
     await expect(page.getByRole("heading", { name: "AI Integration & Automation" })).toBeVisible();
-    await expect(page.locator('a[href*="ai-enablement"]').first()).toBeVisible();
+    await expect(page.locator('main a[href*="ai-enablement"]').first()).toBeVisible();
 
     await page.locator("header nav").getByRole("button", { name: "Services" }).hover();
     await page.locator("header [data-nav-panel]").getByRole("link", { name: "AI Integration & Automation" }).click();

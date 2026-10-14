@@ -20,6 +20,8 @@ export const FAQ_GROUPS: FaqGroupDef[] = [
   { key: "mvp-development", label: "MVP development", section: "Services" },
   { key: "prototype-to-production", label: "Prototype to production", section: "Services" },
   { key: "ai-enablement", label: "AI enablement", section: "Services" },
+  { key: "staff-augmentation", label: "Staff augmentation", section: "Services" },
+  { key: "game-development", label: "Game development", section: "Services" },
   { key: "low-code-no-code", label: "Low-code / no-code", section: "Services" },
   { key: "performance-marketing", label: "Performance marketing", section: "Services" },
   { key: "web-mobile-apps", label: "Web & mobile apps", section: "Services" },

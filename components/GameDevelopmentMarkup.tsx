@@ -336,7 +336,7 @@ export default async function GameDevelopmentMarkup() {
             </ul>
           </div>
           <div data-reveal="" style={rv("0.1s")} className="relative rounded-[28px] border border-ink/[0.08] bg-white p-6 sm:p-10">
-            <StaffSeatForm formName="game-development" companyLabel="Studio / Company" needLabel="What brings you here today?" needOptions={NEEDS} needError="Choose what brings you here." briefLabel="Tell us about the title" extras={false} />
+            <StaffSeatForm formName="game-development" endpoint="/api/public/game-development" companyLabel="Studio / Company" needLabel="What brings you here today?" needOptions={NEEDS} needError="Choose what brings you here." briefLabel="Tell us about the title" extras={false} />
           </div>
         </div>
       </section>

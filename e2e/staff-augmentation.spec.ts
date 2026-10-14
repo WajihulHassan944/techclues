@@ -72,6 +72,13 @@ test.describe("staff augmentation page", () => {
 
   test("the seat form validates, then shows the thank-you", async ({ page }) => {
     await open(page);
+    let body: Record<string, unknown> = {};
+    let fail = true;
+    await page.route("**/api/public/staff-augmentation", async (route) => {
+      body = route.request().postDataJSON();
+      if (fail) return route.fulfill({ status: 500, json: { message: "Server down" } });
+      return route.fulfill({ status: 201, json: { id: "abc" } });
+    });
     const form = page.locator('form[data-form="staff-augmentation"]');
     await form.getByRole("button", { name: /Let's talk/ }).click();
     for (const t of ["Add your first name.", "Add your last name.", "Choose what you need.", "Check your work email.", "We need your consent to reply."]) await expect(form).toContainText(t);
@@ -81,7 +88,12 @@ test.describe("staff augmentation page", () => {
     await form.getByLabel("Work email").fill("sam@example.com");
     await form.getByRole("checkbox").first().check();
     await form.getByRole("button", { name: /Let's talk/ }).click();
+    await expect(form.getByRole("alert")).toBeVisible();
+    await expect(page.getByText("Thanks, that's with us.")).toHaveCount(0);
+    fail = false;
+    await form.getByRole("button", { name: /Let's talk/ }).click();
     await expect(page.getByText("Thanks, that's with us.")).toBeVisible();
+    expect(body).toMatchObject({ firstName: "Sam", lastName: "Taylor", email: "sam@example.com", need: "A full team", consent: true });
   });
 
   test("reached from the site footer without a reload", async ({ page }) => {

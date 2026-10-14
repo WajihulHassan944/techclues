@@ -71,6 +71,13 @@ test.describe("game development page", () => {
 
   test("the project form validates, then shows the thank-you", async ({ page }) => {
     await open(page);
+    let body: Record<string, unknown> = {};
+    let fail = true;
+    await page.route("**/api/public/game-development", async (route) => {
+      body = route.request().postDataJSON();
+      if (fail) return route.fulfill({ status: 500, json: { message: "Server down" } });
+      return route.fulfill({ status: 201, json: { id: "abc" } });
+    });
     const form = page.locator('form[data-form="game-development"]');
     await expect(form.getByLabel("Studio / Company")).toBeVisible();
     await expect(form.getByLabel("Company size")).toHaveCount(0);
@@ -82,7 +89,12 @@ test.describe("game development page", () => {
     await form.getByLabel("Work email").fill("sam@example.com");
     await form.getByRole("checkbox").first().check();
     await form.getByRole("button", { name: /Let's talk/ }).click();
+    await expect(form.getByRole("alert")).toBeVisible();
+    await expect(page.getByText("Thanks, that's with us.")).toHaveCount(0);
+    fail = false;
+    await form.getByRole("button", { name: /Let's talk/ }).click();
     await expect(page.getByText("Thanks, that's with us.")).toBeVisible();
+    expect(body).toMatchObject({ firstName: "Sam", lastName: "Taylor", email: "sam@example.com", need: "Just a concept", consent: true });
   });
 
   test("reached from the site footer without a reload", async ({ page }) => {

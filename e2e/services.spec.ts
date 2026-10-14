@@ -1,14 +1,17 @@
 import { test, expect, type Page } from "@playwright/test";
 
 const SERVICES = [
-  ["MVPs & Custom Platforms", "mvp-development"],
-  ["Prototype to Production", "prototype-to-production"],
-  ["Web & Mobile Apps", "web-mobile-apps"],
-  ["UI/UX & Prototyping", "ui-ux-design"],
-  ["Low-Code / No-Code", "low-code-no-code"],
-  ["E-commerce & Marketplaces", "ecommerce-marketplace-development"],
-  ["Performance Marketing", "performance-marketing"],
-  ["Strategy & Brand Identity", "brand-strategy"],
+  ["MVPs & Custom Platforms", "mvp-development", "01"],
+  ["Prototype to Production", "prototype-to-production", "02"],
+  ["AI Integration & Automation", "ai-enablement", "03"],
+  ["Web & Mobile Apps", "web-mobile-apps", "04"],
+  ["UI/UX & Prototyping", "ui-ux-design", "05"],
+  ["Low-Code / No-Code", "low-code-no-code", "06"],
+  ["E-commerce & Marketplaces", "ecommerce-marketplace-development", "07"],
+  ["Performance Marketing", "performance-marketing", "08"],
+  ["Strategy & Brand Identity", "brand-strategy", "09"],
+  ["Staff Augmentation", "staff-augmentation", "10"],
+  ["Game Development", "game-development", "11"],
 ] as const;
 
 /** Dismisses the cookie banner; it only goes away once React has hydrated, so retry the click until it does. */
@@ -61,13 +64,13 @@ test.describe("services page", () => {
     }
   });
 
-  test("lists all eight services with numbers, links, inclusions and audience", async ({ page }) => {
+  test("lists every service with numbers, links, inclusions and audience", async ({ page }) => {
     await open(page);
-    for (const [i, [name, slug]] of SERVICES.entries()) {
+    for (const [name, slug, num] of SERVICES) {
       const card = page.locator(`#${slug}`);
       await expect(card).toHaveCount(1);
       await expect(card.getByRole("heading", { name })).toBeVisible();
-      await expect(card).toContainText(String(i + 1).padStart(2, "0"));
+      await expect(card).toContainText(num);
       await expect(card.getByRole("link", { name: /Learn more/ })).toHaveAttribute("href", `/services/${slug}`);
       await expect(card).toContainText("What's included");
       await expect(card).toContainText("Best for:");

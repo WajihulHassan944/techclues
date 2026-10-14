@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ComponentProps } from "react";
+import { api, ApiError } from "@/lib/api/client";
 
 const NEEDS = ["One specialist", "A full team", "Short-term coverage", "Not sure yet"];
 const SIZES = ["1 – 50 employees", "51 – 200 employees", "201 – 1,000 employees", "1,000+ employees"];
@@ -51,15 +52,18 @@ export type LeadFormConfig = {
   briefLabel?: string;
   extras?: boolean; // company size + timeline selects
   companyLabel?: string;
+  endpoint?: string; // public API route the form posts to
 };
 
-export default function StaffSeatForm({ formName = "staff-augmentation", needLabel = "What do you need?", needOptions = NEEDS, needError = "Choose what you need.", briefLabel = "The role, stack, and timeline", extras = true, companyLabel = "Company" }: LeadFormConfig = {}) {
+export default function StaffSeatForm({ formName = "staff-augmentation", needLabel = "What do you need?", needOptions = NEEDS, needError = "Choose what you need.", briefLabel = "The role, stack, and timeline", extras = true, companyLabel = "Company", endpoint = "/api/public/staff-augmentation" }: LeadFormConfig = {}) {
   const [v, setV] = useState({ first: "", last: "", company: "", need: "", email: "", code: "+44", phone: "", brief: "", size: "", timeline: "", consent: false, marketing: false, website: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failure, setFailure] = useState("");
   const set = <K extends keyof typeof v>(k: K, val: (typeof v)[K]) => setV((s) => ({ ...s, [k]: val }));
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const err: Record<string, string> = {};
     if (!v.first.trim()) err.first = "Add your first name.";
@@ -69,7 +73,34 @@ export default function StaffSeatForm({ formName = "staff-augmentation", needLab
     if (!v.consent) err.consent = "We need your consent to reply.";
     setErrors(err);
     if (Object.keys(err).length) return;
-    setDone(true);
+    setSending(true);
+    setFailure("");
+    try {
+      await api.post(
+        endpoint,
+        {
+          firstName: v.first.trim(),
+          lastName: v.last.trim(),
+          email: v.email.trim(),
+          company: v.company.trim() || undefined,
+          need: v.need,
+          phoneCode: v.phone.trim() ? v.code : undefined,
+          phone: v.phone.trim() || undefined,
+          brief: v.brief.trim() || undefined,
+          companySize: extras ? v.size || undefined : undefined,
+          timeline: extras ? v.timeline || undefined : undefined,
+          consent: v.consent,
+          marketingConsent: v.marketing,
+          website: v.website,
+        },
+        { auth: false },
+      );
+      setDone(true);
+    } catch (e2) {
+      setFailure(e2 instanceof ApiError ? e2.message : "Something went wrong. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   if (done) {
@@ -134,8 +165,13 @@ export default function StaffSeatForm({ formName = "staff-augmentation", needLab
         </p>
       </div>
       <div className="sm:col-span-2">
-        <button type="submit" className="group inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-ink pl-7 pr-6 text-[15px] font-medium text-white transition-all duration-300 hover:bg-brand hover:shadow-[0_14px_40px_-10px_rgba(0,100,255,0.7)] sm:w-auto">
-          Let&apos;s talk
+        {failure && (
+          <p role="alert" className="mb-4 text-[14px] text-[#d64545]">
+            {failure}
+          </p>
+        )}
+        <button type="submit" disabled={sending} className="group inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-ink pl-7 pr-6 text-[15px] font-medium text-white transition-all duration-300 hover:bg-brand hover:shadow-[0_14px_40px_-10px_rgba(0,100,255,0.7)] sm:w-auto">
+          {sending ? "Sending…" : "Let's talk"}
           <svg viewBox="0 0 24 24" className="size-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
         </button>
       </div>

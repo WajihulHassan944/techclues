@@ -13,6 +13,7 @@ const ITEMS: Item[] = [
     children: [
       { label: "MVPs & Custom Platforms", href: "/services/mvp-development" },
       { label: "Prototype to Production", href: "/services/prototype-to-production" },
+      { label: "AI Integration & Automation", href: "/services/ai-enablement" },
       { label: "Web & Mobile Apps", href: "/services/web-mobile-apps" },
       { label: "UI/UX & Prototyping", href: "/services/ui-ux-design" },
       { label: "Low-Code / No-Code", href: "/services/low-code-no-code" },

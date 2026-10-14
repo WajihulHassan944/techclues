@@ -48,9 +48,18 @@ test.describe("client-side navigation", () => {
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(7);
   });
 
-  test("the removed AI service is gone from the dropdown, footer and services page", async ({ page }) => {
+  test("the AI service is restored in the dropdown, footer and services page", async ({ page }) => {
     await page.goto("/services");
-    await expect(page.getByText("AI Integration & Automation")).toHaveCount(0);
-    await expect(page.locator('a[href*="ai-enablement"]')).toHaveCount(0);
+    await rejectCookies(page);
+    await expect(page.getByRole("heading", { name: "AI Integration & Automation" })).toBeVisible();
+    await expect(page.locator('a[href*="ai-enablement"]').first()).toBeVisible();
+
+    await page.locator("header nav").getByRole("button", { name: "Services" }).hover();
+    await page.locator("header [data-nav-panel]").getByRole("link", { name: "AI Integration & Automation" }).click();
+    await expect(page).toHaveURL(/\/services\/ai-enablement$/);
+    await expect(page.locator("h1")).toContainText("AI that earns its place");
+
+    await page.locator("footer").scrollIntoViewIfNeeded();
+    await expect(page.locator("footer").getByRole("link", { name: "AI Integration & Automation" })).toBeVisible();
   });
 });

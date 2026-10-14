@@ -77,6 +77,33 @@ const PAGES: Svc[] = [
     minImages: 5,
   },
   {
+    slug: "ai-enablement",
+    title: "AI Integration Services for UK Businesses | TechClues",
+    kicker: "AI integration services",
+    headline: "AI that earns its place in your product.",
+    serviceCard: "AI Integration & Automation",
+    sections: (() => {
+      const s = sections("Prompting, retrieval or fine-tuning?");
+      s.splice(s.indexOf("Pricing"), 0, "AI at work");
+      return s;
+    })(),
+    painPoints: [
+      "Your team spends hours on work a model could draft in seconds.",
+      "You've tried AI features, but they're unreliable or off-brand.",
+      "You don't know what's realistic, or what it costs to run.",
+    ],
+    pricing: ["AI audit", "£1,500", "Build", "£3,000", "About two weeks"],
+    compareLabel: "Prompting, retrieval or fine-tuning?",
+    compare: ["Simple, general tasks", "Answers from your own content", "A consistent format or tone", "Not used", "Looked up at answer time", "Trained into the model"],
+    receive: ["AI audit and costed build plan", "Data and privacy review", "Working prototype", "Team handover and documentation"],
+    tech: ["Claude", "OpenAI", "Gemini", "Hugging Face", "Python", "LangChain", "PyTorch", "Node.js", "Next.js", "PostgreSQL", "Supabase", "Redis"],
+    faqFirst: "How much does it cost?",
+    faqOther: "Which models do you use?",
+    faqOtherAnswer: "Claude, OpenAI and Gemini",
+    faqCount: 7,
+    minImages: 4,
+  },
+  {
     slug: "low-code-no-code",
     title: "No-Code & Low-Code Development Agency UK | TechClues",
     kicker: "No-code and low-code development",

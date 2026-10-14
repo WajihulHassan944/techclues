@@ -58,19 +58,26 @@ m = re.search(r'"@type": ?"FAQPage".*?\}\s*\]\s*\}', html, re.S)
 qa = re.findall(r'"name": ?"((?:[^"\\]|\\.)*)",\s*"acceptedAnswer": ?\{\s*"@type": ?"Answer",\s*"text": ?"((?:[^"\\]|\\.)*)"', m.group(0))
 items = [{"q": json.loads('"' + a + '"'), "a": json.loads('"' + b + '"')} for a, b in qa]
 assert len(items) == n_buttons, (len(items), n_buttons)
-faq_path = root + "/lib/service-faqs.ts"
-faq = open(faq_path).read()
-if f'"{slug}":' not in faq:
-    entry = f'  "{slug}": ' + json.dumps(items, indent=4, ensure_ascii=False).replace("\n", "\n  ") + ",\n"
-    faq = faq.replace("\n};\n", "\n" + entry + "};\n")
-    open(faq_path, "w").write(faq)
+# FAQs now live in the backend (admin-editable, served by GET /api/public/faqs) rather than a
+# static frontend file. This only updates the repo-of-record seed data for local dev/reseed —
+# production already has FAQs seeded, so a new group must separately be added there via the
+# authenticated POST /api/admin/faqs endpoint (never by re-running the one-off migration, which
+# wipes the collection with --force).
+faqs_data_path = root + "/../techclues-api/src/database/data/faqs-data.json"
+if os.path.exists(faqs_data_path):
+    faqs_data = json.load(open(faqs_data_path))
+    if slug not in faqs_data:
+        faqs_data[slug] = items
+        json.dump(faqs_data, open(faqs_data_path, "w"), indent=2, ensure_ascii=False)
+        open(faqs_data_path, "a").write("\n")
 
 # 4. component + route
 open(f"{root}/components/{name}Markup.tsx", "w").write(f'''/* {slug} service page content, generated from the saved markup. */
 import Accordion from "./Accordion";
-import {{ serviceFaqs }} from "@/lib/service-faqs";
+import {{ getFaqs }} from "@/lib/api/faqs";
 
-export default function {name}Markup() {{
+export default async function {name}Markup() {{
+  const serviceFaqs = await getFaqs();
   return (
     <>
 {main}
@@ -88,7 +95,7 @@ export const metadata: Metadata = {{
   title: {json.dumps(title, ensure_ascii=False)},
   description:
     {json.dumps(desc, ensure_ascii=False)},
-  alternates: {{ canonical: "https://vebryx.co.uk/services/{slug}" }},
+  alternates: {{ canonical: "https://techclues.co.uk/services/{slug}" }},
 }};
 
 export default function Page() {{

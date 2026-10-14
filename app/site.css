@@ -8455,3 +8455,6 @@ html.lenis body {
 .max-h-\[240px\]{max-height:240px}
 @media (min-width:640px){.sm\:grid-cols-\[1\.2fr_1fr\]{grid-template-columns:1.2fr 1fr}}
 @media (min-width:1024px){.lg\:gap-4{gap:1rem}}
+
+/* homepage services grid: 6 cards across, last row of two wider cards */
+@media (min-width:1024px){.lg\:grid-cols-6{grid-template-columns:repeat(6,minmax(0,1fr))}.lg\:col-span-3{grid-column:span 3/span 3}}

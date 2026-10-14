@@ -8410,3 +8410,41 @@ html.lenis body {
 .zo-slot-in { animation: zo-slot-in .45s cubic-bezier(.65, 0, .35, 1) both; }
 .zo-slot-out { animation: zo-slot-out .45s cubic-bezier(.65, 0, .35, 1) both; }
 @media (prefers-reduced-motion: reduce) { .zo-ping { animation: none; } }
+
+/* staff augmentation: capability panel swap */
+@keyframes staff-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.staff-fade { animation: staff-fade 500ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) { .staff-fade { animation: none; } }
+
+/* staff augmentation: utilities not present in the compiled stylesheet */
+.-z-20{z-index:-20}
+.aspect-\[16\/9\]{aspect-ratio:16/9}
+.aspect-\[4\/5\]{aspect-ratio:4/5}
+.blur-\[80px\]{filter:blur(80px)}
+.border-white\/12{border-color:rgb(255 255 255/.12)}
+.content-between{align-content:space-between}
+.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.h-\[190px\]{height:190px}
+.h-\[calc\(100\%-1\.5rem\)\]{height:calc(100% - 1.5rem)}
+.items-stretch{align-items:stretch}
+.max-w-\[56px\]{max-width:56px}
+.mt-\[7px\]{margin-top:7px}
+.mt-auto{margin-top:auto}
+.right-7{right:1.75rem}
+.rounded-t-lg{border-top-left-radius:.5rem;border-top-right-radius:.5rem}
+.text-\[40px\]{font-size:40px}
+.text-\[clamp\(1\.25rem\,1\.7vw\,1\.5rem\)\]{font-size:clamp(1.25rem,1.7vw,1.5rem)}
+.text-\[clamp\(1\.2rem\,1\.7vw\,1\.5rem\)\]{font-size:clamp(1.2rem,1.7vw,1.5rem)}
+.text-\[clamp\(2\.1rem\,4vw\,3\.6rem\)\]{font-size:clamp(2.1rem,4vw,3.6rem)}
+.text-ink\/\[0\.07\]{color:rgb(14 15 49/.07)}
+.top-\[5px\]{top:5px}
+.accent-\[\#0064ff\]{accent-color:#0064ff}
+.bg-\[linear-gradient\(180deg\,rgba\(14\,15\,49\,0\)_30\%\,rgba\(14\,15\,49\,0\.9\)_100\%\)\]{background-image:linear-gradient(180deg,rgba(14,15,49,0) 30%,rgba(14,15,49,.9) 100%)}
+.group:hover .group-hover\:scale-105{transform:scale(1.05)}
+.hover\:shadow-\[0_30px_60px_-40px_rgba\(14\,15\,49\,0\.35\)\]:hover,.hover\:shadow-\[0_30px_60px_-40px_rgba\(14\,15\,49\,0\.4\)\]:hover{box-shadow:0 30px 60px -40px rgba(14,15,49,.4)}
+@media (min-width:640px){.sm\:grid-cols-\[1fr_auto_1fr_auto_1fr\]{grid-template-columns:1fr auto 1fr auto 1fr}.sm\:py-12{padding-top:3rem;padding-bottom:3rem}}
+@media (min-width:1024px){.lg\:grid-cols-\[0\.8fr_1\.2fr\]{grid-template-columns:.8fr 1.2fr}.lg\:grid-cols-\[minmax\(0\,0\.9fr\)_minmax\(0\,1\.1fr\)\]{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}.lg\:p-14{padding:3.5rem}}
+.\[\&\>div\>\[role\=tablist\]\]\:justify-center{justify-content:center}
+.staff-chip{display:inline-block;border-radius:999px;padding:4px 12px;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.staff-chip-0{background:#e8eefc;color:#2c4a9a}.staff-chip-1{background:#efe9fb;color:#5b3fa6}.staff-chip-2{background:#e1f3ea;color:#1f7a4d}.staff-chip-3{background:#fbeede;color:#a05a12}
+.staff-tabs-center [role=tablist]{justify-content:center}

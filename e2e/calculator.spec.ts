@@ -122,10 +122,10 @@ test.describe("MVP cost calculator", () => {
       ["Update a product", "Mobile app", ["Notifications", "Search"], "Relaxed", "£428 – £605 Around £504 · 4 weeks"],
       ["Start with an MVP", "Web app", ["Sign up", "User onboarding"], "Standard", "£5,000 – £5,129 Around £5,055 · 4 weeks"],
     ];
+    // The cookie choice persists once made (by design), so it's only rejected once via open()
+    // above — later navigations in this loop must not expect the banner to reappear.
     for (const [goal, platform, feats, pace, expected] of cases) {
       await page.goto(URL);
-      await expect(page.locator("#cookie-title")).toBeVisible();
-      await rejectCookies(page);
       expect(await run(page, goal, platform, feats, pace)).toBe(expected);
     }
   });

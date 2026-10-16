@@ -91,16 +91,16 @@ export default function ZeroOneCompare() {
   const done = w >= PRICE;
   return (
     <div ref={ref} className="flex h-full flex-col rounded-[24px] border border-ink/[0.08] bg-white p-6 sm:p-8">
-      <p className="text-[14px] font-medium text-ink">Two ways to find out</p>
+      <p className="text-[14px] font-medium text-ink">Two routes to an answer</p>
       <div className="flex flex-1 flex-col justify-center gap-8 pt-7">
-        <Row label="Build the full product first" time="Months of building" amount={gbp(v)} note="You find out whether it works after the money is spent.">
+        <Row label="Start by building the whole product" time="Months of development" amount={gbp(v)} note="Whether it works only becomes clear once the budget is gone.">
           <div className="relative h-3 overflow-hidden rounded-full bg-ink/[0.06]">
             <span className="relative block h-full overflow-hidden rounded-full bg-ink/70" style={{ width: `${(v / FULL) * 100}%` }}>
               <span className={`bar-stripes absolute inset-0 transition-opacity duration-700 ${k >= 1 ? "opacity-0" : "opacity-100"}`}></span>
             </span>
           </div>
         </Row>
-        <Row label="Test it with BUILD.ONE first" time={done ? "7 days" : `Day ${Math.max(1, Math.ceil((w / PRICE) * 7))}`} amount={gbp(w)} note="Real users, a clear answer, and £499 off your build if you go ahead." highlight>
+        <Row label="Validate it with BUILD.ONE first" time={done ? "7 days" : `Day ${Math.max(1, Math.ceil((w / PRICE) * 7))}`} amount={gbp(w)} note="Genuine users, a straight answer, and £499 taken off your build if you proceed." highlight>
           <div className="relative">
             <div className="h-3 overflow-hidden rounded-full bg-ink/[0.06]">
               <span className="block h-full rounded-full bg-brand" style={{ width: w === 0 ? "0%" : `max(10px, ${(w / FULL) * 100}%)` }}></span>
@@ -116,7 +116,7 @@ export default function ZeroOneCompare() {
         </Row>
       </div>
       <p className="pt-8 text-[clamp(1.15rem,1.7vw,1.4rem)] leading-snug tracking-[-0.02em] text-ink" style={{ opacity: k >= 2 ? 1 : 0, transform: k >= 2 ? "none" : "translateY(10px)", transition: `opacity .6s ${EASE_OUT} .35s, transform .6s ${EASE_OUT} .35s` } as CSSProperties}>
-        About {PCT}% of the cost, and you know in a week.
+        Roughly {PCT}% of the spend, with your answer inside a week.
       </p>
     </div>
   );

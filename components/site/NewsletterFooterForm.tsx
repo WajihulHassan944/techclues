@@ -23,18 +23,18 @@ export default function NewsletterFooterForm() {
         setStatus("sent");
       } else {
         setStatus("error");
-        setError(res.error ?? "Something went wrong. Please try again.");
+        setError(res.error ?? "That did not go through. Please try once more.");
       }
     } catch (err) {
       setStatus("error");
-      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+      setError(err instanceof ApiError ? err.message : "That did not go through. Please try once more.");
     }
   };
 
   if (status === "sent") {
     return (
       <p role="status" className="border-t border-white/20 pt-6 text-[17px] text-white">
-        Thanks — you&apos;re on the list.
+        Thank you, you are now subscribed.
       </p>
     );
   }
@@ -42,13 +42,13 @@ export default function NewsletterFooterForm() {
   return (
     <form data-form="newsletter" data-clarity-mask="True" onSubmit={submit} className="group/form relative flex items-center gap-4 border-t border-white/20 pt-6">
       <label htmlFor="newsletter-email" className="sr-only">
-        Your email
+        Email address
       </label>
       <input
         id="newsletter-email"
         type="email"
         required
-        placeholder="Your email"
+        placeholder="Email address"
         className="w-0 min-w-0 flex-1 bg-transparent text-[17px] text-white placeholder:text-white/45 focus:outline-none"
         value={email}
         onChange={(e) => setEmail(e.target.value)}

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import StaffAugmentationMarkup from "@/components/StaffAugmentationMarkup";
 
 export const metadata: Metadata = {
-  title: "Staff Augmentation Services for UK Teams | TechClues",
+  title: "UK Staff Augmentation Services for Your Team | TechClues",
   description:
-    "We embed vetted engineers and AI specialists inside your team from day one, so architectural decisions and production learning stay in your organisation.",
+    "Vetted engineers and AI specialists join your team from the first day, which keeps architectural decisions and hard-won production knowledge inside your organisation.",
   alternates: { canonical: "https://techclues.co.uk/services/staff-augmentation" },
 };
 

@@ -9,54 +9,54 @@ const JOBS: Job[] = [
   {
     key: "enquiry",
     label: "Enquiries",
-    title: "A new enquiry comes in",
+    title: "A fresh enquiry arrives",
     steps: [
-      { node: "Gmail", dir: "in", text: "Reads the new enquiry in Gmail" },
-      { node: "HubSpot", dir: "in", text: "Finds the customer's history in HubSpot" },
-      { node: "Google Sheets", dir: "in", text: "Checks your prices in Google Sheets" },
-      { text: "Drafts a reply with prices and next steps" },
-      { node: "you", dir: "out", text: "You check the draft", action: "Approve" },
-      { node: "Gmail", dir: "out", text: "Sends the reply from your inbox" },
-      { node: "HubSpot", dir: "out", text: "Logs the conversation in HubSpot" },
+      { node: "Gmail", dir: "in", text: "Opens the new enquiry in Gmail" },
+      { node: "HubSpot", dir: "in", text: "Looks up the customer's past activity in HubSpot" },
+      { node: "Google Sheets", dir: "in", text: "Looks at your pricing in Google Sheets" },
+      { text: "Prepares a reply covering prices and next steps" },
+      { node: "you", dir: "out", text: "You review the draft", action: "Approve" },
+      { node: "Gmail", dir: "out", text: "Sends the reply out from your own inbox" },
+      { node: "HubSpot", dir: "out", text: "Records the conversation in HubSpot" },
     ],
   },
   {
     key: "invoice",
     label: "Invoices",
-    title: "A supplier invoice arrives",
+    title: "An invoice comes in from a supplier",
     steps: [
-      { node: "Gmail", dir: "in", text: "Picks up the PDF invoice from Gmail" },
-      { text: "Reads the supplier, date, total and VAT" },
-      { node: "Google Sheets", dir: "in", text: "Matches it to your purchase orders" },
-      { node: "you", dir: "out", text: "Flags a mismatch for you to check", action: "Approve" },
-      { node: "Xero", dir: "out", text: "Posts the bill to Xero" },
-      { node: "Slack", dir: "out", text: "Lets your finance channel know in Slack" },
+      { node: "Gmail", dir: "in", text: "Collects the PDF invoice from Gmail" },
+      { text: "Pulls out the supplier, date, total and VAT" },
+      { node: "Google Sheets", dir: "in", text: "Compares it against your purchase orders" },
+      { node: "you", dir: "out", text: "Raises any mismatch for you to look at", action: "Approve" },
+      { node: "Xero", dir: "out", text: "Enters the bill into Xero" },
+      { node: "Slack", dir: "out", text: "Notifies your finance channel in Slack" },
     ],
   },
   {
     key: "support",
     label: "Support",
-    title: "A customer asks about an order",
+    title: "A customer has a question about an order",
     steps: [
-      { node: "WhatsApp", dir: "in", text: "Reads the question on WhatsApp" },
-      { node: "Zendesk", dir: "in", text: "Finds the order and past tickets in Zendesk" },
-      { text: "Writes an answer from your help articles" },
-      { node: "WhatsApp", dir: "out", text: "Replies to the customer straight away" },
-      { node: "you", dir: "out", text: "Hands anything tricky to your team", action: "Take over" },
-      { node: "Zendesk", dir: "out", text: "Logs the conversation in Zendesk" },
+      { node: "WhatsApp", dir: "in", text: "Picks up the question on WhatsApp" },
+      { node: "Zendesk", dir: "in", text: "Locates the order and earlier tickets in Zendesk" },
+      { text: "Composes an answer based on your help articles" },
+      { node: "WhatsApp", dir: "out", text: "Answers the customer immediately" },
+      { node: "you", dir: "out", text: "Passes anything complicated to your team", action: "Take over" },
+      { node: "Zendesk", dir: "out", text: "Records the conversation in Zendesk" },
     ],
   },
   {
     key: "report",
     label: "Reports",
-    title: "Your weekly report",
+    title: "Your report for the week",
     steps: [
-      { node: "Xero", dir: "in", text: "Pulls this week's sales from Xero" },
-      { node: "HubSpot", dir: "in", text: "Pulls new leads and deals from HubSpot" },
-      { node: "Google Sheets", dir: "out", text: "Updates your report in Google Sheets" },
-      { text: "Writes a plain-English summary of what changed" },
-      { node: "you", dir: "out", text: "You read it before it goes out", action: "Approve" },
-      { node: "Slack", dir: "out", text: "Shares it with your team in Slack" },
+      { node: "Xero", dir: "in", text: "Fetches this week's sales from Xero" },
+      { node: "HubSpot", dir: "in", text: "Fetches new leads and deals from HubSpot" },
+      { node: "Google Sheets", dir: "out", text: "Refreshes your report in Google Sheets" },
+      { text: "Produces a plain-English summary of what has changed" },
+      { node: "you", dir: "out", text: "You read it before it is sent", action: "Approve" },
+      { node: "Slack", dir: "out", text: "Posts it for your team in Slack" },
     ],
   },
 ];
@@ -171,13 +171,13 @@ export default function AiAtWork() {
       <div className="mx-auto w-full max-w-[1680px] px-5 sm:px-8 lg:px-[60px]">
         <div data-reveal="" style={{ "--reveal-delay": "0s", "--reveal-y": "28px" } as React.CSSProperties}>
           <p className="flex items-center gap-2 text-[14px] font-medium text-muted">
-            <span className="size-1.5 rounded-full bg-brand"></span>See it work
+            <span className="size-1.5 rounded-full bg-brand"></span>Watch it in action
           </p>
           <h2 className="mt-4 text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em] text-ink">
-            AI at work in your tools.
+            AI doing the work inside your tools.
           </h2>
           <p className="mt-5 max-w-[540px] text-[17px] leading-relaxed text-ink-soft">
-            Pick a job to see how AI moves through the tools you already use, and where you stay in control.
+            Choose a task to see how AI travels through the tools you already have, and where you keep control.
           </p>
         </div>
 
@@ -344,7 +344,7 @@ export default function AiAtWork() {
               })}
             </ol>
             <div className="mt-6 flex items-center justify-between gap-4 border-t border-white/10 pt-5">
-              <p className="text-[13px] leading-relaxed text-white/55">An example. We design each workflow around your tools and your rules.</p>
+              <p className="text-[13px] leading-relaxed text-white/55">This is just an example. Every workflow we build is shaped around your tools and your rules.</p>
               {userClicked && currentStepIndex >= totalSteps && !reducedMotion && (
                 <button
                   onClick={() => setStepIndex(0)}

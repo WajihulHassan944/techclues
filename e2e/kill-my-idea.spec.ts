@@ -21,7 +21,7 @@ async function open(page: Page) {
 }
 
 const IDEA = "An app that lets dental clinics fill last-minute cancellations from a waiting list.";
-const next = (page: Page) => page.getByRole("button", { name: "Next" });
+const next = (page: Page) => page.getByRole("button", { name: "Continue" });
 
 async function toStep3(page: Page, picks: { customer?: string; alternatives?: string; problem?: string; edge?: string } = {}) {
   await page.locator("textarea").fill(IDEA);
@@ -35,20 +35,20 @@ async function toStep3(page: Page, picks: { customer?: string; alternatives?: st
 }
 
 async function submit(page: Page) {
-  await page.getByPlaceholder("Your name", { exact: true }).first().fill("Sam Example");
-  await page.getByPlaceholder("Email", { exact: true }).first().fill("sam@example.com");
-  await page.getByRole("button", { name: "Try to kill it" }).click();
+  await page.getByPlaceholder("Full name", { exact: true }).first().fill("Sam Example");
+  await page.getByPlaceholder("Email address", { exact: true }).first().fill("sam@example.com");
+  await page.getByRole("button", { name: "Try and kill it" }).click();
 }
 
 test.describe("kill my idea page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Free Startup Idea Validation Tool | Kill My Idea");
-    await expect(page.locator("h1")).toContainText("Think your idea is brilliant?");
-    await expect(page.locator("h1")).toContainText("Give us two minutes to kill it.");
-    await expect(page.getByText("Most products fail on the same handful of assumptions.")).toBeVisible();
+    await expect(page).toHaveTitle("Kill My Idea | Free Tool to Validate Your Startup Idea");
+    await expect(page.locator("h1")).toContainText("Sure your idea is brilliant?");
+    await expect(page.locator("h1")).toContainText("Spare two minutes; we’ll tear it apart.");
+    await expect(page.getByText("Products tend to fall over on the same few assumptions.")).toBeVisible();
     await expect(page.getByText("Step 1 of 3")).toBeVisible();
-    for (const t of ["Two minutes", "Seven weak points", "Honest, not cruel"]) await expect(page.locator('section[aria-label="How it works"]')).toContainText(t);
+    for (const t of ["Two minutes", "Seven vulnerable areas", "Frank, never harsh"]) await expect(page.locator('section[aria-label="How it works"]')).toContainText(t);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -56,17 +56,17 @@ test.describe("kill my idea page", () => {
   test("step one needs a real idea before Next works", async ({ page }) => {
     await open(page);
     await expect(next(page)).toBeDisabled();
-    await expect(page.getByText("A little more detail, please.")).toBeVisible();
+    await expect(page.getByText("Please add a little more detail.")).toBeVisible();
     await page.locator("textarea").fill("too short");
     await expect(next(page)).toBeDisabled();
     await page.locator("textarea").fill("An app for dog walkers in cities");
-    await expect(page.getByText("That'll do.")).toBeVisible();
+    await expect(page.getByText("That is enough.")).toBeVisible();
     await expect(next(page)).toBeEnabled();
     // "Who is it for" starts on a specific job role and can be changed
-    await expect(page.getByRole("radio", { name: "A specific job role" })).toHaveAttribute("aria-checked", "true");
-    await page.getByRole("radio", { name: "Almost everyone" }).click();
-    await expect(page.getByRole("radio", { name: "Almost everyone" })).toHaveAttribute("aria-checked", "true");
-    await expect(page.getByRole("radio", { name: "A specific job role" })).toHaveAttribute("aria-checked", "false");
+    await expect(page.getByRole("radio", { name: "A particular job role" })).toHaveAttribute("aria-checked", "true");
+    await page.getByRole("radio", { name: "Nearly everyone" }).click();
+    await expect(page.getByRole("radio", { name: "Nearly everyone" })).toHaveAttribute("aria-checked", "true");
+    await expect(page.getByRole("radio", { name: "A particular job role" })).toHaveAttribute("aria-checked", "false");
   });
 
   test("steps move forward and back, and the progress bar follows", async ({ page }) => {
@@ -84,23 +84,23 @@ test.describe("kill my idea page", () => {
     await next(page).click();
     await next(page).click();
     await expect(page.getByText("Step 3 of 3")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Try to kill it" })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "Try and kill it" })).toBeDisabled();
   });
 
   test("the last step needs a name and a valid email", async ({ page }) => {
     await open(page);
     await toStep3(page);
-    const go = page.getByRole("button", { name: "Try to kill it" });
-    await page.getByPlaceholder("Your name", { exact: true }).first().fill("Sam");
-    await page.getByPlaceholder("Email", { exact: true }).first().fill("nope");
+    const go = page.getByRole("button", { name: "Try and kill it" });
+    await page.getByPlaceholder("Full name", { exact: true }).first().fill("Sam");
+    await page.getByPlaceholder("Email address", { exact: true }).first().fill("nope");
     await expect(go).toBeDisabled();
-    await page.getByPlaceholder("Email", { exact: true }).first().fill("sam@example.com");
+    await page.getByPlaceholder("Email address", { exact: true }).first().fill("sam@example.com");
     await expect(go).toBeEnabled();
     await page.getByRole("button", { name: "Real-time chat" }).click();
     await page.getByRole("button", { name: "Payments" }).click();
-    await expect(page.getByText("2 selected. Fewer is usually better.")).toBeVisible();
+    await expect(page.getByText("2 selected. Fewer is normally better.")).toBeVisible();
     await page.getByRole("button", { name: "Payments" }).click();
-    await expect(page.getByText("1 selected. Fewer is usually better.")).toBeVisible();
+    await expect(page.getByText("1 selected. Fewer is normally better.")).toBeVisible();
   });
 
   test("a sound idea survives", async ({ page }) => {
@@ -108,48 +108,48 @@ test.describe("kill my idea page", () => {
     await toStep3(page);
     await submit(page);
     await expect(page.getByRole("status", { name: "Stress testing your idea" })).toBeVisible();
-    await expect(page.getByText("Looking for the weak points…")).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Your idea survived." })).toBeVisible({ timeout: 6000 });
-    await expect(page.getByText("The verdict", { exact: true })).toBeVisible();
+    await expect(page.getByText("Hunting for weak points…")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Your idea held up." })).toBeVisible({ timeout: 6000 });
+    await expect(page.getByText("Your verdict", { exact: true })).toBeVisible();
     await expect(page.getByText(`“${IDEA}”`)).toBeVisible();
-    for (const t of ["Target customer", "Existing alternatives", "Core problem", "Differentiation", "MVP complexity", "Potential risks"]) await expect(page.getByRole("heading", { name: t })).toBeVisible();
-    await expect(page.getByText("Holds up", { exact: true })).toHaveCount(5);
-    await expect(page.getByText("Weak point", { exact: true })).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "Questions to answer before you build" })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Let's talk/ })).toHaveAttribute("href", "/book-a-call");
+    for (const t of ["Intended customer", "Current alternatives", "Central problem", "What sets you apart", "MVP scope", "Possible risks"]) await expect(page.getByRole("heading", { name: t })).toBeVisible();
+    await expect(page.getByText("Stands firm", { exact: true })).toHaveCount(5);
+    await expect(page.getByText("Soft spot", { exact: true })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Questions to settle before you build" })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Get in touch/ })).toHaveAttribute("href", "/book-a-call");
     await expect(page.getByRole("link", { name: /BUILD.ONE for £499/ })).toHaveAttribute("href", "/zero-one");
-    await expect(page.getByText("For reference, the scope you picked")).toHaveCount(0); // no features picked
+    await expect(page.getByText("As a guide, the scope you chose")).toHaveCount(0); // no features picked
   });
 
   test("a risky idea is called out and priced", async ({ page }) => {
     await open(page);
-    await toStep3(page, { customer: "Almost everyone", alternatives: "Nothing, as far as I know", problem: "It would be nice to have", edge: "Honestly, not sure yet" });
+    await toStep3(page, { customer: "Nearly everyone", alternatives: "Nothing that I know of", problem: "It would be a pleasant extra", edge: "To be honest, I am not sure yet" });
     for (const f of ["Real-time chat", "AI features", "Payments", "Sign up & log in", "Admin panel"]) await page.getByRole("button", { name: f }).click();
     await submit(page);
-    await expect(page.getByRole("heading", { name: "We'd kill this one first." })).toBeVisible({ timeout: 6000 });
-    await expect(page.getByText("Weak point", { exact: true }).first()).toBeVisible();
-    await expect(page.getByText("5 features is a product, not a minimum viable one.")).toBeVisible();
-    await expect(page.getByText(/Almost everyone” is the most common way an MVP dies/)).toBeVisible();
-    await expect(page.getByText(/For reference, the scope you picked would cost roughly £[\d,]+–£[\d,]+ to build as a web MVP\./)).toBeVisible();
-    await expect(page.getByRole("link", { name: "Refine the estimate" })).toHaveAttribute("href", "/mvp-cost-calculator");
+    await expect(page.getByRole("heading", { name: "This is the one we would kill first." })).toBeVisible({ timeout: 6000 });
+    await expect(page.getByText("Soft spot", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText("5 features makes a full product, not a minimum viable one.")).toBeVisible();
+    await expect(page.getByText(/Nearly everyone” is the commonest way for an MVP to die/)).toBeVisible();
+    await expect(page.getByText(/As a guide, the scope you chose would cost around £[\d,]+–£[\d,]+ to build as a web MVP\./)).toBeVisible();
+    await expect(page.getByRole("link", { name: "Sharpen the estimate" })).toHaveAttribute("href", "/mvp-cost-calculator");
   });
 
   test("a middling idea is wounded but standing", async ({ page }) => {
     await open(page);
-    await toStep3(page, { alternatives: "Big platforms people already use", problem: "It's a daily annoyance" });
+    await toStep3(page, { alternatives: "Large platforms already in daily use", problem: "It irritates them every day" });
     await page.getByRole("button", { name: "Payments" }).click();
     await submit(page);
-    await expect(page.getByRole("heading", { name: "Wounded, but standing." })).toBeVisible({ timeout: 6000 });
-    await expect(page.getByText("Watch this", { exact: true }).first()).toBeVisible();
-    await expect(page.getByText(/payments adds meaningful cost and testing/)).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Bruised, but still upright." })).toBeVisible({ timeout: 6000 });
+    await expect(page.getByText("Keep an eye on this", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText(/payments adds noticeable cost and testing/)).toBeVisible();
   });
 
   test("Start again clears the answers and goes back to step one", async ({ page }) => {
     await open(page);
     await toStep3(page);
     await submit(page);
-    await expect(page.getByRole("heading", { name: "Your idea survived." })).toBeVisible({ timeout: 6000 });
-    await page.getByRole("button", { name: "Start again" }).click();
+    await expect(page.getByRole("heading", { name: "Your idea held up." })).toBeVisible({ timeout: 6000 });
+    await page.getByRole("button", { name: "Begin again" }).click();
     await expect(page.getByText("Step 1 of 3")).toBeVisible();
     await expect(page.locator("textarea")).toHaveValue("");
     await expect(next(page)).toBeDisabled();
@@ -182,7 +182,7 @@ test.describe("kill my idea on mobile", () => {
     await toStep3(page);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await submit(page);
-    await expect(page.getByRole("heading", { name: "Your idea survived." })).toBeVisible({ timeout: 6000 });
+    await expect(page.getByRole("heading", { name: "Your idea held up." })).toBeVisible({ timeout: 6000 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 });

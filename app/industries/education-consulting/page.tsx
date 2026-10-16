@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import EducationConsultingMarkup from "@/components/EducationConsultingMarkup";
 
 export const metadata: Metadata = {
-  title: "Edtech & Consulting Software Development UK | TechClues",
+  title: "Software Development for Edtech & Consulting in the UK | TechClues",
   description:
-    "Software for UK educators, trainers and consultancies: learning platforms, client portals, booking and scheduling, assessments and admin automation.",
+    "Custom software for UK educators, trainers and consultancies, covering learning platforms, client portals, bookings and scheduling, assessments and automated admin.",
   alternates: { canonical: "https://techclues.co.uk/industries/education-consulting" },
 };
 

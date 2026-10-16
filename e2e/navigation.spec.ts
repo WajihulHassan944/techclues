@@ -18,7 +18,7 @@ test.describe("client-side navigation", () => {
     await page.locator("header nav").getByRole("button", { name: "Services" }).hover();
     await page.locator("header [data-nav-panel]").getByRole("link", { name: "Performance Marketing" }).click();
     await expect(page).toHaveURL(/\/services\/performance-marketing$/);
-    await expect(page.locator("h1")).toContainText("Find your first users");
+    await expect(page.locator("h1")).toContainText("Land your first users");
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(42);
     expect(await page.evaluate(() => window.scrollY)).toBeLessThan(5);
 
@@ -37,7 +37,7 @@ test.describe("client-side navigation", () => {
     await page.goto("/services");
     await rejectCookies(page);
     await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 7));
-    await page.locator("#mvp-development").getByRole("link", { name: /Learn more/ }).click();
+    await page.locator("#mvp-development").getByRole("link", { name: /Find out more/ }).click();
     await expect(page).toHaveURL(/\/services\/mvp-development$/);
     await page.locator("section[aria-label='Pricing']").scrollIntoViewIfNeeded();
     await expect(page.locator("section[aria-label='Pricing'] [data-reveal]").first()).toHaveAttribute("data-shown", "");
@@ -51,13 +51,13 @@ test.describe("client-side navigation", () => {
   test("the AI service is restored in the dropdown, footer and services page", async ({ page }) => {
     await page.goto("/services");
     await rejectCookies(page);
-    await expect(page.getByRole("heading", { name: "AI Integration & Automation" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Automation & AI Integration" })).toBeVisible();
     await expect(page.locator('main a[href*="ai-enablement"]').first()).toBeVisible();
 
     await page.locator("header nav").getByRole("button", { name: "Services" }).hover();
     await page.locator("header [data-nav-panel]").getByRole("link", { name: "AI Integration & Automation" }).click();
     await expect(page).toHaveURL(/\/services\/ai-enablement$/);
-    await expect(page.locator("h1")).toContainText("AI that earns its place");
+    await expect(page.locator("h1")).toContainText("AI worth its place");
 
     await page.locator("footer").scrollIntoViewIfNeeded();
     await expect(page.locator("footer").getByRole("link", { name: "AI Integration & Automation" })).toBeVisible();

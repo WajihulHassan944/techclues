@@ -61,7 +61,7 @@ export default function ZeroOneBriefForm() {
       setState("sent");
     } catch {
       setState("error");
-      setError("Something went wrong sending your brief. Please try again.");
+      setError("Your brief could not be sent. Please try once more.");
     }
   }
 
@@ -69,8 +69,8 @@ export default function ZeroOneBriefForm() {
     <form data-form="zero_one_brief" data-slot-form="true" data-clarity-mask="True" onSubmit={submit} className="space-y-12">
       <Step n="01" title="Your idea">
         <label className="group block">
-          <span className="text-[13px] text-muted transition-colors group-focus-within:text-brand">What&apos;s the idea, in a sentence or two?</span>
-          <textarea name="idea" required rows={2} maxLength={1500} placeholder="e.g. An app that fills last-minute dental cancellations." className="mt-2 w-full resize-none border-b border-ink/15 bg-transparent pb-3 text-[18px] leading-relaxed text-ink transition-colors placeholder:text-ink/25 focus:border-brand focus:outline-none focus-visible:outline-none"></textarea>
+          <span className="text-[13px] text-muted transition-colors group-focus-within:text-brand">Describe the idea in a sentence or two.</span>
+          <textarea name="idea" required rows={2} maxLength={1500} placeholder="e.g. An app that fills late dental cancellations." className="mt-2 w-full resize-none border-b border-ink/15 bg-transparent pb-3 text-[18px] leading-relaxed text-ink transition-colors placeholder:text-ink/25 focus:border-brand focus:outline-none focus-visible:outline-none"></textarea>
         </label>
       </Step>
       <Step n="02" title="About you">
@@ -78,7 +78,7 @@ export default function ZeroOneBriefForm() {
           <Field label="Name" name="name" required autoComplete="name" />
           <Field label="Email" name="email" type="email" required autoComplete="email" />
           <Field label="Company name" name="company" required autoComplete="organization" />
-          <Field label="Contact number" name="phone" type="tel" required autoComplete="tel" minLength={7} />
+          <Field label="Phone number" name="phone" type="tel" required autoComplete="tel" minLength={7} />
         </div>
       </Step>
       <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-px w-px opacity-0" />
@@ -90,7 +90,7 @@ export default function ZeroOneBriefForm() {
             <a className="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:decoration-brand" href="/privacy-policy">
               privacy policy
             </a>
-            , and to TechClues contacting me about this brief.
+            , and to TechClues getting in touch with me about this brief.
           </span>
         </label>
         <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">
@@ -99,16 +99,16 @@ export default function ZeroOneBriefForm() {
               <>Sending…</>
             ) : sent ? (
               <>
-                Brief sent <Tick className="size-4" />
+                Brief received <Tick className="size-4" />
               </>
             ) : (
               <>
-                Send my brief
+                Submit my brief
                 <Arrow />
               </>
             )}
           </button>
-          {!sent && <p className="text-[14px] text-muted">No payment now. We&apos;ll review it first.</p>}
+          {!sent && <p className="text-[14px] text-muted">Nothing to pay today. We review it first.</p>}
         </div>
         {state === "error" && (
           <p role="alert" className="mt-4 rounded-xl bg-[#fdecec] px-4 py-3 text-[14px] text-[#b42318]">
@@ -119,10 +119,10 @@ export default function ZeroOneBriefForm() {
           <div className="mt-6 rounded-2xl bg-[#e9f7ef] p-5 text-[15px] leading-relaxed text-[#146c3b]">
             <p className="flex items-start gap-3">
               <Tick className="mt-0.5 size-4 shrink-0" strokeWidth={2.5} />
-              <span>Thanks, your brief is with our team. Pick a time for your 30-minute scope call now, or we&apos;ll be in touch to book it.</span>
+              <span>Thank you, our team has your brief. Choose a time for your 30-minute scope call now, or we will contact you to arrange it.</span>
             </p>
             <a href={callHref} data-cta="zero-one-book-call" className="group mt-4 inline-flex h-12 items-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[14.5px] font-medium text-white transition-colors duration-300 hover:bg-brand">
-              Pick a time for your call
+              Choose a time for your call
               <Arrow />
             </a>
           </div>

@@ -20,15 +20,15 @@ async function open(page: Page) {
   return errors;
 }
 
-const SKILLS = ["UI/UX design", "Front-end development", "Full-stack development", "Mobile apps", "AI & automation", "Low-code", "Brand design", "Performance marketing", "Other"];
+const SKILLS = ["UI/UX design", "Front-end engineering", "Full-stack engineering", "Mobile applications", "Automation & AI", "Low-code", "Branding", "Performance marketing", "Other"];
 
 test.describe("careers page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Careers at TechClues | Product Studio in West Midlands & Islamabad");
-    await expect(page.locator("h1")).toContainText("Build products");
-    await expect(page.locator("h1")).toContainText("people actually use.");
-    await expect(page.getByText("TechClues is a product studio in West Midlands, with a production studio in Islamabad, PK.")).toBeVisible();
+    await expect(page).toHaveTitle("Careers at TechClues | West Midlands & Islamabad Product Studio");
+    await expect(page.locator("h1")).toContainText("Create products");
+    await expect(page.locator("h1")).toContainText("that people really use.");
+    await expect(page.getByText("TechClues is a West Midlands product studio, plus a studio for production in Islamabad, PK.")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -38,15 +38,15 @@ test.describe("careers page", () => {
     const labels = await page.locator("main section[aria-label]").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
     expect(labels).toEqual(["What the work is like", "Open roles", "Apply"]);
     const work = page.locator('section[aria-label="What the work is like"]');
-    for (const t of ["Real products, quickly", "Validation first", "Something new every few weeks", "Two locations, one team"]) await expect(work).toContainText(t);
+    for (const t of ["Genuine products, fast", "Validate first", "Fresh challenges every few weeks", "One team across two locations"]) await expect(work).toContainText(t);
     const roles = page.locator('section[aria-label="Open roles"]');
-    await expect(roles).toContainText("We're not advertising any roles right now");
+    await expect(roles).toContainText("No positions are being advertised at the moment");
     for (const s of SKILLS.slice(0, -1)) await expect(roles.getByRole("listitem").filter({ hasText: s }).first()).toBeVisible();
   });
 
   test("the hero button jumps to the application form", async ({ page }) => {
     await open(page);
-    await page.getByRole("link", { name: "Send us your details" }).click();
+    await page.getByRole("link", { name: "Submit your details" }).click();
     await expect.poll(() => page.evaluate(() => document.querySelector("#apply")!.getBoundingClientRect().top), { timeout: 5000 }).toBeLessThan(200);
   });
 
@@ -75,7 +75,7 @@ test.describe("careers page", () => {
     await form.getByRole("button", { name: "Other" }).click();
     const other = form.locator("input[name=other]");
     await expect(other).toBeFocused();
-    await expect(form.getByText("What else do you do?")).toBeVisible();
+    await expect(form.getByText("What else is your field?")).toBeVisible();
     await form.getByRole("button", { name: "Other" }).click();
     await expect(other).toHaveCount(0);
   });
@@ -84,7 +84,7 @@ test.describe("careers page", () => {
     await open(page);
     const form = page.locator("form[data-form=careers]");
     await form.scrollIntoViewIfNeeded();
-    await form.getByRole("button", { name: "Send application" }).click();
+    await form.getByRole("button", { name: "Submit application" }).click();
     await expect(page).toHaveURL(/\/careers$/);
     expect(await form.locator("input[name=name]").evaluate((e) => (e as HTMLInputElement).validity.valueMissing)).toBe(true);
     await form.locator("input[name=name]").fill("Sam Example");
@@ -95,7 +95,7 @@ test.describe("careers page", () => {
     await form.locator("textarea[name=message]").fill("I design products.");
     await form.locator("input[name=consent]").check();
     expect(await form.evaluate((f) => (f as HTMLFormElement).checkValidity())).toBe(true);
-    await form.getByRole("button", { name: "Send application" }).click();
+    await form.getByRole("button", { name: "Submit application" }).click();
     await expect(page).toHaveURL(/\/careers$/);
     await expect(form.locator("input[name=name]")).toHaveValue("Sam Example"); // untouched: not wired up
     await expect(form.getByRole("link", { name: "privacy policy" })).toHaveAttribute("href", "/privacy-policy");

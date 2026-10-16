@@ -29,10 +29,10 @@ const nextBtn = (page: Page) => page.locator('button[aria-label^="Next: book"]:n
 test.describe("book a call page", () => {
   test("renders the intro, steps and trust badge with metadata", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Book a free MVP strategy call | TechClues");
-    await expect(page.locator("h1")).toHaveText("Let's talk aboutyour idea.");
+    await expect(page).toHaveTitle("Free MVP strategy call booking | TechClues");
+    await expect(page.locator("h1")).toHaveText("Let's discussyour concept.");
     const main = page.locator("main");
-    for (const t of ["Free MVP strategy call.", "30 minutes", "Video call", "Free, no obligation", "We review your idea", "We define your MVP strategy", "We deliver your roadmap", "4.3", "Trustpilot", "Instant confirmation and a calendar invite by email"]) await expect(main).toContainText(t);
+    for (const t of ["A free MVP strategy call.", "30 minutes", "Meet by video", "No cost, no commitment", "We look over your idea", "We settle on your MVP strategy", "We hand over your roadmap", "4.3", "Trustpilot", "Immediate confirmation, plus a calendar invite sent by email"]) await expect(main).toContainText(t);
     await expect(page.locator('a[href="https://uk.trustpilot.com/review/techclues.co.uk"]')).toHaveCount(1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
@@ -40,7 +40,7 @@ test.describe("book a call page", () => {
 
   test("calendar offers weekday slots from 9:00 to 17:00 London time", async ({ page }) => {
     await open(page);
-    await expect(page.getByRole("heading", { name: "Choose a time" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Pick a time" })).toBeVisible();
     await expect(days(page).first()).toBeVisible({ timeout: 10_000 });
     expect(await days(page).count()).toBeGreaterThan(5);
     for (const l of await days(page).evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")!))) expect(l).not.toMatch(/^(Saturday|Sunday)/);
@@ -90,13 +90,13 @@ test.describe("book a call page", () => {
     await expect(days(page).first()).toBeVisible({ timeout: 10_000 });
     await times(page).nth(1).click();
     await nextBtn(page).click();
-    await expect(page.getByRole("heading", { name: "Your details" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Your information" })).toBeVisible();
     await expect(page.getByText("Free MVP strategy call · 30 min · London time")).toBeVisible();
-    await page.getByRole("button", { name: "Confirm booking" }).click();
-    await expect(page.getByText("Add your name.")).toBeVisible();
-    await expect(page.getByText("Check your email address.")).toBeVisible();
-    await page.getByRole("button", { name: "Change time" }).click();
-    await expect(page.getByRole("heading", { name: "Choose a time" })).toBeVisible();
+    await page.getByRole("button", { name: "Book this slot" }).click();
+    await expect(page.getByText("Enter your name.")).toBeVisible();
+    await expect(page.getByText("Please check your email address.")).toBeVisible();
+    await page.getByRole("button", { name: "Pick another time" }).click();
+    await expect(page.getByRole("heading", { name: "Pick a time" })).toBeVisible();
     await expect(days(page).first()).toBeVisible({ timeout: 10_000 });
     await times(page).nth(1).click();
     await nextBtn(page).click();
@@ -106,10 +106,10 @@ test.describe("book a call page", () => {
     page.on("request", (r) => {
       if (r.method() === "POST") posts.push(r.url());
     });
-    await page.getByRole("button", { name: "Confirm booking" }).click();
-    await expect(page.getByRole("heading", { name: "You're booked, Sam." })).toBeVisible({ timeout: 8000 });
+    await page.getByRole("button", { name: "Book this slot" }).click();
+    await expect(page.getByRole("heading", { name: "Your call is booked, Sam." })).toBeVisible({ timeout: 8000 });
     await expect(page.getByText("sam@example.com")).toBeVisible();
-    for (const t of ["30 minutes", "Add to Google Calendar", "Apple or Outlook calendar", "Reschedule or cancel"]) await expect(page.locator("main")).toContainText(t);
+    for (const t of ["30 minutes", "Add it to Google Calendar", "Apple or Outlook calendar", "Reschedule or cancel"]) await expect(page.locator("main")).toContainText(t);
     expect(posts.some((u) => u.includes("/api/public/bookings"))).toBe(true);
   });
 
@@ -127,7 +127,7 @@ test.describe("book a call page", () => {
     await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 9));
     await page.locator('a[href="/book-a-call"]').first().click();
     await expect(page).toHaveURL(/\/book-a-call$/);
-    await expect(page.getByRole("heading", { name: "Choose a time" })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("heading", { name: "Pick a time" })).toBeVisible({ timeout: 10_000 });
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(9);
   });
 });

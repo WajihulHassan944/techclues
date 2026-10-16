@@ -33,38 +33,38 @@ type Tab = { key: string; tab: string; title: string; text: string; points: stri
 const TABS: Tab[] = [
   {
     key: "cycle", tab: "Full Cycle", title: "Full Cycle Development",
-    text: "End-to-end development from initial concept and design to deployment and post-launch support.",
-    points: ["Concept, design and pre-production planning", "Core engineering across Unity and Unreal", "QA, certification and platform submission", "Post-launch updates and live support"],
+    text: "Development from the first concept and design right through to release and support after launch.",
+    points: ["Concept work, design and pre-production planning", "Main engineering work in Unity and Unreal", "QA, certification and submission to each platform", "Updates after launch and ongoing live support"],
     metric: ["Build health", "100%"], rows: [["Concept", "shipped"], ["Engineering", "in build"], ["QA", "shipped"], ["Live Ops", "shipped"]], img: "/images/game/studio.jpg",
   },
   {
     key: "art", tab: "Art & Assets", title: "Game Art and Asset Creation",
-    text: "Characters, environments, props and animation using high-end modelling and texturing.",
-    points: ["Character and creature modelling", "Environment art and world building", "Rigging and animation", "Technical art and shader work"],
+    text: "Characters, environments, props and animation produced with premium modelling and texturing.",
+    points: ["Modelling of characters and creatures", "Environment art and world creation", "Rigging plus animation", "Technical art and shader development"],
     metric: ["Polycount", "42K"], rows: [["Characters", "shipped"], ["Environments", "in build"], ["VFX", "shipped"]], img: "/images/game/art3d.jpg",
   },
   {
     key: "xr", tab: "AR / VR / XR", title: "AR, VR and XR Development",
-    text: "Immersive AR and VR games built on the latest interactive 3D technologies.",
-    points: ["Native builds for Quest, Vision Pro and PSVR2", "Hand tracking and spatial interaction design", "Performance tuning for standalone headsets", "AR experiences for mobile and wearables"],
+    text: "Immersive AR and VR games made with the newest interactive 3D tech.",
+    points: ["Native builds aimed at Quest, Vision Pro and PSVR2", "Hand tracking and spatial interaction design work", "Performance optimisation for standalone headsets", "AR experiences on mobile and wearable devices"],
     metric: ["Frame rate", "90 FPS"], rows: [["Quest 3", "shipped"], ["Vision Pro", "in build"], ["PC VR", "shipped"]], img: "/images/game/vr.jpg",
   },
   {
     key: "multi", tab: "Multiplayer", title: "Multiplayer and Networked Games",
-    text: "Robust network support, server architecture and cloud integration for online play.",
-    points: ["Dedicated server and matchmaking architecture", "Client-server netcode and lag compensation", "Cloud scaling for concurrent players", "Cross-platform play and progression sync"],
+    text: "Dependable networking, server architecture and cloud integration to power online play.",
+    points: ["Architecture for dedicated servers and matchmaking", "Client-server netcode with lag compensation", "Cloud scaling to handle concurrent players", "Cross-platform play with synced progression"],
     metric: ["Ping", "42ms"], rows: [["Matchmaking", "shipped"], ["Replication", "in build"], ["Anti-cheat", "shipped"]], img: "/images/game/lan.jpg",
   },
   {
     key: "web3", tab: "Web3 & Metaverse", title: "Web3 and Metaverse",
-    text: "Wallet sign-in, digital collectibles and ownable land wired into real gameplay loops.",
-    points: ["Wallet integration and on-chain identity", "NFT-backed items with real utility", "Land and asset ownership mechanics", "Marketplace and economy design"],
+    text: "Wallet sign-in, digital collectibles and ownable land built into genuine gameplay loops.",
+    points: ["Wallet integration with on-chain identity", "NFT-backed items that serve a real purpose", "Mechanics for land and asset ownership", "Design of the marketplace and economy"],
     metric: ["Gas cost", "-30%"], rows: [["Wallet Connect", "shipped"], ["Marketplace", "in build"], ["Smart Contract", "shipped"]], img: "/images/game/neon-city.jpg",
   },
   {
     key: "uefn", tab: "UEFN & Verse", title: "UEFN and Verse",
-    text: "Custom Fortnite islands with bespoke environments and original gameplay logic.",
-    points: ["Custom islands built in UEFN", "Original gameplay logic written in Verse", "Devices and props authored from scratch", "Discovery-ready publishing and iteration"],
+    text: "Bespoke Fortnite islands featuring tailor-made environments and original gameplay logic.",
+    points: ["Bespoke islands created in UEFN", "Original gameplay logic coded in Verse", "Devices and props made from the ground up", "Publishing ready for Discover, plus iteration"],
     metric: ["Status", "Published to Discover"], rows: [["Island Build", "shipped"], ["Verse Scripting", "in build"], ["Playtesting", "shipped"]], img: "/images/game/code.jpg",
   },
 ];
@@ -124,7 +124,7 @@ export default function GameCapabilities() {
             ))}
           </ul>
           <a href="#get-started" className="group mt-8 inline-flex h-11 items-center gap-2 rounded-full border border-ink/15 px-5 text-[14px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white">
-            Discuss this with us
+            Talk this through with us
             <svg viewBox="0 0 24 24" className="size-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
           </a>
         </div>

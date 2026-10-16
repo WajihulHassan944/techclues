@@ -22,27 +22,27 @@ async function open(page: Page) {
 
 const SECTIONS: [string, string][] = [
   ["1-scope", "1. Scope"],
-  ["2-website-use", "2. Website use"],
-  ["3-client-responsibilities", "3. Client responsibilities"],
-  ["4-fees-and-payments", "4. Fees and payments"],
-  ["5-intellectual-property", "5. Intellectual property"],
-  ["6-confidentiality", "6. Confidentiality"],
-  ["7-third-party-services", "7. Third-party services"],
-  ["8-warranties-disclaimer", "8. Warranties disclaimer"],
-  ["9-limitation-of-liability", "9. Limitation of liability"],
-  ["10-termination", "10. Termination"],
-  ["11-data-protection", "11. Data protection"],
+  ["2-website-use", "2. Using the website"],
+  ["3-client-responsibilities", "3. Client obligations"],
+  ["4-fees-and-payments", "4. Payment and fees"],
+  ["5-intellectual-property", "5. IP ownership"],
+  ["6-confidentiality", "6. Confidential information"],
+  ["7-third-party-services", "7. External services"],
+  ["8-warranties-disclaimer", "8. Disclaimer of warranties"],
+  ["9-limitation-of-liability", "9. Liability limits"],
+  ["10-termination", "10. Ending services"],
+  ["11-data-protection", "11. Protecting data"],
   ["12-changes", "12. Changes"],
-  ["13-governing-law", "13. Governing law"],
-  ["contact-us", "Contact us"],
+  ["13-governing-law", "13. Applicable law"],
+  ["contact-us", "Get in touch"],
 ];
 
 test.describe("terms and conditions page", () => {
   test("renders with metadata, heading, date and no errors", async ({ page }) => {
     const errors = await open(page);
     await expect(page).toHaveTitle("Terms & Conditions | TechClues");
-    await expect(page.locator("h1")).toHaveText("Terms & conditions");
-    await expect(page.getByText("Last updated", { exact: false }).first()).toBeVisible();
+    await expect(page.locator("h1")).toHaveText("Conditions & terms");
+    await expect(page.getByText("Most recently updated", { exact: false }).first()).toBeVisible();
     await expect(page.locator("time")).toHaveAttribute("datetime", "2026-02-04");
     await expect(page.locator("time")).toHaveText("4 February 2026");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -64,9 +64,9 @@ test.describe("terms and conditions page", () => {
   test("a contents link scrolls to its section", async ({ page }) => {
     await open(page);
     const toc = page.getByRole("navigation", { name: "On this page" });
-    await toc.getByRole("link", { name: "7. Third-party services", exact: true }).click();
+    await toc.getByRole("link", { name: "7. External services", exact: true }).click();
     await expect.poll(() => page.evaluate(() => document.getElementById("7-third-party-services")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
-    await toc.getByRole("link", { name: "Contact us", exact: true }).click();
+    await toc.getByRole("link", { name: "Get in touch", exact: true }).click();
     await expect.poll(() => page.evaluate(() => document.getElementById("contact-us")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
   });
 
@@ -92,7 +92,7 @@ test.describe("terms and conditions page", () => {
     await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 2));
     await page.locator("footer").getByRole("link", { name: "Terms & conditions" }).click();
     await expect(page).toHaveURL(/\/terms-conditions$/);
-    await expect(page.locator("h1")).toHaveText("Terms & conditions");
+    await expect(page.locator("h1")).toHaveText("Conditions & terms");
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(2);
   });
 

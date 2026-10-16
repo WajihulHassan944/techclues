@@ -27,10 +27,10 @@ const value = (page: Page) => page.locator(`${EARN} [aria-live=polite] p`).nth(1
 test.describe("partners page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Partner Referral Programme | Earn 10% for Introductions");
-    await expect(page.locator("h1")).toContainText("Introduce a project.");
-    await expect(page.locator("h1")).toContainText("Earn 10% of it.");
-    for (const t of ["10% of project fees", "Up to £5,000 a referral", "Paid as the client pays", "Every service counts"]) await expect(page.locator("main").first()).toContainText(t);
+    await expect(page).toHaveTitle("Partner Referral Programme | Earn 10% Per Introduction");
+    await expect(page.locator("h1")).toContainText("Refer a project.");
+    await expect(page.locator("h1")).toContainText("Receive 10% of it.");
+    for (const t of ["10% share of project fees", "Up to £5,000 per referral", "Paid when the client pays", "All services qualify"]) await expect(page.locator("main").first()).toContainText(t);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -62,11 +62,11 @@ test.describe("partners page", () => {
     // above £20,000 the rate drops to 5%
     await page.locator(`${EARN} input[type=number]`).fill("30000");
     await expect(value(page)).toHaveText(`£3,000`, { timeout: 3000 }); // 12.5% of 20k = 2,500 + 5% of 10k = 500
-    await expect(result(page)).toContainText("5% of the £10,000 above that");
+    await expect(result(page)).toContainText("5% of the £10,000 beyond that");
     // capped at £5,000
     await page.locator(`${EARN} input[type=number]`).fill("200000");
     await expect(value(page)).toHaveText("£5,000", { timeout: 3000 });
-    await expect(result(page)).toContainText("Capped at £5,000 a referral");
+    await expect(result(page)).toContainText("Limited to £5,000 per referral");
   });
 
   test("monthly services count six months, and BUILD.ONE is a flat £50", async ({ page }) => {
@@ -80,7 +80,7 @@ test.describe("partners page", () => {
     await page.locator(EARN).getByRole("button", { name: "BUILD.ONE" }).click();
     await expect(value(page)).toHaveText("£50", { timeout: 3000 });
     await expect(page.locator(`${EARN} input[type=number]`)).toBeDisabled();
-    await expect(result(page)).toContainText("Flat fee for a BUILD.ONE");
+    await expect(result(page)).toContainText("Flat fee per BUILD.ONE");
   });
 
   test("the AI service is not offered in the calculator or the table", async ({ page }) => {
@@ -91,13 +91,13 @@ test.describe("partners page", () => {
   test("commission table lists every project type", async ({ page }) => {
     await open(page);
     const t = page.locator('section[aria-label="Commission by project"]');
-    for (const x of ["£2,500–£10,000+", "£250–£1,000+", "£313–£1,250+", "Web & Mobile Apps", "£750–£2,000+/mo", "£50 fixed", "Grant application support", "10% of our fee"]) await expect(t).toContainText(x);
+    for (const x of ["£2,500–£10,000+", "£250–£1,000+", "£313–£1,250+", "Web & Mobile Applications", "£750–£2,000+/mo", "£50 fixed", "Help with grant applications", "10% share of our fee"]) await expect(t).toContainText(x);
   });
 
   test("how it works lists the four steps", async ({ page }) => {
     await open(page);
     const h = page.locator('section[aria-label="How it works"]');
-    for (const x of ["Apply to join", "Introduce a client", "We confirm it in writing", "Get paid"]) await expect(h).toContainText(x);
+    for (const x of ["Apply now", "Refer a client", "Written confirmation from us", "Get paid"]) await expect(h).toContainText(x);
   });
 
   test("join form checks required fields and shows the original messages", async ({ page }) => {
@@ -105,20 +105,20 @@ test.describe("partners page", () => {
     const form = page.locator("#join form");
     await form.scrollIntoViewIfNeeded();
     await form.getByRole("button", { name: "Apply to join" }).click();
-    await expect(form.getByText("Add your name.")).toBeVisible();
-    await expect(form.getByText("Check your email address.")).toBeVisible();
-    await expect(form.getByText("Choose what describes you best.")).toBeVisible();
-    await expect(form.getByText("Please confirm you've read the programme rules.")).toBeVisible();
+    await expect(form.getByText("Enter your name.")).toBeVisible();
+    await expect(form.getByText("Please check your email address.")).toBeVisible();
+    await expect(form.getByText("Select the option that fits you best.")).toBeVisible();
+    await expect(form.getByText("Please confirm that you have read the programme rules.")).toBeVisible();
     await expect(form.locator('[data-field="name"]')).toBeFocused();
     await form.locator('[data-field="name"]').fill("Sam");
-    await expect(form.getByText("Add your name.")).toHaveCount(0); // clears as you type
+    await expect(form.getByText("Enter your name.")).toHaveCount(0); // clears as you type
     await form.locator('[data-field="email"]').fill("nope");
     await form.getByRole("button", { name: "Freelancer" }).click();
     await expect(form.getByRole("button", { name: "Freelancer" })).toHaveAttribute("aria-pressed", "true");
     await form.getByRole("button", { name: "Freelancer" }).click();
     await expect(form.getByRole("button", { name: "Freelancer" })).toHaveAttribute("aria-pressed", "false"); // click again to unselect
     await form.getByRole("button", { name: "Apply to join" }).click();
-    await expect(form.getByText("Check your email address.")).toBeVisible();
+    await expect(form.getByText("Please check your email address.")).toBeVisible();
   });
 
   test("refer form has its own fields and checks", async ({ page }) => {
@@ -127,14 +127,14 @@ test.describe("partners page", () => {
     await form.scrollIntoViewIfNeeded();
     await form.getByRole("tab", { name: "Refer a client" }).click();
     await expect(form.getByRole("tab", { name: "Refer a client" })).toHaveAttribute("aria-selected", "true");
-    await expect(form.getByText("Already a partner? Introduce a client here, with their permission.")).toBeVisible();
-    await expect(form.getByText("The client", { exact: true })).toBeVisible();
-    await form.getByRole("button", { name: "Send the referral" }).click();
-    for (const m of ["Add the client's name.", "Check the client's email address.", "Choose the type of project.", "Please confirm the client has agreed to be contacted."]) await expect(form.getByText(m)).toBeVisible();
+    await expect(form.getByText("Already a partner? Introduce a client here, once they have given permission.")).toBeVisible();
+    await expect(form.getByText("About the client", { exact: true })).toBeVisible();
+    await form.getByRole("button", { name: "Submit the referral" }).click();
+    for (const m of ["Enter the client's name.", "Please check the client's email address.", "Select a project type.", "Please confirm that the client has agreed to be contacted."]) await expect(form.getByText(m)).toBeVisible();
     await form.locator("select").first().selectOption("Web & Mobile Apps");
-    await expect(form.getByText("Choose the type of project.")).toHaveCount(0);
+    await expect(form.getByText("Select a project type.")).toHaveCount(0);
     await form.getByRole("tab", { name: "Become a partner" }).click();
-    await expect(form.getByText("Add the client's name.")).toHaveCount(0); // errors reset when switching
+    await expect(form.getByText("Enter the client's name.")).toHaveCount(0); // errors reset when switching
   });
 
   test("programme rules accordion opens one answer at a time", async ({ page }) => {
@@ -150,9 +150,9 @@ test.describe("partners page", () => {
 
   test("the form's rules link and the hero buttons jump to their sections", async ({ page }) => {
     await open(page);
-    await page.getByRole("link", { name: "See what you'd earn" }).click();
+    await page.getByRole("link", { name: "Check your potential earnings" }).click();
     await expect.poll(() => page.evaluate(() => document.querySelector("#earnings")!.getBoundingClientRect().top), { timeout: 5000 }).toBeLessThan(250);
-    await page.getByRole("link", { name: "Become a partner" }).first().click();
+    await page.getByRole("link", { name: "Join as a partner" }).first().click();
     await expect.poll(() => page.evaluate(() => document.querySelector("#join")!.getBoundingClientRect().top), { timeout: 5000 }).toBeLessThan(250);
   });
 

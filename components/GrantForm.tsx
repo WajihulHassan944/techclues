@@ -14,12 +14,12 @@ const BUDGETS = ["Under £10k", "£10k–£25k", "£25k–£50k", "£50k–£100
 const MATCH = ["Yes, half or more", "Yes, some of it", "No", "Not sure"];
 const START = ["As soon as possible", "In 1–3 months", "In 3–6 months", "Just exploring"];
 const PUBLIC = ["None", "Yes", "Not sure"];
-const STEPS = ["Your business", "Your project", "Your details"];
+const STEPS = ["About your business", "About your project", "Contact details"];
 
 const REQUIRED: [string, string][][] = [
-  [["legalName", "Add the company's legal name."], ["businessType", "Choose the type of business."], ["basedIn", "Choose where the business is based."], ["employees", "Choose the company size."]],
-  [["project", "Choose what the project is."]],
-  [["name", "Add your name."], ["email", "Check your email address."]],
+  [["legalName", "Enter the company's legal name."], ["businessType", "Select the type of business."], ["basedIn", "Select where the business is based."], ["employees", "Select the company size."]],
+  [["project", "Select the kind of project."]],
+  [["name", "Enter your name."], ["email", "Please check your email address."]],
 ];
 
 const cn = (...a: (string | false | undefined)[]) => a.filter(Boolean).join(" ");
@@ -34,7 +34,7 @@ function Label({ label, optional, hint, error, wide, children }: { label: string
     <label className={cn("block min-w-0", wide && "sm:col-span-2")}>
       <span className="mb-1.5 flex items-baseline justify-between gap-3 text-[14px] font-medium text-ink">
         {label}
-        {optional && <span className="text-[13px] font-normal text-muted">Optional</span>}
+        {optional && <span className="text-[13px] font-normal text-muted">Not required</span>}
       </span>
       {children}
       {error ? <span className="mt-1.5 block text-[13px] text-[#b42318]">{error}</span> : hint && <span className="mt-1.5 block text-[12.5px] leading-snug text-muted">{hint}</span>}
@@ -46,7 +46,7 @@ function Select({ field, value, onChange, options, invalid }: { field?: string; 
   return (
     <span className="relative block">
       <select data-field={field} value={value} onChange={(e) => onChange(e.target.value)} aria-invalid={invalid} className={cn(input(invalid ? "x" : undefined), "cursor-pointer appearance-none pr-10", !value && "text-muted/80")}>
-        <option value="">Choose…</option>
+        <option value="">Select…</option>
         {options.map((o) => (
           <option key={o} value={o} className="text-ink">
             {o}
@@ -141,7 +141,7 @@ export default function GrantForm() {
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+      setError(err instanceof ApiError ? err.message : "That did not go through. Please try once more.");
     }
   }
 
@@ -150,16 +150,16 @@ export default function GrantForm() {
   if (status === "success") {
     return (
       <div className="scroll-mt-28 rounded-[24px] bg-[#f6f7fb] p-8 text-center" role="status">
-        <p className="text-[20px] font-medium text-ink">Thanks — we&apos;ll check your options.</p>
-        <p className="mt-2 text-[15px] text-ink-soft">We reply within a few hours.</p>
+        <p className="text-[20px] font-medium text-ink">Thank you, we will review your options.</p>
+        <p className="mt-2 text-[15px] text-ink-soft">Expect a reply within a few hours.</p>
       </div>
     );
   }
 
   return (
     <form ref={form} data-form="grant" data-clarity-mask="True" onSubmit={submit} noValidate className="scroll-mt-28 rounded-[24px] bg-[#f6f7fb] p-5 sm:p-7">
-      <p className="text-[19px] font-medium tracking-[-0.01em] text-ink">Check your funding options</p>
-      <p className="mt-1 text-[14px] text-muted">Free, with no obligation. Takes about two minutes.</p>
+      <p className="text-[19px] font-medium tracking-[-0.01em] text-ink">Explore your funding options</p>
+      <p className="mt-1 text-[14px] text-muted">Free and without obligation. It takes around two minutes.</p>
       <div className="mt-6 flex items-center justify-between text-[13px]">
         <p ref={title} tabIndex={-1} className="font-medium text-ink outline-none" aria-live="polite">
           {STEPS[step]}
@@ -178,47 +178,47 @@ export default function GrantForm() {
       <div key={step} className="step-in mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
         {step === 0 && (
           <>
-            <Label label="Company legal name" error={errors.legalName} wide hint="As registered at Companies House, or your trading name if you're not registered yet.">
+            <Label label="Company legal name" error={errors.legalName} wide hint="Use the name registered at Companies House, or your trading name if you are not registered yet.">
               <Txt data-field="legalName" value={val("legalName")} onChange={(e) => set("legalName", e.target.value)} autoComplete="organization" placeholder="e.g. Acme Trading Ltd" aria-invalid={!!errors.legalName} className={input(errors.legalName)} />
             </Label>
-            <Label label="Company no." optional>
+            <Label label="Company number" optional>
               <Txt value={val("companyNumber")} onChange={(e) => set("companyNumber", e.target.value.toUpperCase())} placeholder="e.g. SC123456" maxLength={10} className={input()} />
             </Label>
-            <Label label="Type of business" error={errors.businessType}>
+            <Label label="Business type" error={errors.businessType}>
               <Select field="businessType" value={val("businessType")} onChange={(x) => set("businessType", x)} options={BUSINESS_TYPES} invalid={!!errors.businessType} />
             </Label>
-            <Chips label="Where is the business based?" field="basedIn" options={BASED_IN} value={val("basedIn")} onChange={(x) => set("basedIn", x)} error={errors.basedIn} />
-            <Chips label="Company size (employees)" field="employees" options={SIZES} value={val("employees")} onChange={(x) => set("employees", x)} error={errors.employees} />
+            <Chips label="Where is the business located?" field="basedIn" options={BASED_IN} value={val("basedIn")} onChange={(x) => set("basedIn", x)} error={errors.basedIn} />
+            <Chips label="Number of employees" field="employees" options={SIZES} value={val("employees")} onChange={(x) => set("employees", x)} error={errors.employees} />
             <Label label="Annual turnover" optional>
               <Select value={val("turnover")} onChange={(x) => set("turnover", x)} options={TURNOVER} />
             </Label>
-            <Label label="Trading for" optional>
+            <Label label="Time trading" optional>
               <Select value={val("trading")} onChange={(x) => set("trading", x)} options={TRADING} />
             </Label>
           </>
         )}
         {step === 1 && (
           <>
-            <Chips label="What's the project?" field="project" options={PROJECTS} value={val("project")} onChange={(x) => set("project", x)} error={errors.project} />
-            <Label label="Estimated budget" optional>
+            <Chips label="What kind of project is it?" field="project" options={PROJECTS} value={val("project")} onChange={(x) => set("project", x)} error={errors.project} />
+            <Label label="Expected budget" optional>
               <Select value={val("budget")} onChange={(x) => set("budget", x)} options={BUDGETS} />
             </Label>
-            <Label label="When to start" optional>
+            <Label label="Preferred start" optional>
               <Select value={val("start")} onChange={(x) => set("start", x)} options={START} />
             </Label>
-            <Label label="Match funding" optional hint="Could you pay part of the cost? Most grants cover only some of it.">
+            <Label label="Match funding" optional hint="Could you cover part of the cost? Most grants pay for only a portion.">
               <Select value={val("match")} onChange={(x) => set("match", x)} options={MATCH} />
             </Label>
-            <Label label="Public funding" optional hint="Any grants or loans from public bodies in the last 3 years. Schemes cap how much one business can get.">
+            <Label label="Public funding" optional hint="Any grants or loans from public bodies in the past 3 years. Schemes limit how much a single business can receive.">
               <Select value={val("publicFunding")} onChange={(x) => set("publicFunding", x)} options={PUBLIC} />
             </Label>
-            <Label label="About the project" optional wide hint="What it will do, and what it will change for the business: time saved, new customers, jobs created.">
+            <Label label="Project details" optional wide hint="What it will do and how it will change the business: time saved, new customers, jobs created.">
               <textarea
                 value={val("about")}
                 onChange={(e) => set("about", e.target.value)}
                 rows={3}
                 maxLength={1500}
-                placeholder="e.g. An online booking system so we can take bookings around the clock and hire two more staff."
+                placeholder="e.g. An online booking system so we can accept bookings at any hour and take on two more staff."
                 className="w-full resize-y rounded-2xl border border-ink/12 bg-white px-4 py-3 text-[15px] leading-relaxed text-ink transition-[border-color,box-shadow] duration-200 placeholder:text-muted/70 hover:border-ink/25 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10"
               />
             </Label>
@@ -226,16 +226,16 @@ export default function GrantForm() {
         )}
         {step === 2 && (
           <>
-            <Label label="Your name" error={errors.name}>
+            <Label label="Full name" error={errors.name}>
               <Txt data-field="name" value={val("name")} onChange={(e) => set("name", e.target.value)} autoComplete="name" aria-invalid={!!errors.name} className={input(errors.name)} />
             </Label>
-            <Label label="Your role" optional>
+            <Label label="Job title" optional>
               <Txt value={val("role")} onChange={(e) => set("role", e.target.value)} autoComplete="organization-title" placeholder="e.g. Director" className={input()} />
             </Label>
-            <Label label="Email" error={errors.email}>
+            <Label label="Email address" error={errors.email}>
               <Txt data-field="email" value={val("email")} onChange={(e) => set("email", e.target.value)} type="email" inputMode="email" autoComplete="email" aria-invalid={!!errors.email} className={input(errors.email)} />
             </Label>
-            <Label label="Phone" optional>
+            <Label label="Phone number" optional>
               <Txt value={val("phone")} onChange={(e) => set("phone", e.target.value)} type="tel" inputMode="tel" autoComplete="tel" className={input()} />
             </Label>
           </>
@@ -272,7 +272,7 @@ export default function GrantForm() {
           data-cta={step === STEPS.length - 1 ? "grant-check" : undefined}
           className="group inline-flex h-13 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-white transition-all duration-300 hover:bg-brand hover:shadow-[0_12px_30px_-10px_rgba(0,100,255,0.7)] active:scale-[0.99] disabled:cursor-wait disabled:opacity-70"
         >
-          {step === STEPS.length - 1 ? (status === "submitting" ? "Checking…" : "Check my options") : "Continue"}
+          {step === STEPS.length - 1 ? (status === "submitting" ? "Reviewing…" : "Review my options") : "Continue"}
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
             <path d="M5 12h14" />
             <path d="m12 5 7 7-7 7" />
@@ -280,7 +280,7 @@ export default function GrantForm() {
         </button>
       </div>
       <p className="mt-4 text-center text-[12.5px] leading-relaxed text-muted">
-        We&apos;ll use your details only to check your options and reply.{" "}
+        Your details are used only to review your options and reply.{" "}
         <a href="/privacy-policy" className="underline underline-offset-2 hover:text-ink">
           Privacy policy
         </a>

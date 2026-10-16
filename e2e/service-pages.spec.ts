@@ -32,20 +32,20 @@ const sections = (compare: string | null, extraAfterIncluded?: string) =>
 const PAGES: Svc[] = [
   {
     slug: "mvp-development",
-    title: "MVP Development Services for UK Startups | TechClues",
-    kicker: "MVP development for UK startups",
-    headline: "Turn your idea into a product people actually want.",
+    title: "UK Startup MVP Development Services | TechClues",
+    kicker: "UK startup MVP development",
+    headline: "Shape your idea into something people genuinely want.",
     serviceCard: "MVPs & Custom Platforms",
     sections: sections("Prototype, MVP or full product?"),
     painPoints: [
-      "You've got an idea, but you're not sure people will pay for it.",
-      "Quotes from agencies are huge, vague and months long.",
-      "You've been burned by a build that went over time and budget.",
+      "You have an idea, but doubt that people would pay for it.",
+      "Agency quotes come back enormous, woolly and stretching over months.",
+      "A past build has overrun on time and budget and left you burned.",
     ],
-    pricing: ["Validation MVP", "£2,500", "Lean MVP", "£5,000", "Custom / SaaS", "£10,000", "£499"],
+    pricing: ["Validation MVP", "£2,500", "Lean MVP", "£5,000", "Bespoke / SaaS", "£10,000", "£499"],
     compareLabel: "Prototype, MVP or full product?",
-    compare: ["Can people use it?", "Do people want it?", "Can it grow?", "Test sessions", "Early adopters", "Around 8 weeks and beyond"],
-    receive: ["Validation findings", "Prioritised feature roadmap", "Source code and documentation", "Post-launch iteration plan"],
+    compare: ["Is it usable?", "Is there demand?", "Can it scale?", "Usability sessions", "First adopters", "Roughly 8 weeks, sometimes longer"],
+    receive: ["Findings from validation", "Roadmap of ranked features", "Source code with documentation", "Iteration plan after launch"],
     tech: ["Figma", "React", "Next.js", "TypeScript", "Node.js", "PostgreSQL", "Supabase", "AWS", "Stripe"],
     faqFirst: "How much does an MVP cost?",
     faqOther: "What if the idea doesn't validate?",
@@ -55,20 +55,20 @@ const PAGES: Svc[] = [
   },
   {
     slug: "prototype-to-production",
-    title: "Make Your AI-Built App Production-Ready | TechClues",
-    kicker: "AI-built app to production, for UK founders",
-    headline: "Your AI-built app, ready for real users.",
+    title: "Turn Your AI-Built App Into a Production-Ready Product | TechClues",
+    kicker: "Taking UK founders' AI-built apps into production",
+    headline: "Real users can rely on your AI-built app.",
     serviceCard: "Prototype to Production",
     sections: sections("Keep prompting, harden or rebuild?"),
     painPoints: [
-      "It works in the demo, but you wouldn't trust it with real customers' data.",
-      "Every new prompt fixes one thing and breaks two others.",
-      "Logins, payments or the App Store review are where it all stalls.",
+      "It runs fine in the demo, yet you'd never let real customers' data near it.",
+      "Each fresh prompt repairs one problem and causes two more.",
+      "Logins, payments and the App Store review are the points where progress stops.",
     ],
-    pricing: ["Code audit", "£750", "Hardening sprint", "£3,500", "2–4 weeks"],
+    pricing: ["Audit of code", "£750", "Sprint for hardening", "£3,500", "2–4 weeks"],
     compareLabel: "Keep prompting, harden or rebuild?",
-    compare: ["Keep prompting", "Harden it", "Rebuild", "It's still a demo", "Audited and fixed", "Tailored quote"],
-    receive: ["Code and security audit report", "Costed plan for the sprint", "Automated tests for critical flows", "Production hosting, backups and monitoring"],
+    compare: ["Carry on prompting", "Toughen it", "Rebuild", "Just a demo so far", "Checked, then repaired", "Bespoke quotation"],
+    receive: ["Audit report on code and security", "Sprint plan with costs", "Automated testing of critical flows", "Monitoring, backups and hosting for production"],
     tech: ["Lovable", "Bolt.new", "Replit", "Cursor", "Next.js", "Supabase"],
     faqFirst: "How much does it cost?",
     faqOther: "Will you rebuild everything?",
@@ -78,9 +78,9 @@ const PAGES: Svc[] = [
   },
   {
     slug: "ai-enablement",
-    title: "AI Integration Services for UK Businesses | TechClues",
-    kicker: "AI integration services",
-    headline: "AI that earns its place in your product.",
+    title: "UK AI Integration Services for Businesses | TechClues",
+    kicker: "Services for AI integration",
+    headline: "AI worth its place inside your product.",
     serviceCard: "AI Integration & Automation",
     sections: (() => {
       const s = sections("Prompting, retrieval or fine-tuning?");
@@ -88,14 +88,14 @@ const PAGES: Svc[] = [
       return s;
     })(),
     painPoints: [
-      "Your team spends hours on work a model could draft in seconds.",
-      "You've tried AI features, but they're unreliable or off-brand.",
-      "You don't know what's realistic, or what it costs to run.",
+      "Your people lose hours on tasks a model could draft within seconds.",
+      "The AI features you've tried were unreliable or off-brand.",
+      "You can't tell what's achievable, or what it costs to keep running.",
     ],
-    pricing: ["AI audit", "£1,500", "Build", "£3,000", "About two weeks"],
+    pricing: ["AI audit", "£1,500", "Build", "£3,000", "Around two weeks"],
     compareLabel: "Prompting, retrieval or fine-tuning?",
-    compare: ["Simple, general tasks", "Answers from your own content", "A consistent format or tone", "Not used", "Looked up at answer time", "Trained into the model"],
-    receive: ["AI audit and costed build plan", "Data and privacy review", "Working prototype", "Team handover and documentation"],
+    compare: ["Simple, general jobs", "Replies drawn from your own content", "A steady format or tone", "Not used", "Fetched at answer time", "Taught to the model"],
+    receive: ["AI audit and build plan with costs", "Data and privacy check", "Prototype that works", "Team handover with documentation"],
     tech: ["Claude", "OpenAI", "Gemini", "Hugging Face", "Python", "LangChain", "PyTorch", "Node.js", "Next.js", "PostgreSQL", "Supabase", "Redis"],
     faqFirst: "How much does it cost?",
     faqOther: "Which models do you use?",
@@ -105,20 +105,20 @@ const PAGES: Svc[] = [
   },
   {
     slug: "low-code-no-code",
-    title: "No-Code & Low-Code Development Agency UK | TechClues",
-    kicker: "No-code and low-code development",
-    headline: "A working product in days, not months.",
+    title: "UK Agency for No-Code & Low-Code Development | TechClues",
+    kicker: "Low-code and no-code development",
+    headline: "A usable product within days, rather than months.",
     serviceCard: "Low-Code / No-Code",
     sections: sections("Low-code or custom code?", "Low-code against custom code"),
     painPoints: [
-      "You need to test an idea before committing to a full build.",
-      "Your team runs on spreadsheets and manual work.",
-      "Budget is tight, but you still need something that works.",
+      "Before you commit to a full build, an idea needs testing.",
+      "Spreadsheets and manual effort keep your team going.",
+      "Funds are limited, but what you get still has to work.",
     ],
     pricing: ["Launch", "£2,500", "Business", "£5,000", "Advanced", "£8,500"],
     compareLabel: "Low-code or custom code?",
-    compare: ["Speed to launch", "Days to weeks", "Weeks to months", "Platform subscriptions", "Validation and internal tools"],
-    receive: ["Platform recommendation", "Working app or portal", "Team training session", "Upgrade path to custom code"],
+    compare: ["Time to go live", "A few days to a few weeks", "Several weeks to a few months", "Platform subscriptions", "Validation work and internal tools"],
+    receive: ["Platform recommendation", "Live app or portal", "Staff training session", "Route to upgrade to custom code"],
     tech: ["Bubble", "Webflow", "Softr", "Shopify"],
     faqFirst: "How much does it cost?",
     faqOther: "Is low-code good enough for real users?",
@@ -128,20 +128,20 @@ const PAGES: Svc[] = [
   },
   {
     slug: "performance-marketing",
-    title: "Performance Marketing Agency for UK Startups | TechClues",
-    kicker: "Performance marketing for startups",
-    headline: "Find your first users, then keep them coming.",
+    title: "UK Startup Performance Marketing Agency | TechClues",
+    kicker: "Performance marketing aimed at startups",
+    headline: "Land your first users and keep new ones arriving.",
     serviceCard: "Performance Marketing",
     sections: sections("Paid social or paid search?", "How a marketing funnel works"),
     painPoints: [
-      "You've launched, but nobody's signing up.",
-      "Ad spend goes out, but you can't tell what's working.",
-      "You need proof of demand before building more.",
+      "Launched, yet no one is signing up.",
+      "Money goes on ads, but you can't see what is working.",
+      "You want evidence of demand before you build further.",
     ],
     pricing: ["Launch", "£750", "Growth", "£1,250", "Scale", "£2,000"],
     compareLabel: "Paid social or paid search?",
-    compare: ["People by interest and profile", "People searching for a solution", "Meta, LinkedIn, TikTok"],
-    receive: ["Audience and channel research", "Campaign strategy and budget plan", "A/B tests", "Growth recommendations"],
+    compare: ["Audiences grouped by interests and profile", "Users actively looking for an answer", "Meta, LinkedIn, TikTok"],
+    receive: ["Research into audience and channels", "Budget plan and campaign strategy", "A/B tests", "Recommendations for growth"],
     tech: ["Google Ads", "Meta Ads", "Mixpanel", "Mailchimp"],
     faqFirst: "How much do you charge?",
     faqOther: "What budget do I need?",
@@ -151,20 +151,20 @@ const PAGES: Svc[] = [
   },
   {
     slug: "web-mobile-apps",
-    title: "App Development Company in West Midlands & the UK | TechClues",
-    kicker: "App development in West Midlands and across the UK",
-    headline: "Web and mobile apps that feel fast and work everywhere.",
+    title: "West Midlands & UK App Development Company | TechClues",
+    kicker: "App development across the West Midlands and the whole UK",
+    headline: "Apps for web and mobile that load fast and run everywhere.",
     serviceCard: "Web & Mobile Apps",
     sections: sections("Native, cross-platform or web app?", "How your app is built"),
     painPoints: [
-      "Your current app is slow, buggy or hard to change.",
-      "You need the same product on web, iOS and Android.",
-      "You're not sure which technology will last.",
+      "Your app today is slow, buggy or tricky to alter.",
+      "One product must run across web, iOS and Android.",
+      "You can't tell which technology will endure.",
     ],
     pricing: ["Starter", "£5,000", "Business", "£8,500", "Advanced", "£15,000"],
     compareLabel: "Native, cross-platform or web app?",
-    compare: ["One per platform", "Games and hardware-heavy apps", "Tools that live on the web"],
-    receive: ["Technical architecture plan", "iOS and Android apps", "App Store and Google Play release", "Source code and documentation"],
+    compare: ["A codebase per platform", "Hardware-intensive apps and games", "Tools that belong on the web"],
+    receive: ["Technical architecture blueprint", "iOS plus Android apps", "Store launch: App Store, Google Play", "Source code with documentation"],
     tech: ["React", "Flutter", "Firebase", "Vercel"],
     faqFirst: "How much does an app cost?",
     faqOther: "Do you build native or cross-platform apps?",
@@ -174,20 +174,20 @@ const PAGES: Svc[] = [
   },
   {
     slug: "ecommerce-marketplace-development",
-    title: "E-commerce & Marketplace Development UK | TechClues",
-    kicker: "E-commerce and marketplace development",
-    headline: "An online shop or marketplace that's easy to buy from, and easy to run.",
+    title: "UK E-commerce & Marketplace Development | TechClues",
+    kicker: "Marketplace and e-commerce development",
+    headline: "A web store or marketplace that's effortless to buy from and to manage.",
     serviceCard: "E-commerce & Marketplaces",
     sections: sections("Shopify, WooCommerce or a custom build?"),
     painPoints: [
-      "Your shop gets visitors, but too few of them buy.",
-      "Updating products, prices and stock takes far too long.",
-      "Your marketplace needs sellers, buyers and payouts working together.",
+      "Visitors reach your shop, but not enough of them purchase.",
+      "Keeping catalogue, pricing and inventory current takes far too long.",
+      "Sellers, buyers and payouts must work together in your marketplace.",
     ],
     pricing: ["Basic", "£1,000", "Growth", "£2,000", "Advanced", "£3,500"],
     compareLabel: "Shopify, WooCommerce or a custom build?",
-    compare: ["Selling fast with little upkeep", "Shops already on WordPress", "Built in, to your rules"],
-    receive: ["Store or marketplace design", "Payments and checkout", "Admin training", "Launch and handover"],
+    compare: ["Quick launches, minimal maintenance", "Stores that already use WordPress", "Native, shaped around your rules"],
+    receive: ["Shop or marketplace styling", "Payment and checkout setup", "Back-office training", "Going live and hand-off"],
     tech: ["Shopify", "WooCommerce", "Stripe", "Xero"],
     faqFirst: "How much does an online store or marketplace cost?",
     faqOther: "Are you a Shopify Partner?",
@@ -197,20 +197,20 @@ const PAGES: Svc[] = [
   },
   {
     slug: "ui-ux-design",
-    title: "UI/UX Design & Prototyping Agency in West Midlands | TechClues",
-    kicker: "UI/UX design and prototyping",
-    headline: "Design that users understand in seconds.",
+    title: "West Midlands UI/UX Design & Prototyping Agency | TechClues",
+    kicker: "Prototyping and UI/UX design",
+    headline: "Design people grasp within seconds.",
     serviceCard: "UI/UX & Prototyping",
     sections: sections("UX and UI: what's the difference?", "Example designs"),
     painPoints: [
-      "Users sign up, then get lost and leave.",
-      "Your product looks dated next to competitors.",
-      "Developers keep guessing how screens should work.",
+      "Users sign up, get lost, then leave.",
+      "Rivals make your product look old-fashioned.",
+      "Developers must guess how screens ought to work.",
     ],
     pricing: ["Essential", "£1,000", "Product", "£2,000", "Complete", "£3,500"],
     compareLabel: "UX and UI: what's the difference?",
-    compare: ["How it works", "How it looks and feels", "Task success and drop-off"],
-    receive: ["User research findings", "Clickable prototype", "Usability test results", "Developer-ready Figma files"],
+    compare: ["The process", "Its look and feel", "Task completion and drop-off rates"],
+    receive: ["Findings from user research", "Clickable prototype", "Results of usability testing", "Developer-ready Figma"],
     tech: ["Figma", "Framer", "Maze", "Storybook"],
     faqFirst: "How much does design cost?",
     faqOther: "Do you only design, or build too?",
@@ -220,20 +220,20 @@ const PAGES: Svc[] = [
   },
   {
     slug: "brand-strategy",
-    title: "Branding Agency for Startups in West Midlands | TechClues",
-    kicker: "Brand strategy and identity for startups",
-    headline: "A brand that makes people trust you from the first click.",
+    title: "West Midlands Branding Agency for Startups | TechClues",
+    kicker: "Identity and brand strategy built for startups",
+    headline: "A brand that earns people's trust from their very first click.",
     serviceCard: "Strategy & Brand Identity",
     sections: sections(null),
     painPoints: [
-      "You struggle to explain what makes you different.",
-      "Your brand looks homemade next to competitors.",
-      "Every page and post looks slightly different.",
+      "It's hard to say what sets you apart.",
+      "Placed beside rivals, your brand appears homemade.",
+      "No two pages or posts quite match.",
     ],
     pricing: ["Essential", "£750", "Identity", "£1,500", "Complete", "£2,500"],
     compareLabel: "",
     compare: [],
-    receive: ["Market and competitor review", "Positioning statement", "Brand guidelines", "Launch assets"],
+    receive: ["Review of market and competitors", "Statement of positioning", "Brand rulebook", "Launch materials"],
     tech: ["Figma", "Adobe Illustrator", "Miro", "Notion"],
     faqFirst: "How much does branding cost?",
     faqOther: "Do you design logos only?",
@@ -278,7 +278,7 @@ for (const svc of PAGES) {
       await expect(page.locator("h1")).toContainText(svc.kicker);
       await expect(page.locator("h1")).toContainText(svc.headline);
       await expect(page.getByRole("navigation", { name: "Breadcrumb" }).getByRole("link", { name: "Services" })).toHaveAttribute("href", "/services");
-      await expect(page.getByRole("link", { name: "Book a free call" }).first()).toHaveAttribute("href", "/book-a-call");
+      await expect(page.getByRole("link", { name: "Arrange a free call" }).first()).toHaveAttribute("href", "/book-a-call");
       expect(await fits(page)).toBe(true);
       expect(errors).toEqual([]);
     });
@@ -301,7 +301,7 @@ for (const svc of PAGES) {
     test("opening section keeps the pain points as a plain list", async ({ page }) => {
       await open(page, svc.slug);
       const why = page.locator('section[aria-label="Why it matters"]');
-      await expect(why).toContainText("Sound familiar?");
+      await expect(why).toContainText("Sound like you?");
       for (const text of svc.painPoints) await expect(why).toContainText(text);
       await expect(why.getByRole("button")).toHaveCount(0);
     });
@@ -388,7 +388,7 @@ for (const svc of PAGES) {
       await page.goto("/services");
       await expect(page.locator("#cookie-title")).toBeVisible();
       await rejectCookies(page);
-      await page.locator(`#${svc.slug}`).getByRole("link", { name: /Learn more/ }).click();
+      await page.locator(`#${svc.slug}`).getByRole("link", { name: /Find out more/ }).click();
       await expect(page).toHaveURL(new RegExp(`/services/${svc.slug}$`));
       await expect(page.locator("h1")).toContainText(svc.kicker);
       await page.locator("header nav button", { hasText: "Services" }).hover();
@@ -459,7 +459,7 @@ test.describe("service page: low-code-no-code timeline", () => {
     await page.keyboard.press("ArrowRight");
     await page.keyboard.press("ArrowRight"); // 25
     await expect(slider(page)).toHaveAttribute("aria-valuetext", "Weeks: low-code Live, custom code Build");
-    await expect(page.locator(SEC).getByText("Improving with real users").first()).toBeVisible();
+    await expect(page.locator(SEC).getByText("Getting better with real users").first()).toBeVisible();
     for (let i = 0; i < 9; i++) await page.keyboard.press("ArrowRight"); // 70
     await expect(slider(page)).toHaveAttribute("aria-valuetext", "Months: low-code Live, custom code Test");
     await expect(page.locator(SEC).getByText("v3", { exact: true })).toHaveCSS("opacity", "1");
@@ -490,8 +490,8 @@ test.describe("service page: low-code-no-code timeline", () => {
     // The phase text under each lane follows the position (90 = both lanes live)
     const lanes = page.locator(SEC).locator("div.\\[grid-area\\:1\\/1\\]:not([aria-hidden='true'])");
     await expect(lanes).toHaveCount(2);
-    await expect(lanes.nth(0)).toContainText("Real users are in");
-    await expect(lanes.nth(1)).toContainText("built to grow without limits");
+    await expect(lanes.nth(0)).toContainText("Genuine users are on board");
+    await expect(lanes.nth(1)).toContainText("built to scale with no ceiling");
   });
 
   test("region labels highlight as the timeline moves", async ({ page }) => {
@@ -535,15 +535,15 @@ test.describe("service page: performance-marketing funnel", () => {
     await openFunnel(page);
     const live = page.locator(`${SEC} [aria-live=polite]`);
     await expect(live).toContainText("9 customers");
-    await expect(live).toContainText("3 coming back");
-    await page.getByRole("radio", { name: "After testing" }).click();
-    await expect(page.getByRole("radio", { name: "After testing" })).toHaveAttribute("aria-checked", "true");
+    await expect(live).toContainText("3 returning");
+    await page.getByRole("radio", { name: "Post-test" }).click();
+    await expect(page.getByRole("radio", { name: "Post-test" })).toHaveAttribute("aria-checked", "true");
     await expect(live).toContainText("18 customers", { timeout: 3000 });
-    await expect(live).toContainText("9 coming back");
-    await expect(live).toContainText("2× the customers", { timeout: 3000 });
+    await expect(live).toContainText("9 returning");
+    await expect(live).toContainText("2× as many customers", { timeout: 3000 });
     await page.locator(SEC).getByRole("tab", { name: /click through/ }).click();
     await expect(panel(page, "click")).toContainText("2%");
-    await page.getByRole("radio", { name: "Before testing" }).click();
+    await page.getByRole("radio", { name: "Pre-test" }).click();
     await expect(live).toContainText("9 customers", { timeout: 3000 });
     await expect(panel(page, "click")).toContainText("1.5%");
   });
@@ -551,7 +551,7 @@ test.describe("service page: performance-marketing funnel", () => {
   test("rotates through the stages by itself until you pick one", async ({ page }) => {
     await openFunnel(page);
     await expect(panel(page, "click")).toHaveAttribute("aria-hidden", "false", { timeout: 9000 });
-    await page.locator(SEC).getByRole("tab", { name: /come back for more/ }).click();
+    await page.locator(SEC).getByRole("tab", { name: /return for more/ }).click();
     await page.mouse.move(5, 5);
     await page.waitForTimeout(6500);
     await expect(panel(page, "return")).toHaveAttribute("aria-hidden", "false");
@@ -575,7 +575,7 @@ test.describe("service page: web-mobile-apps interactions", () => {
 
   test("picking a layer opens the stack and swaps the tools", async ({ page }) => {
     await openArch(page);
-    await expect(tab(page, /Web & mobile apps/)).toHaveAttribute("aria-selected", "true");
+    await expect(tab(page, /Mobile & web apps/)).toHaveAttribute("aria-selected", "true");
     await expect(page.locator(`${SEC} #arch-tech`)).toContainText("Tailwind CSS");
     await tab(page, /^04\s*Data/).click();
     await expect(tab(page, /^04\s*Data/)).toHaveAttribute("aria-selected", "true");
@@ -605,11 +605,11 @@ test.describe("service page: web-mobile-apps interactions", () => {
 
   test("steps through the layers by itself until you hover", async ({ page }) => {
     await openArch(page);
-    await expect(tab(page, /^02\s*API/)).toHaveAttribute("aria-selected", "true", { timeout: 7000 });
+    await expect(tab(page, /^02\s*Integrations/)).toHaveAttribute("aria-selected", "true", { timeout: 7000 });
     await page.locator(`${SEC} #arch-tech`).hover();
     await page.locator(SEC).getByRole("tab").nth(0).hover();
     await page.waitForTimeout(4500);
-    await expect(tab(page, /^02\s*API/)).toHaveAttribute("aria-selected", "true");
+    await expect(tab(page, /^02\s*Integrations/)).toHaveAttribute("aria-selected", "true");
   });
 
   test("pricing switches between web and mobile apps", async ({ page }) => {
@@ -618,8 +618,8 @@ test.describe("service page: web-mobile-apps interactions", () => {
     await pr.scrollIntoViewIfNeeded();
     await expect(pr.locator("#pricing-panel-0")).toBeVisible();
     await expect(pr.locator("#pricing-panel-1")).toBeHidden();
-    await pr.getByRole("tab", { name: "Mobile app" }).click();
-    await expect(pr.getByRole("tab", { name: "Mobile app" })).toHaveAttribute("aria-selected", "true");
+    await pr.getByRole("tab", { name: "Mobile application" }).click();
+    await expect(pr.getByRole("tab", { name: "Mobile application" })).toHaveAttribute("aria-selected", "true");
     await expect(pr.locator("#pricing-panel-1")).toBeVisible();
     await expect(pr.locator("#pricing-panel-0")).toBeHidden();
     for (const p of ["£7,500", "£12,500", "£20,000"]) await expect(pr.locator("#pricing-panel-1")).toContainText(p);
@@ -646,7 +646,7 @@ test.describe("service page: ui-ux-design showcase", () => {
     await open(page, "ui-ux-design");
     const sec = page.locator('section[aria-label="Example designs"]');
     await sec.scrollIntoViewIfNeeded();
-    await expect(sec.getByRole("heading", { name: "Designed to be used." })).toBeVisible();
+    await expect(sec.getByRole("heading", { name: "Made to be used." })).toBeVisible();
     for (const n of ["banking app", "class booking", "product page", "analytics dashboard", "activity tracker", "boarding pass"])
       await expect(sec.locator(`figure[aria-label="Example: ${n}"]`)).toHaveCount(1);
   });

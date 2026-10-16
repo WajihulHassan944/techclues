@@ -23,11 +23,11 @@ async function open(page: Page, path = "/zero-one") {
 test.describe("BUILD.ONE page", () => {
   test("renders the hero with metadata and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("BUILD.ONE | Build & Test Your Core Feature in a Week | TechClues");
+    await expect(page).toHaveTitle("BUILD.ONE | Core Feature Built and Tested in One Week | TechClues");
     await expect(page.locator("h1")).toContainText("BUILD.ONE");
-    await expect(page.locator("h1")).toContainText("From idea to something real.");
+    await expect(page.locator("h1")).toContainText("Turn an idea into something tangible.");
     const main = page.locator("main");
-    for (const t of ["From TechClues", "£499", "1 week", "Build → Test → Learn", "4 projects a month · £499 off any build booked within 30 days", "Who it's for", "Two ways to find out", "Why now", "Good ideas don't stay open for long."]) await expect(main).toContainText(t);
+    for (const t of ["By TechClues", "£499", "1 week", "Build → Test → Learn", "4 projects each month · £499 off any build reserved within 30 days", "Who this suits", "Two routes to an answer", "Why now", "Great ideas do not remain available for long."]) await expect(main).toContainText(t);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -48,28 +48,28 @@ test.describe("BUILD.ONE page", () => {
     await expect(page).toHaveURL(/#brief$/);
     await expect.poll(() => page.evaluate(() => document.getElementById("brief")!.getBoundingClientRect().top), { timeout: 8000 }).toBeLessThan(300);
     await page.evaluate(() => window.scrollTo(0, 0));
-    await page.getByRole("link", { name: "How the week works" }).click();
+    await page.getByRole("link", { name: "The week, step by step" }).click();
     await expect(page).toHaveURL(/#week$/);
   });
 
   test("cost comparison counts up when scrolled into view", async ({ page }) => {
     await open(page);
-    const card = page.locator("div.rounded-\\[24px\\]", { hasText: "Two ways to find out" });
+    const card = page.locator("div.rounded-\\[24px\\]", { hasText: "Two routes to an answer" });
     await expect(card).toContainText("£0");
     await card.scrollIntoViewIfNeeded();
     await expect(card).toContainText("£15,000", { timeout: 8000 });
     await expect(card).toContainText("£499", { timeout: 8000 });
     await expect(card).toContainText("7 days");
     await expect(card.getByText("3%", { exact: true })).toBeVisible();
-    await expect(card.getByText("About 3% of the cost, and you know in a week.")).toBeVisible();
+    await expect(card.getByText("Roughly 3% of the spend, with your answer inside a week.")).toBeVisible();
   });
 
   test("brief form checks the fields, then shows the thank-you with a booking link", async ({ page }) => {
     await open(page);
     const form = page.locator('form[data-form="zero_one_brief"]');
     await form.scrollIntoViewIfNeeded();
-    await form.getByRole("button", { name: "Send my brief" }).click();
-    await expect(form.getByRole("button", { name: "Send my brief" })).toBeVisible();
+    await form.getByRole("button", { name: "Submit my brief" }).click();
+    await expect(form.getByRole("button", { name: "Submit my brief" })).toBeVisible();
     await expect(form.locator("textarea[name=idea]:invalid")).toHaveCount(1);
     await form.locator("textarea[name=idea]").fill("An app that fills dental cancellations.");
     await form.locator("input[name=name]").fill("Sam Taylor");
@@ -81,15 +81,15 @@ test.describe("BUILD.ONE page", () => {
     page.on("request", (r) => {
       if (r.method() === "POST") posts.push(r.url());
     });
-    await form.getByRole("button", { name: "Send my brief" }).click();
-    await expect(form.getByText("Thanks, your brief is with our team.")).toBeVisible({ timeout: 5000 });
-    await expect(form.getByRole("button", { name: /Brief sent/ })).toBeVisible();
+    await form.getByRole("button", { name: "Submit my brief" }).click();
+    await expect(form.getByText("Thank you, our team has your brief.")).toBeVisible({ timeout: 5000 });
+    await expect(form.getByRole("button", { name: /Brief received/ })).toBeVisible();
     const link = form.locator('[data-cta="zero-one-book-call"]');
     await expect(link).toHaveAttribute("href", /^\/book-a-call\?name=Sam\+Taylor&email=sam%40example\.com&company=Acme&notes=BUILD\.ONE/);
     expect(posts.some((u) => u.includes("/api/public/zero-one"))).toBe(true);
     await link.click();
     await expect(page).toHaveURL(/\/book-a-call\?/);
-    await expect(page.getByRole("heading", { name: "Choose a time" })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("heading", { name: "Pick a time" })).toBeVisible({ timeout: 10_000 });
   });
 
   test("floating Book your slot button shows after scrolling, but not over the form", async ({ page }) => {

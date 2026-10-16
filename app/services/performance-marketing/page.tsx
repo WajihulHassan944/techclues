@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import PerformanceMarketingMarkup from "@/components/PerformanceMarketingMarkup";
 
 export const metadata: Metadata = {
-  title: "Performance Marketing Agency for UK Startups | TechClues",
+  title: "UK Startup Performance Marketing Agency | TechClues",
   description:
-    "Performance marketing for UK startups: waitlist and launch campaigns, paid social and Google Ads, landing page optimisation and clear reporting.",
+    "Performance marketing for UK startups, including waitlist and launch campaigns, paid social, Google Ads, landing page optimisation and transparent reporting.",
   alternates: { canonical: "https://techclues.co.uk/services/performance-marketing" },
 };
 

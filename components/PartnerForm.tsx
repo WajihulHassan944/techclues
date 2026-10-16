@@ -26,7 +26,7 @@ function Label({ label, optional, error, wide, children }: { label: string; opti
     <label className={cn("block min-w-0", wide && "sm:col-span-2")}>
       <span className="mb-1.5 flex items-baseline justify-between gap-3 text-[14px] font-medium text-ink">
         {label}
-        {optional && <span className="text-[13px] font-normal text-muted">Optional</span>}
+        {optional && <span className="text-[13px] font-normal text-muted">Not required</span>}
       </span>
       {children}
       {error && <span className="mt-1.5 block text-[13px] text-[#b42318]">{error}</span>}
@@ -44,7 +44,7 @@ function Select({ field, value, onChange, options, invalid }: { field?: string; 
         aria-invalid={invalid}
         className={cn(input(invalid ? "x" : undefined), "cursor-pointer appearance-none pr-10", !value && "text-muted/80")}
       >
-        <option value="">Choose…</option>
+        <option value="">Select…</option>
         {options.map((o) => (
           <option key={o} value={o} className="text-ink">
             {o}
@@ -79,23 +79,23 @@ export default function PartnerForm() {
   const rules: [string, string, (x: string) => boolean][] =
     mode === "join"
       ? [
-          ["name", "Add your name.", (x) => !!x],
-          ["email", "Check your email address.", (x) => EMAIL.test(x)],
-          ["kind", "Choose what describes you best.", (x) => !!x],
+          ["name", "Enter your name.", (x) => !!x],
+          ["email", "Please check your email address.", (x) => EMAIL.test(x)],
+          ["kind", "Select the option that fits you best.", (x) => !!x],
         ]
       : [
-          ["name", "Add your name.", (x) => !!x],
-          ["email", "Check your email address.", (x) => EMAIL.test(x)],
-          ["clientName", "Add the client's name.", (x) => !!x],
-          ["clientEmail", "Check the client's email address.", (x) => EMAIL.test(x)],
-          ["projectType", "Choose the type of project.", (x) => !!x],
+          ["name", "Enter your name.", (x) => !!x],
+          ["email", "Please check your email address.", (x) => EMAIL.test(x)],
+          ["clientName", "Enter the client's name.", (x) => !!x],
+          ["clientEmail", "Please check the client's email address.", (x) => EMAIL.test(x)],
+          ["projectType", "Select a project type.", (x) => !!x],
         ];
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const next: Record<string, string> = {};
     for (const [k, msg, ok] of rules) if (!ok(get(k))) next[k] = msg;
-    if (!agreed) next.agreed = mode === "join" ? "Please confirm you've read the programme rules." : "Please confirm the client has agreed to be contacted.";
+    if (!agreed) next.agreed = mode === "join" ? "Please confirm that you have read the programme rules." : "Please confirm that the client has agreed to be contacted.";
     setErrors(next);
     const first = Object.keys(next)[0];
     if (first) {
@@ -109,13 +109,13 @@ export default function PartnerForm() {
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+      setError(err instanceof ApiError ? err.message : "That did not go through. Please try once more.");
     }
   }
 
   const chips = (field: string, options: string[], error?: string) => (
     <fieldset className="min-w-0 sm:col-span-2">
-      <legend className="mb-2 text-[14px] font-medium text-ink">What describes you best?</legend>
+      <legend className="mb-2 text-[14px] font-medium text-ink">Which of these fits you best?</legend>
       <div className="flex flex-wrap gap-2">
         {options.map((o, i) => (
           <button
@@ -137,8 +137,8 @@ export default function PartnerForm() {
   if (status === "success") {
     return (
       <div className="rounded-[24px] bg-[#f6f7fb] p-8 text-center" role="status">
-        <p className="text-[20px] font-medium text-ink">{mode === "join" ? "Thanks — we've got your application." : "Thanks — we've got the referral."}</p>
-        <p className="mt-2 text-[15px] text-ink-soft">We reply within a few hours.</p>
+        <p className="text-[20px] font-medium text-ink">{mode === "join" ? "Thank you, your application has arrived." : "Thank you, the referral has arrived."}</p>
+        <p className="mt-2 text-[15px] text-ink-soft">Expect a reply within a few hours.</p>
       </div>
     );
   }
@@ -164,18 +164,18 @@ export default function PartnerForm() {
           </button>
         ))}
       </div>
-      <p className="mt-4 text-[14px] leading-relaxed text-muted">{mode === "join" ? "Free to join. Tell us a little about you and we'll send the programme terms." : "Already a partner? Introduce a client here, with their permission."}</p>
+      <p className="mt-4 text-[14px] leading-relaxed text-muted">{mode === "join" ? "Joining costs nothing. Share a few details about yourself and we will send over the programme terms." : "Already a partner? Introduce a client here, once they have given permission."}</p>
       <div key={mode} className="step-in mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <Label label="Your name" error={errors.name}>
+        <Label label="Full name" error={errors.name}>
           <input data-field="name" value={v.name ?? ""} onChange={(e) => set("name", e.target.value)} autoComplete="name" aria-invalid={!!errors.name} className={input(errors.name)} />
         </Label>
-        <Label label="Your email" error={errors.email}>
+        <Label label="Email address" error={errors.email}>
           <input data-field="email" type="email" inputMode="email" value={v.email ?? ""} onChange={(e) => set("email", e.target.value)} autoComplete="email" aria-invalid={!!errors.email} className={input(errors.email)} />
         </Label>
-        <Label label="Your company" optional>
+        <Label label="Company name" optional>
           <input value={v.company ?? ""} onChange={(e) => set("company", e.target.value)} autoComplete="organization" className={input()} />
         </Label>
-        <Label label="Your phone" optional>
+        <Label label="Phone number" optional>
           <input type="tel" inputMode="tel" value={v.phone ?? ""} onChange={(e) => set("phone", e.target.value)} autoComplete="tel" className={input()} />
         </Label>
         {mode === "join" ? (
@@ -184,41 +184,41 @@ export default function PartnerForm() {
             <Label label="Website or LinkedIn" optional>
               <input value={v.website ?? ""} onChange={(e) => set("website", e.target.value)} inputMode="url" placeholder="https://" className={input()} />
             </Label>
-            <Label label="Your clients are" optional>
+            <Label label="Where your clients are based" optional>
               <Select value={v.reach ?? ""} onChange={(x) => set("reach", x)} options={REACH} />
             </Label>
-            <Label label="Introductions you might make" optional wide>
+            <Label label="Introductions you could make" optional wide>
               <Select value={v.volume ?? ""} onChange={(x) => set("volume", x)} options={VOLUME} />
             </Label>
-            <Label label="Anything else?" optional wide>
-              <textarea value={v.notes ?? ""} onChange={(e) => set("notes", e.target.value)} rows={3} maxLength={1500} placeholder="Who you work with, and the kind of projects you see." className={area} />
+            <Label label="Anything to add?" optional wide>
+              <textarea value={v.notes ?? ""} onChange={(e) => set("notes", e.target.value)} rows={3} maxLength={1500} placeholder="The people you work with and the projects that come your way." className={area} />
             </Label>
           </>
         ) : (
           <>
             <div className="border-t border-ink/[0.08] pt-5 sm:col-span-2">
-              <p className="text-[14px] font-medium text-ink">The client</p>
+              <p className="text-[14px] font-medium text-ink">About the client</p>
             </div>
-            <Label label="Their name" error={errors.clientName}>
+            <Label label="Client name" error={errors.clientName}>
               <input data-field="clientName" value={v.clientName ?? ""} onChange={(e) => set("clientName", e.target.value)} aria-invalid={!!errors.clientName} className={input(errors.clientName)} />
             </Label>
-            <Label label="Their company" optional>
+            <Label label="Client company" optional>
               <input value={v.clientCompany ?? ""} onChange={(e) => set("clientCompany", e.target.value)} className={input()} />
             </Label>
-            <Label label="Their email" error={errors.clientEmail}>
+            <Label label="Client email" error={errors.clientEmail}>
               <input data-field="clientEmail" type="email" inputMode="email" value={v.clientEmail ?? ""} onChange={(e) => set("clientEmail", e.target.value)} aria-invalid={!!errors.clientEmail} className={input(errors.clientEmail)} />
             </Label>
-            <Label label="Their phone" optional>
+            <Label label="Client phone" optional>
               <input type="tel" inputMode="tel" value={v.clientPhone ?? ""} onChange={(e) => set("clientPhone", e.target.value)} className={input()} />
             </Label>
-            <Label label="Type of project" error={errors.projectType}>
+            <Label label="Project type" error={errors.projectType}>
               <Select field="projectType" value={v.projectType ?? ""} onChange={(x) => set("projectType", x)} options={[...PROJECTS, "Not sure yet"]} invalid={!!errors.projectType} />
             </Label>
-            <Label label="Rough budget" optional>
+            <Label label="Approximate budget" optional>
               <Select value={v.budget ?? ""} onChange={(x) => set("budget", x)} options={BUDGET} />
             </Label>
-            <Label label="About the project" optional wide>
-              <textarea value={v.notes ?? ""} onChange={(e) => set("notes", e.target.value)} rows={3} maxLength={1500} placeholder="What they want to build or improve, and any timing." className={area} />
+            <Label label="Project details" optional wide>
+              <textarea value={v.notes ?? ""} onChange={(e) => set("notes", e.target.value)} rows={3} maxLength={1500} placeholder="What they hope to build or improve, and when." className={area} />
             </Label>
           </>
         )}
@@ -236,14 +236,14 @@ export default function PartnerForm() {
           <span className="text-[14px] leading-relaxed text-ink-soft">
             {mode === "join" ? (
               <>
-                I&apos;ve read the{" "}
+                I have read the{" "}
                 <a href="#rules" className="text-ink underline decoration-ink/30 underline-offset-2 hover:decoration-brand">
                   programme rules
                 </a>
                 .
               </>
             ) : (
-              "The client has agreed to TechClues contacting them about this project."
+              "The client has agreed that TechClues may contact them about this project."
             )}
             {errors.agreed && <span className="mt-1 block text-[13px] text-[#b42318]">{errors.agreed}</span>}
           </span>
@@ -269,14 +269,14 @@ export default function PartnerForm() {
         data-cta={mode === "join" ? "partner-apply" : "partner-refer"}
         className="group mt-6 inline-flex h-13 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-white transition-all duration-300 hover:bg-brand hover:shadow-[0_12px_30px_-10px_rgba(0,100,255,0.7)] active:scale-[0.99] disabled:cursor-wait disabled:opacity-70"
       >
-        {status === "submitting" ? "Sending…" : mode === "join" ? "Apply to join" : "Send the referral"}
+        {status === "submitting" ? "Sending…" : mode === "join" ? "Apply to join" : "Submit the referral"}
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
           <path d="M5 12h14" />
           <path d="m12 5 7 7-7 7" />
         </svg>
       </button>
       <p className="mt-4 text-center text-[12.5px] leading-relaxed text-muted">
-        We&apos;ll use these details only for the programme.{" "}
+        These details are used only for the programme.{" "}
         <a href="/privacy-policy" className="underline underline-offset-2 hover:text-ink">
           Privacy policy
         </a>

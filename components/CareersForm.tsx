@@ -28,7 +28,7 @@ function Field({ label, optional, ...rest }: { label: string; optional?: boolean
     <label className="group block">
       <span className="text-[13px] text-muted transition-colors group-focus-within:text-brand">
         {label}
-        {optional && <span className="text-ink/30"> · optional</span>}
+        {optional && <span className="text-ink/30"> · not required</span>}
       </span>
       <input
         {...rest}
@@ -66,22 +66,22 @@ export default function CareersForm() {
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+      setError(err instanceof ApiError ? err.message : "That did not go through. Please try once more.");
     }
   };
 
   if (status === "success") {
     return (
       <div className="rounded-2xl bg-[#f1f0f6] p-8 text-center" role="status">
-        <p className="text-[20px] font-medium text-ink">Thanks — we&apos;ve got your application.</p>
-        <p className="mt-2 text-[15px] text-ink-soft">We reply within a few hours.</p>
+        <p className="text-[20px] font-medium text-ink">Thank you, your application has arrived.</p>
+        <p className="mt-2 text-[15px] text-ink-soft">Expect a reply within a few hours.</p>
       </div>
     );
   }
 
   return (
     <form data-form="careers" data-clarity-mask="True" onSubmit={submit} className="space-y-12">
-      <Step n="01" title="What do you do?">
+      <Step n="01" title="What is your field?">
         <div className="flex flex-wrap gap-2">
           {SKILLS.map((s) => {
             const on = areas.includes(s);
@@ -101,7 +101,7 @@ export default function CareersForm() {
         </div>
         {areas.includes("Other") && (
           <div className="mt-6 max-w-[520px]">
-            <Field label="What else do you do?" name="other" optional autoFocus value={other} onChange={(e) => setOther(e.target.value)} />
+            <Field label="What else is your field?" name="other" optional autoFocus value={other} onChange={(e) => setOther(e.target.value)} />
           </div>
         )}
       </Step>
@@ -109,18 +109,18 @@ export default function CareersForm() {
         <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
           <Field label="Name" name="name" required autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
           <Field label="Email" name="email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <Field label="Where are you based?" name="location" optional autoComplete="address-level2" value={location} onChange={(e) => setLocation(e.target.value)} />
-          <Field label="Portfolio, GitHub or LinkedIn" name="link" type="url" optional placeholder="https://" value={link} onChange={(e) => setLink(e.target.value)} />
+          <Field label="Where do you live?" name="location" optional autoComplete="address-level2" value={location} onChange={(e) => setLocation(e.target.value)} />
+          <Field label="Portfolio, GitHub or LinkedIn link" name="link" type="url" optional placeholder="https://" value={link} onChange={(e) => setLink(e.target.value)} />
         </div>
       </Step>
-      <Step n="03" title="Your work">
+      <Step n="03" title="Your experience">
         <label className="group block">
-          <span className="text-[13px] text-muted transition-colors group-focus-within:text-brand">Tell us about yourself</span>
+          <span className="text-[13px] text-muted transition-colors group-focus-within:text-brand">Introduce yourself</span>
           <textarea
             name="message"
             required
             rows={4}
-            placeholder="What have you built, and what would you like to work on next?"
+            placeholder="What have you made so far, and what would you like to take on next?"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="mt-2 w-full resize-none border-b border-ink/15 bg-transparent pb-3 text-[18px] leading-relaxed text-ink transition-colors placeholder:text-ink/25 focus:border-brand focus:outline-none focus-visible:outline-none"
@@ -145,7 +145,7 @@ export default function CareersForm() {
             <a className="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:decoration-brand" href="/privacy-policy">
               privacy policy
             </a>
-            , and to TechClues keeping my details to consider me for work.
+            , and to TechClues holding my details so it can consider me for roles.
           </span>
         </label>
         {status === "error" && (
@@ -155,7 +155,7 @@ export default function CareersForm() {
         )}
         <div className="mt-7">
           <button type="submit" disabled={status === "submitting"} className="group inline-flex h-14 items-center gap-2 rounded-full bg-brand pl-7 pr-6 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-ink disabled:opacity-60">
-            {status === "submitting" ? "Sending…" : "Send application"}
+            {status === "submitting" ? "Sending…" : "Submit application"}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
               <path d="M5 12h14" />
               <path d="m12 5 7 7-7 7" />

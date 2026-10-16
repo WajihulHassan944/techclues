@@ -4,9 +4,9 @@ import { listPublicPosts } from "@/lib/api/blog";
 import { formatDate } from "@/lib/blog-render";
 
 export const metadata: Metadata = {
-  title: "MVP & Startup Insights | TechClues Blog",
+  title: "TechClues Blog | Startup & MVP Insights",
   description:
-    "Practical guides for founders on validating ideas, product strategy and building MVPs that work, from a West Midlands product studio.",
+    "Hands-on guidance for founders on testing ideas, shaping product strategy and building MVPs that succeed, written by a West Midlands product studio.",
   alternates: { canonical: "https://techclues.co.uk/blog" },
 };
 

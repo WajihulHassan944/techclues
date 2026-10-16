@@ -4,15 +4,15 @@ export type Option = { id: string; name: string; text: string; multiplier: numbe
 export type Feature = { id: string; name: string; baseCost: number; weeks: number };
 
 export const goals: Option[] = [
-  { id: "mvp", name: "Start with an MVP", text: "Test the idea with real users first.", multiplier: 1 },
-  { id: "full", name: "Build a full product", text: "A complete platform, ready to scale.", multiplier: 1.5 },
-  { id: "update", name: "Update a product", text: "Improve or extend what you have.", multiplier: 0.7 },
+  { id: "mvp", name: "Start with an MVP", text: "Try the idea out on real users first.", multiplier: 1 },
+  { id: "full", name: "Build a full product", text: "A finished platform, built to grow.", multiplier: 1.5 },
+  { id: "update", name: "Update a product", text: "Improve or expand what you already have.", multiplier: 0.7 },
 ];
 
 export const platforms: Option[] = [
-  { id: "web", name: "Web app", text: "Works in every browser.", multiplier: 0.5 },
+  { id: "web", name: "Web app", text: "Runs in any browser.", multiplier: 0.5 },
   { id: "mobile", name: "Mobile app", text: "iOS and Android.", multiplier: 1.2 },
-  { id: "both", name: "Web + mobile", text: "Every screen, one product.", multiplier: 1.7 },
+  { id: "both", name: "Web + mobile", text: "All screens, a single product.", multiplier: 1.7 },
 ];
 
 export const features: Feature[] = [

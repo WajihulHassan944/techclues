@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const REVIEWS = [
-  { q: "TechClues took our idea from a rough sketch to a live MVP in under six weeks. We saw a working build every week, and the price never moved from the original quote.", ini: "DH", name: "Daniel Hughes", role: "Founder, UK property start-up" },
-  { q: "Our old website looked fine but never brought in enquiries. After the rebuild with TechClues the pages load faster and calls from Google started coming in within the first month.", ini: "AS", name: "Amira Siddiqui", role: "Practice manager, dental clinic" },
-  { q: "We came to them with a half-finished prototype built with AI tools. They tidied it up, secured it and got it ready for real customers, and explained every decision in plain English.", ini: "TF", name: "Tom Fletcher", role: "CEO, e-commerce start-up" },
-  { q: "They automated our order and stock handling with a custom dashboard. My team saves hours every day and I finally have one place to see sales, inventory and staff tasks.", ini: "PN", name: "Priya Nair", role: "Operations director, retail business" },
+  { q: "TechClues turned our rough sketch into a live MVP in less than six weeks. A working build landed in front of us weekly, and the cost stayed exactly as first quoted.", ini: "DH", name: "Daniel Hughes", role: "Founder, UK property start-up" },
+  { q: "The old site looked decent but never generated enquiries. Since TechClues rebuilt it, pages load quicker and phone calls from Google began arriving in the first month.", ini: "AS", name: "Amira Siddiqui", role: "Practice manager, dental clinic" },
+  { q: "We arrived with a part-built prototype made using AI tools. They cleaned it up, locked it down and made it fit for actual customers, explaining each choice in everyday English.", ini: "TF", name: "Tom Fletcher", role: "CEO, e-commerce start-up" },
+  { q: "A custom dashboard from them now handles our orders and stock automatically. My team gets hours back each day, and at last I can see sales, inventory and staff tasks in one place.", ini: "PN", name: "Priya Nair", role: "Operations director, retail business" },
 ];
 
 const INTERVAL_MS = 7000;

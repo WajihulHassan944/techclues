@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import BrandStrategyMarkup from "@/components/BrandStrategyMarkup";
 
 export const metadata: Metadata = {
-  title: "Branding Agency for Startups in West Midlands | TechClues",
+  title: "West Midlands Branding Agency for Startups | TechClues",
   description:
-    "Brand strategy and identity for UK startups: market research, positioning, messaging, logo and visual identity, with guidelines your team can use.",
+    "Brand strategy and identity for UK startups, covering market research, positioning, messaging, logo and visual identity, plus guidelines your team can put to work.",
   alternates: { canonical: "https://techclues.co.uk/services/brand-strategy" },
 };
 

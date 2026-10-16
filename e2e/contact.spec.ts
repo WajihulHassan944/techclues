@@ -25,11 +25,11 @@ const MAP = 'section[aria-label="Where we are"]';
 test.describe("contact page", () => {
   test("renders with metadata, intro, contact details and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Contact TechClues | Book a Free MVP Strategy Call");
-    await expect(page.locator("h1")).toContainText("Let's build");
-    await expect(page.locator("h1")).toContainText("something together.");
-    await expect(page.getByText("Tell us about your idea. We'll get back to you within a few hours.")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Book a free 30-minute call" })).toHaveAttribute("href", "/book-a-call");
+    await expect(page).toHaveTitle("Contact TechClues | Book Your Free MVP Strategy Call");
+    await expect(page.locator("h1")).toContainText("Let's create");
+    await expect(page.locator("h1")).toContainText("something jointly.");
+    await expect(page.getByText("Share your idea with us and expect our reply within a few hours.")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Reserve a free 30-minute call" })).toHaveAttribute("href", "/book-a-call");
     const main = page.locator("main");
     await expect(main.getByRole("link", { name: "techcluesltd@gmail.com" })).toHaveAttribute("href", "mailto:techcluesltd@gmail.com");
     await expect(main.locator('a[href="tel:+447472411699"]')).toHaveCount(1);
@@ -56,7 +56,7 @@ test.describe("contact page", () => {
     await expect(form.locator("input[name=other]")).toHaveCount(0);
     await form.getByRole("button", { name: "Other" }).click();
     await expect(form.locator("input[name=other]")).toBeFocused();
-    await expect(form.getByText("What else do you need?")).toBeVisible();
+    await expect(form.getByText("What else are you after?")).toBeVisible();
     await form.getByRole("button", { name: "Other" }).click();
     await expect(form.locator("input[name=other]")).toHaveCount(0);
   });
@@ -78,7 +78,7 @@ test.describe("contact page", () => {
     await open(page);
     const form = page.locator("form[data-form=contact]");
     await form.scrollIntoViewIfNeeded();
-    await form.getByRole("button", { name: "Send enquiry" }).click();
+    await form.getByRole("button", { name: "Submit enquiry" }).click();
     await expect(page).toHaveURL(/\/contact$/);
     expect(await form.locator("input[name=name]").evaluate((e) => (e as HTMLInputElement).validity.valueMissing)).toBe(true);
     await form.locator("input[name=name]").fill("Sam Example");
@@ -86,10 +86,10 @@ test.describe("contact page", () => {
     await form.locator("textarea[name=message]").fill("An app for dog walkers.");
     await form.locator("input[name=consent]").check();
     expect(await form.evaluate((f) => (f as HTMLFormElement).checkValidity())).toBe(true);
-    await form.getByRole("button", { name: "Send enquiry" }).click();
+    await form.getByRole("button", { name: "Submit enquiry" }).click();
     await expect(page).toHaveURL(/\/contact$/);
-    await expect(page.getByText("Thanks — we've got your message.")).toBeVisible();
-    await expect(page.getByText("We reply within a few hours.")).toBeVisible();
+    await expect(page.getByText("Thank you, your message has arrived.")).toBeVisible();
+    await expect(page.getByText("Expect a reply within a few hours.")).toBeVisible();
   });
 
   test("map starts on West Midlands and hovering Islamabad moves the highlight", async ({ page }) => {

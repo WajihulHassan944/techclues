@@ -34,13 +34,27 @@ const CATEGORIES: [string, string, number, string, string][] = [
   ["fit", "Industries & fit", 7, "", ""],
 ];
 
+// visible text of each category chip (section aria-labels keep the original names)
+const CHIP_LABELS: Record<string, string> = {
+  "getting-started": "First steps",
+  pricing: "Costs & billing",
+  process: "Schedules & workflow",
+  mvp: "MVPs & idea testing",
+  design: "Design & branding",
+  technology: "Engineering & tech",
+  ai: "AI",
+  launch: "Go-live, support & hand-off",
+  "working-together": "How we collaborate",
+  fit: "Sectors & suitability",
+};
+
 test.describe("faq page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("FAQ | Costs, Timelines & How We Build | TechClues");
+    await expect(page).toHaveTitle("FAQ | Costs, Timelines & How We Work | TechClues");
     await expect(page.locator("h1")).toContainText("Questions,");
-    await expect(page.locator("h1")).toContainText("answered straight.");
-    await expect(page.getByText("Costs, timelines, ownership and what happens after launch. If yours isn't here, ask us on the call.")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("plainly answered.");
+    await expect(page.getByText("Pricing, schedules, ownership and life after launch. Can't spot your question? Raise it on the call.")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -51,7 +65,7 @@ test.describe("faq page", () => {
     expect(labels).toEqual([...CATEGORIES.map((c) => c[1]), "Start your project"]);
     const chips = page.locator("main ul").first().getByRole("link");
     await expect(chips).toHaveCount(10);
-    for (const [id, label] of CATEGORIES) await expect(page.locator("main ul").first().getByRole("link", { name: label, exact: true })).toHaveAttribute("href", `#${id}`);
+    for (const [id] of CATEGORIES) await expect(page.locator("main ul").first().getByRole("link", { name: CHIP_LABELS[id], exact: true })).toHaveAttribute("href", `#${id}`);
   });
 
   test("78 questions in total, each category with its own count", async ({ page }) => {
@@ -90,7 +104,7 @@ test.describe("faq page", () => {
 
   test("a category chip scrolls to its section", async ({ page }) => {
     await open(page);
-    await page.locator("main ul").first().getByRole("link", { name: "Launch, support & handover", exact: true }).click();
+    await page.locator("main ul").first().getByRole("link", { name: "Go-live, support & hand-off", exact: true }).click();
     await expect.poll(() => page.evaluate(() => document.querySelector("#launch")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(260);
     await expect(page).toHaveURL(/\/faq(#launch)?$/);
   });

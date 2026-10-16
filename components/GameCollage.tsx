@@ -24,19 +24,19 @@ export default function GameCollage() {
         <div ref={stage} className="gd-stage-in">
           <div className="gd-layer gd-layer-a">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/game/setup.jpg" alt="A neon-lit game development workspace" loading="lazy" />
+            <img src="/images/game/setup.jpg" alt="A game studio desk lit by neon" loading="lazy" />
           </div>
           <div className="gd-layer gd-layer-b">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/game/controller.jpg" alt="A game controller in blue and orange light" loading="lazy" />
+            <img src="/images/game/controller.jpg" alt="A gamepad under blue and orange lighting" loading="lazy" />
           </div>
           <div className="gd-layer gd-layer-c gd-glass-light" aria-hidden="true">
             <span>Unreal Engine 5</span>
             <b>90 FPS · Quest 3</b>
           </div>
           <div className="gd-layer gd-layer-d gd-glass-light" aria-hidden="true">
-            <span>Build</span>
-            <b>Shipped to 6 platforms</b>
+            <span>Release</span>
+            <b>Live on 6 platforms</b>
           </div>
         </div>
       </div>

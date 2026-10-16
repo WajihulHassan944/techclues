@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import WebMobileAppsMarkup from "@/components/WebMobileAppsMarkup";
 
 export const metadata: Metadata = {
-  title: "App Development Company in West Midlands & the UK | TechClues",
+  title: "West Midlands & UK App Development Company | TechClues",
   description:
-    "Web and mobile app development for UK startups and SMEs. iOS, Android and web apps built with React Native, Flutter and Next.js, designed to perform.",
+    "We develop web and mobile apps for UK startups and SMEs: iOS, Android and web products made with React Native, Flutter and Next.js, built to perform well.",
   alternates: { canonical: "https://techclues.co.uk/services/web-mobile-apps" },
 };
 

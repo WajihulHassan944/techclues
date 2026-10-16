@@ -18,20 +18,20 @@ const STAGES: Stage[] = [
   {
     key: "reach",
     name: "Reach",
-    who: "Someone who has never heard of you sees your ad while they scroll.",
-    doing: ["Research who your customers are and where they spend time", "Write the copy and design the ads", "Target by interest, job title and location"],
-    metric: { name: "Reach and cost per 1,000 views (CPM)", text: "How many of the right people see your ad, and what it costs to show it to them." },
+    who: "A person who has never come across you spots your ad as they scroll.",
+    doing: ["Work out who your customers are and where they spend their time", "Write the copy and create the ad designs", "Target by interest, job title and place"],
+    metric: { name: "Reach and cost per 1,000 views (CPM)", text: "The number of suitable people who see your ad, and the price of putting it in front of them." },
     example: { value: [1e4, 1e4], unit: "people" },
     people: [1e4, 1e4],
-    verb: "see your ad",
+    verb: "view your ad",
     tools: ["Meta Ads", "TikTok Ads", "LinkedIn Ads"],
   },
   {
     key: "click",
     name: "Click",
-    who: "They click through to a page built around one clear action.",
-    doing: ["Google Ads for people already searching for what you offer", "Landing pages with one message and one button", "Heatmaps that show where visitors get stuck"],
-    metric: { name: "Click-through rate (CTR)", text: "The share of people who see your ad and click it." },
+    who: "They follow the click to a page designed around a single clear action.",
+    doing: ["Google Ads aimed at people already searching for what you sell", "Landing pages carrying one message and one button", "Heatmaps revealing where visitors get stuck"],
+    metric: { name: "Click-through rate (CTR)", text: "The proportion of people who see your ad and then click on it." },
     example: { value: [1.5, 2], unit: "%" },
     people: [150, 200],
     verb: "click through",
@@ -40,9 +40,9 @@ const STAGES: Stage[] = [
   {
     key: "convert",
     name: "Convert",
-    who: "They join the waitlist, book a call or buy.",
-    doing: ["Track every sign-up, booking and sale", "A/B test headlines, offers and forms", "Remind visitors who left without acting"],
-    metric: { name: "Conversion rate", text: "The share of visitors who act. Set against your spend, it gives your cost per customer (CPA)." },
+    who: "They sign up to the waitlist, book a call or make a purchase.",
+    doing: ["Measure every sign-up, booking and sale", "A/B test headlines, offers and forms", "Nudge visitors who left without acting"],
+    metric: { name: "Conversion rate", text: "The proportion of visitors who take action. Compared with your spend, it shows your cost per customer (CPA)." },
     example: { value: [6, 9], unit: "%" },
     people: [9, 18],
     verb: "sign up or buy",
@@ -51,12 +51,12 @@ const STAGES: Stage[] = [
   {
     key: "return",
     name: "Return",
-    who: "Follow-up emails and offers bring them back to buy again.",
-    doing: ["Welcome and follow-up emails", "Offers that bring past customers back", "Regular reports on what each customer is worth"],
-    metric: { name: "Repeat rate", text: "The share of customers who come back. It drives what each customer is worth over time (LTV)." },
+    who: "Follow-up emails and offers draw them back to purchase again.",
+    doing: ["Welcome emails and follow-ups", "Offers that win previous customers back", "Regular reporting on the value of each customer"],
+    metric: { name: "Repeat rate", text: "The proportion of customers who return. It shapes how much each customer is worth over time (LTV)." },
     example: { value: [33, 50], unit: "%" },
     people: [3, 9],
-    verb: "come back for more",
+    verb: "return for more",
     tools: ["HubSpot", "Mailchimp"],
   },
 ];
@@ -389,7 +389,7 @@ export default function MarketingFunnel() {
               style={{ left: pill.left, width: pill.width, transition: "left .45s cubic-bezier(.16,1,.3,1), width .45s cubic-bezier(.16,1,.3,1)" }}
             />
           )}
-          {["Before testing", "After testing"].map((label, i) => (
+          {["Pre-test", "Post-test"].map((label, i) => (
             <button
               key={label}
               ref={(el) => { modeBtns.current[i] = el; }}
@@ -405,19 +405,19 @@ export default function MarketingFunnel() {
         </div>
         <div className="mt-4 grid text-[15px] text-ink-soft">
           <p aria-hidden="true" className="invisible [grid-area:1/1]">
-            Out of 10,000 people:{" "}
+            From every 10,000 people:{" "}
             <span className="font-medium">
               <span className={NUM} style={{ minWidth: widthCh(B) }}>{Math.max(...B)}</span> customers
             </span>
-            , <span className={NUM} style={{ minWidth: widthCh(D) }}>{Math.max(...D)}</span> coming back
-            <span className={CHIP}>{q}× the customers</span>
+            , <span className={NUM} style={{ minWidth: widthCh(D) }}>{Math.max(...D)}</span> returning
+            <span className={CHIP}>{q}× as many customers</span>
           </p>
           <p aria-live="polite" className="[grid-area:1/1]">
-            Out of 10,000 people:{" "}
+            From every 10,000 people:{" "}
             <span className="font-medium text-ink">
               <Num value={B[mode]} still={still} className={NUM} style={{ minWidth: widthCh(B) }} /> customers
             </span>
-            , <Num value={D[mode]} still={still} className={NUM} style={{ minWidth: widthCh(D) }} /> coming back
+            , <Num value={D[mode]} still={still} className={NUM} style={{ minWidth: widthCh(D) }} /> returning
             <span
               className={CHIP}
               style={{
@@ -427,7 +427,7 @@ export default function MarketingFunnel() {
                 transition: mode === 1 ? `opacity .4s ${EASE} .5s, transform .4s ${EASE} .5s` : `opacity .2s, transform .2s, visibility 0s .2s`,
               }}
             >
-              {q}× the customers
+              {q}× as many customers
             </span>
           </p>
         </div>
@@ -603,7 +603,7 @@ export default function MarketingFunnel() {
           ))}
         </div>
         <p className="mt-6 max-w-[520px] text-[13px] leading-relaxed text-muted">
-          Example figures to show how the stages connect, not a forecast. Your real numbers come from your own tracking.
+          These sample figures illustrate how the stages link up and are not a forecast. Your actual numbers come from your own tracking.
         </p>
       </div>
       <div className="relative overflow-hidden rounded-[28px] bg-white p-6 shadow-[0_40px_80px_-50px_rgba(14,15,49,0.35)] ring-1 ring-ink/10 sm:p-8">
@@ -635,7 +635,7 @@ export default function MarketingFunnel() {
                 <p className="text-[13px] font-medium text-muted">Stage {i + 1} of {STAGES.length}</p>
                 <h3 className="mt-2 text-[clamp(1.7rem,2.4vw,2.2rem)] font-normal leading-tight tracking-[-0.03em] text-ink">{s.name}</h3>
                 <p className="mt-2 text-[16px] leading-relaxed text-ink-soft">{s.who}</p>
-                <p className="mt-6 text-[13px] font-medium text-muted">What we do</p>
+                <p className="mt-6 text-[13px] font-medium text-muted">Our part</p>
                 <ul className="mt-3 space-y-2.5">
                   {s.doing.map((d) => (
                     <li key={d} className="flex items-start gap-3 text-[15px] leading-snug text-ink">
@@ -649,7 +649,7 @@ export default function MarketingFunnel() {
                 <div className="mt-6 rounded-2xl bg-paper p-4 ring-1 ring-ink/5 sm:p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-[13px] font-medium text-muted">What we track</p>
+                      <p className="text-[13px] font-medium text-muted">What we measure</p>
                       <p className="mt-1 text-[16px] font-medium leading-snug text-ink">{s.metric.name}</p>
                     </div>
                     <div className="shrink-0 text-right">

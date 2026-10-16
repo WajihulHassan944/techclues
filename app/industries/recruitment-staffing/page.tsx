@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import RecruitmentStaffingMarkup from "@/components/RecruitmentStaffingMarkup";
 
 export const metadata: Metadata = {
-  title: "Recruitment Software Development in the UK | TechClues",
+  title: "UK Recruitment Software Development | TechClues",
   description:
-    "Recruitment software for UK agencies: job boards, candidate and client portals, smart matching, timesheets and workflow automation.",
+    "Software for UK recruitment agencies, including job boards, candidate and client portals, intelligent matching, timesheets and automated workflows.",
   alternates: { canonical: "https://techclues.co.uk/industries/recruitment-staffing" },
 };
 

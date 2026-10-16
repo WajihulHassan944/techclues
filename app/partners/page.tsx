@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import PartnersMarkup from "@/components/PartnersMarkup";
 
 export const metadata: Metadata = {
-  title: "Partner Referral Programme | Earn 10% for Introductions",
+  title: "Partner Referral Programme | Earn 10% Per Introduction",
   description:
-    "Introduce a client to TechClues and earn 10% of the project fees, up to £5,000 a referral, paid as the client pays. For agencies, freelancers, advisers and past clients.",
+    "Refer a client to TechClues and receive 10% of the project fees, capped at £5,000 per referral, paid as the client pays. Open to agencies, freelancers, advisers and past clients.",
   alternates: { canonical: "https://techclues.co.uk/partners" },
 };
 

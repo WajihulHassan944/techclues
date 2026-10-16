@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import MvpDevelopmentMarkup from "@/components/MvpDevelopmentMarkup";
 
 export const metadata: Metadata = {
-  title: "MVP Development Services for UK Startups | TechClues",
+  title: "UK Startup MVP Development Services | TechClues",
   description:
-    "MVP development for UK founders. We test your idea with real users, then build a lean MVP in as little as 2–4 weeks, price agreed up front, from West Midlands.",
+    "MVP development for UK founders. We first put your idea in front of real users, then deliver a lean MVP in as little as 2–4 weeks at a price agreed up front, from West Midlands.",
   alternates: { canonical: "https://techclues.co.uk/services/mvp-development" },
 };
 

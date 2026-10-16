@@ -33,12 +33,12 @@ const scrollTo = (page: Page, sel: string, viewportFraction: number) =>
 test.describe("about page", () => {
   test("renders with metadata, hero, stats and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("About TechClues | MVP Development Studio in West Midlands");
-    await expect(page.locator("h1")).toContainText("We're where ideas start.");
-    await expect(page.getByText("An MVP studio in West Midlands. We help founders test ideas with real users, then build the ones that work.")).toBeVisible();
-    await expect(page.getByText("Build less. Learn faster. Launch what people want.")).toBeVisible();
+    await expect(page).toHaveTitle("About TechClues | West Midlands MVP Development Studio");
+    await expect(page.locator("h1")).toContainText("Ideas begin with us.");
+    await expect(page.getByText("An MVP studio in West Midlands. Founders come to us to try ideas on real users, then we build the survivors.")).toBeVisible();
+    await expect(page.getByText("Make less. Learn quicker. Ship what people want.")).toBeVisible();
     const glance = page.locator('section[aria-label="TechClues at a glance"]');
-    for (const t of ["200+", "Products delivered", "4.3", "Rating on Trustpilot", "2–4 weeks", "West Midlands"]) await expect(glance).toContainText(t);
+    for (const t of ["200+", "Products shipped", "4.3", "Trustpilot score", "2–4 weeks", "West Midlands"]) await expect(glance).toContainText(t);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -121,17 +121,17 @@ test.describe("about page", () => {
     await expect.poll(() => pad.evaluate((e) => parseFloat(getComputedStyle(e).paddingLeft))).toBe(0);
     const y2 = await photo.evaluate((e) => (e as HTMLElement).style.transform);
     expect(y2).not.toBe(y1);
-    await expect(banner.getByText("Built side by side with founders.")).toBeVisible();
+    await expect(banner.getByText("Working shoulder to shoulder with founders.")).toBeVisible();
   });
 
   test("promises, community and call-to-action content is there", async ({ page }) => {
     await open(page);
     const promises = page.locator('section[aria-label="Our promises"]');
-    for (const t of ["You'll always know where things stand", "We'll tell you what not to build", "A working first version, fast", "We see it through to something that works", "Daniel Hughes", "Amira Siddiqui", "Tom Fletcher", "Priya Nair"])
+    for (const t of ["You'll never be left guessing", "We'll say what you shouldn't build", "A usable first version, quickly", "We stay on until it genuinely works", "Daniel Hughes", "Amira Siddiqui", "Tom Fletcher", "Priya Nair"])
       await expect(promises).toContainText(t);
-    await expect(promises.getByRole("link", { name: /Read every review/ })).toHaveAttribute("href", "https://uk.trustpilot.com/review/techclues.co.uk");
+    await expect(promises.getByRole("link", { name: /Browse all reviews/ })).toHaveAttribute("href", "https://uk.trustpilot.com/review/techclues.co.uk");
     const community = page.locator('section[aria-label="Our global presence"]');
-    for (const t of ["Based in the UK, working worldwide.", "West Midlands, UK", "Islamabad, PK"]) await expect(community).toContainText(t);
+    for (const t of ["Rooted in the UK, serving the world.", "West Midlands, UK", "Islamabad, PK"]) await expect(community).toContainText(t);
     await expect(page.locator('section[aria-label="Start your project"]')).toHaveCount(1);
   });
 
@@ -170,7 +170,7 @@ test.describe("about page", () => {
     await page.locator("header nav").getByRole("button", { name: "Company" }).hover();
     await page.locator("header [data-nav-panel]:not(.hidden)").getByRole("link", { name: /About/ }).first().click();
     await expect(page).toHaveURL(/\/about$/);
-    await expect(page.locator("h1")).toContainText("We're where ideas start.");
+    await expect(page.locator("h1")).toContainText("Ideas begin with us.");
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(5);
   });
 });

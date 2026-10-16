@@ -85,21 +85,21 @@ export default async function StaffAugmentationMarkup() {
             <span className="block text-[15px] font-medium tracking-normal text-brand sm:text-[16px]">Staff augmentation</span>
             <span className="mt-4 block overflow-hidden pb-[0.12em] text-[clamp(2.4rem,5.4vw,5.5rem)] font-normal leading-[1.03] tracking-[-0.05em]">
               <span className="svc-rise block" style={{ "--d": "0.1s" } as React.CSSProperties}>
-                Your engineering and AI team, embedded.
+                Our engineers and AI team, inside yours.
               </span>
             </span>
           </h1>
           <div className="svc-in flex flex-col items-center" style={{ "--d": "0.3s", "--y": "16px" } as React.CSSProperties}>
             <p className="mt-4 max-w-[620px] text-[18px] leading-relaxed text-ink-soft">
-              We embed vetted engineers and AI specialists inside your team from day one, so architectural decisions and production learning stay in your organisation.
+              From the first day, vetted engineers and AI specialists sit within your team, so architectural choices and lessons from production stay in your organisation.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
               <a href="#get-started" data-cta="service-hero-scope-team" className="group inline-flex h-13 items-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand">
-                Scope your team
+                Define your team
                 <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
               <a href="#engagement" className="group relative inline-flex items-center gap-1.5 text-[16px] font-medium text-ink">
-                See engagement models
+                Explore engagement models
                 <span className="absolute -bottom-1 left-0 h-px w-full origin-right scale-x-100 bg-ink/30 transition-transform duration-500 group-hover:origin-left group-hover:scale-x-0" />
                 <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-brand transition-transform delay-150 duration-500 group-hover:scale-x-100" />
               </a>
@@ -132,8 +132,8 @@ export default async function StaffAugmentationMarkup() {
       <section aria-label="Key challenges" className={SEC}>
         <div className={WRAP}>
           <div data-reveal="" style={rv()}>
-            <Eyebrow>Key challenges</Eyebrow>
-            <H2>Where hiring slows down delivery.</H2>
+            <Eyebrow>Main challenges</Eyebrow>
+            <H2>Where recruitment holds back delivery.</H2>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4">
             {CHALLENGES.map(([tag, title, text, chip], n) => (
@@ -152,18 +152,18 @@ export default async function StaffAugmentationMarkup() {
       <section aria-label="Our approach" className={SEC}>
         <div className={`${WRAP} grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-20`}>
           <div data-reveal="" style={rv()}>
-            <Eyebrow>Our approach</Eyebrow>
-            <H2>Your team, not a separate one.</H2>
+            <Eyebrow>How we operate</Eyebrow>
+            <H2>Your team, never a separate one.</H2>
             <p className="mt-6 max-w-[520px] text-[17px] leading-relaxed text-ink-soft">
-              TechClues engineers and AI specialists report into your existing team structure, use your tools, and follow your process, not a detached vendor team working in parallel.
+              Our TechClues engineers and AI specialists slot into your current team structure, work with your tools and follow your process, rather than operating as a separate vendor team alongside.
             </p>
             <p className="mt-4 max-w-[520px] text-[17px] leading-relaxed text-ink-soft">
-              Production learning, architectural decisions, and model and data context stay inside your organisation instead of leaving with an external team. You keep full control of the roadmap, the code, and the IP; we handle sourcing, vetting, and the employment relationship.
+              Lessons from production, architectural choices, and model and data context remain with your organisation rather than walking out with an outside team. The roadmap, code and IP stay fully under your control; sourcing, vetting and employment are our job.
             </p>
           </div>
           <div data-reveal="" style={rv("0.1s")}>
             <p className="flex items-center gap-4 text-[13px] font-medium uppercase tracking-[0.12em] text-brand">
-              What stays with you
+              What you keep
               <span className="h-px flex-1 bg-ink/10" />
             </p>
             <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
@@ -183,7 +183,7 @@ export default async function StaffAugmentationMarkup() {
           <div className="rounded-[28px] bg-[#f1f0f6] p-5 sm:rounded-[36px] sm:p-10 lg:p-14">
             <div data-reveal="" style={rv()} className="flex flex-col items-center text-center">
               <Eyebrow>Capabilities</Eyebrow>
-              <h2 className="mx-auto mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em] text-ink">The roles you can add, and how they plug in.</h2>
+              <h2 className="mx-auto mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em] text-ink">Roles you can bring in, and how they fit.</h2>
             </div>
             <div className="staff-tabs-center">
               <StaffCapabilities />
@@ -196,12 +196,12 @@ export default async function StaffAugmentationMarkup() {
         <div className={WRAP}>
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div data-reveal="" style={rv()}>
-              <Eyebrow>Engagement models</Eyebrow>
-              <H2>Choose where your team is built.</H2>
+              <Eyebrow>Collaboration options</Eyebrow>
+              <H2>Pick the location for your team.</H2>
             </div>
             <div data-reveal="" style={rv("0.1s")}>
               <a href="#get-started" className="group inline-flex h-12 items-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand">
-                Let&apos;s talk
+                Get in touch
                 <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </div>
@@ -230,7 +230,7 @@ export default async function StaffAugmentationMarkup() {
             <div className="relative isolate overflow-hidden rounded-[28px] bg-ink px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
               <span className="pointer-events-none absolute -right-28 -top-36 -z-10 size-[420px] rounded-full bg-brand/40 blur-[100px]" />
               <Eyebrow light>Process</Eyebrow>
-              <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em]">From open seat to shipping engineer.</h2>
+              <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em]">From vacant seat to engineer shipping code.</h2>
               <ol className="relative mt-12 grid gap-8 lg:grid-cols-4 lg:gap-5">
                 <span className="absolute left-0 right-0 top-[5px] hidden h-px bg-white/15 lg:block" aria-hidden="true" />
                 {STEPS.map(([t, d], n) => (
@@ -253,12 +253,12 @@ export default async function StaffAugmentationMarkup() {
         <div className={WRAP}>
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div data-reveal="" style={rv()}>
-              <Eyebrow>Industries we serve</Eyebrow>
-              <H2>Where added capacity moves fastest.</H2>
+              <Eyebrow>Sectors we work in</Eyebrow>
+              <H2>Where extra capacity pays off quickest.</H2>
             </div>
             <div data-reveal="" style={rv("0.1s")}>
               <a className="text-[15px] font-medium text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-brand" href="/industries">
-                Explore more
+                See further
               </a>
             </div>
           </div>
@@ -282,13 +282,13 @@ export default async function StaffAugmentationMarkup() {
         <div className={WRAP}>
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div data-reveal="" style={rv()}>
-              <Eyebrow>Case studies</Eyebrow>
-              <H2>Teams that shipped once the seats were filled.</H2>
-              <p className="mt-5 max-w-[520px] text-[17px] leading-relaxed text-ink-soft">Embedded engineers, inside the client&apos;s own team.</p>
+              <Eyebrow>Case histories</Eyebrow>
+              <H2>Teams that delivered after filling their seats.</H2>
+              <p className="mt-5 max-w-[520px] text-[17px] leading-relaxed text-ink-soft">Engineers embedded within the client’s own team.</p>
             </div>
             <div data-reveal="" style={rv("0.1s")}>
               <a className="text-[15px] font-medium text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-brand" href="/case-studies">
-                Read all case studies
+                View every case study
               </a>
             </div>
           </div>
@@ -306,7 +306,7 @@ export default async function StaffAugmentationMarkup() {
                     <p className="mt-4 flex items-center justify-between text-[14px] text-muted">
                       {tag}
                       <span className="inline-flex items-center gap-1.5 text-ink">
-                        Read the case study <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        Read the full case study <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                       </span>
                     </p>
                   </div>
@@ -321,10 +321,10 @@ export default async function StaffAugmentationMarkup() {
         <div className={`${WRAP} grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20`}>
           <div data-reveal="" style={rv()}>
             <Eyebrow>FAQs</Eyebrow>
-            <h2 className="mt-4 text-[clamp(1.9rem,3.2vw,3rem)] font-normal leading-[1.06] tracking-[-0.04em] text-ink">Frequently asked questions.</h2>
-            <p className="mt-5 max-w-[360px] text-[16px] leading-relaxed text-ink-soft">Still have a question about vetting, timelines, or who owns what gets built?</p>
+            <h2 className="mt-4 text-[clamp(1.9rem,3.2vw,3rem)] font-normal leading-[1.06] tracking-[-0.04em] text-ink">Common questions answered.</h2>
+            <p className="mt-5 max-w-[360px] text-[16px] leading-relaxed text-ink-soft">Still wondering about vetting, timelines, or who ends up owning what we build?</p>
             <a href="/book-a-call" className="mt-6 inline-flex text-[15px] font-medium text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-brand">
-              Let&apos;s talk
+              Get in touch
             </a>
           </div>
           <div data-reveal="" style={rv("0.1s")}>
@@ -336,9 +336,9 @@ export default async function StaffAugmentationMarkup() {
       <section id="get-started" aria-label="Get started" className="scroll-mt-24 pb-[clamp(72px,10vw,160px)] pt-[clamp(32px,4vw,64px)]">
         <div className={`${WRAP} grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20`}>
           <div data-reveal="" style={rv()}>
-            <Eyebrow>Get started</Eyebrow>
-            <h2 className="mt-4 text-[clamp(2.1rem,4vw,3.6rem)] font-normal leading-[1.05] tracking-[-0.04em] text-ink">Tell us the seat you need filled.</h2>
-            <p className="mt-5 max-w-[440px] text-[17px] leading-relaxed text-ink-soft">One conversation is enough to scope the role. You get matched profiles to review, not a generic bench list.</p>
+            <Eyebrow>Begin here</Eyebrow>
+            <h2 className="mt-4 text-[clamp(2.1rem,4vw,3.6rem)] font-normal leading-[1.05] tracking-[-0.04em] text-ink">Tell us which role you need to fill.</h2>
+            <p className="mt-5 max-w-[440px] text-[17px] leading-relaxed text-ink-soft">Scoping the role takes just one conversation. You review profiles matched to it, instead of a generic bench list.</p>
             <ul className="mt-8 grid gap-3">
               {["Bring the skill gap or headcount you need filled", "One conversation to scope seniority, stack, and timeline", "Matched candidates within days, not weeks"].map((t) => (
                 <li key={t} className="flex items-start gap-3 text-[16px] text-ink">

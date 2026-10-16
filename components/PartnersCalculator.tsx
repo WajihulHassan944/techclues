@@ -7,7 +7,7 @@ type Type = { key: string; name: string; group: string; packages: Pkg[] };
 
 const GROUPS = ["Build", "Design & brand", "Monthly services", "Quick starts"];
 const TYPES: Type[] = [
-  { key: "zero-one", name: "BUILD.ONE", group: "Quick starts", packages: [{ name: "Core feature, built and tested in a week", price: 499, from: false, kind: "flat" }] },
+  { key: "zero-one", name: "BUILD.ONE", group: "Quick starts", packages: [{ name: "One core feature, built and tested within a week", price: 499, from: false, kind: "flat" }] },
   { key: "mvp-development", name: "MVPs & Custom Platforms", group: "Build", packages: [
     { name: "Validation MVP", price: 2500, from: true, kind: "project" },
     { name: "Lean MVP", price: 5000, from: true, kind: "project" },
@@ -53,8 +53,8 @@ const TYPES: Type[] = [
     { name: "Identity", price: 1500, from: true, kind: "project" },
     { name: "Complete", price: 2500, from: true, kind: "project" },
   ] },
-  { key: "ongoing", name: "Ongoing partnership", group: "Monthly services", packages: [{ name: "Support, improvements and growth, monthly", price: null, from: false, kind: "monthly" }] },
-  { key: "grant", name: "Grant application support", group: "Quick starts", packages: [{ name: "Preparing a grant application", price: null, from: false, kind: "project" }] },
+  { key: "ongoing", name: "Ongoing partnership", group: "Monthly services", packages: [{ name: "Monthly support, improvements and growth", price: null, from: false, kind: "monthly" }] },
+  { key: "grant", name: "Grant application support", group: "Quick starts", packages: [{ name: "Putting together a grant application", price: null, from: false, kind: "project" }] },
 ];
 
 const money = (n: number) => `£${Math.round(n).toLocaleString("en-GB")}`;
@@ -64,7 +64,7 @@ const cn = (...a: (string | false | undefined)[]) => a.filter(Boolean).join(" ")
 
 /** 10% (Pro: 12.5%) of fees up to £20,000 and 5% above, monthly services count 6 months, capped at £5,000. */
 function commission(value: number, kind: Pkg["kind"], tier: "partner" | "pro") {
-  if (kind === "flat") return { total: 50, capped: false, lines: [{ label: "Flat fee for a BUILD.ONE", amount: 50 }] };
+  if (kind === "flat") return { total: 50, capped: false, lines: [{ label: "Flat fee per BUILD.ONE", amount: 50 }] };
   const base = kind === "monthly" ? 6 * value : value;
   const rate = tier === "pro" ? 0.125 : 0.1;
   const low = Math.min(base, 20000);
@@ -75,7 +75,7 @@ function commission(value: number, kind: Pkg["kind"], tier: "partner" | "pro") {
       amount: low * rate,
     },
   ];
-  if (high) lines.push({ label: `${pct(0.05)} of the ${money(high)} above that`, amount: 0.05 * high });
+  if (high) lines.push({ label: `${pct(0.05)} of the ${money(high)} beyond that`, amount: 0.05 * high });
   const sum = lines.reduce((a, l) => a + l.amount, 0);
   return { total: Math.min(sum, 5000), capped: sum > 5000, lines };
 }
@@ -133,7 +133,7 @@ export default function PartnersCalculator() {
     <div className="grid gap-4 rounded-[28px] border border-ink/[0.08] bg-white p-5 sm:p-7 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:gap-8 lg:p-8">
       <div className="min-w-0 space-y-6">
         <div>
-          <p className="text-[14px] font-medium text-ink">Type of project</p>
+          <p className="text-[14px] font-medium text-ink">Project type</p>
           <div className="mt-3 space-y-3">
             {GROUPS.map((g) => (
               <div key={g}>
@@ -157,7 +157,7 @@ export default function PartnersCalculator() {
         </div>
         {type.packages.length > 1 && (
           <div>
-            <p className="text-[14px] font-medium text-ink">Package</p>
+            <p className="text-[14px] font-medium text-ink">Package choice</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {type.packages.map((p, i) => (
                 <button
@@ -196,10 +196,10 @@ export default function PartnersCalculator() {
                 className="h-12 w-full rounded-2xl border border-ink/12 bg-white pl-8 pr-4 text-[15px] tabular-nums text-ink transition-[border-color,box-shadow] duration-200 hover:border-ink/25 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10 disabled:bg-[#f6f7fb] disabled:text-muted"
               />
             </span>
-            <span className="mt-1.5 block text-[12.5px] text-muted">{editable ? (pkg.from || pkg.price === null ? "Prices start here; change it to the quoted value." : "Excluding VAT.") : "BUILD.ONE has a single price."}</span>
+            <span className="mt-1.5 block text-[12.5px] text-muted">{editable ? (pkg.from || pkg.price === null ? "Prices begin here; adjust to the quoted value." : "VAT not included.") : "BUILD.ONE comes at one fixed price."}</span>
           </label>
           <div>
-            <span className="mb-1.5 block text-[14px] font-medium text-ink">You are</span>
+            <span className="mb-1.5 block text-[14px] font-medium text-ink">Your status</span>
             <div role="radiogroup" aria-label="Partner level" className="relative inline-flex w-full rounded-full bg-paper p-1 ring-1 ring-ink/[0.08]">
               <span
                 aria-hidden="true"
@@ -212,13 +212,13 @@ export default function PartnersCalculator() {
                 </button>
               ))}
             </div>
-            <span className="mt-1.5 block text-[12.5px] text-muted">Pro: 3+ paid referrals in 12 months.</span>
+            <span className="mt-1.5 block text-[12.5px] text-muted">Pro status: 3+ paid referrals within 12 months.</span>
           </div>
         </div>
       </div>
       <div className="flex flex-col justify-between rounded-[22px] bg-[#f6f7fb] p-6 ring-1 ring-ink/[0.05] sm:p-7" aria-live="polite">
         <div>
-          <p className="text-[13px] font-medium text-muted">You&apos;d earn</p>
+          <p className="text-[13px] font-medium text-muted">Your earnings</p>
           <p className="mt-2 text-[clamp(2.6rem,5vw,3.8rem)] font-light leading-none tracking-[-0.05em] tabular-nums text-ink">{money(shown)}</p>
           <p className="mt-2 text-[13.5px] text-ink-soft">
             {type.name}
@@ -235,13 +235,13 @@ export default function PartnersCalculator() {
             ))}
             {c.capped && (
               <li className="flex items-baseline justify-between gap-4 text-[#8a4b00]">
-                <span>Capped at {money(5000)} a referral</span>
+                <span>Limited to {money(5000)} per referral</span>
                 <span className="shrink-0 tabular-nums">{money(5000)}</span>
               </li>
             )}
           </ul>
           <p className="mt-4 text-[12.5px] leading-relaxed text-muted">
-            Paid as the client pays, within 14 days of each payment. On our fees excluding VAT{pkg.kind === "monthly" ? " and ad spend" : ""}.
+            Paid as the client pays, within 14 days of each payment. Based on our fees, excluding VAT{pkg.kind === "monthly" ? " and ad spend" : ""}.
           </p>
         </div>
       </div>

@@ -55,7 +55,7 @@ export type LeadFormConfig = {
   endpoint?: string; // public API route the form posts to
 };
 
-export default function StaffSeatForm({ formName = "staff-augmentation", needLabel = "What do you need?", needOptions = NEEDS, needError = "Choose what you need.", briefLabel = "The role, stack, and timeline", extras = true, companyLabel = "Company", endpoint = "/api/public/staff-augmentation" }: LeadFormConfig = {}) {
+export default function StaffSeatForm({ formName = "staff-augmentation", needLabel = "What are you looking for?", needOptions = NEEDS, needError = "Select what you are looking for.", briefLabel = "Role, tech stack and timing", extras = true, companyLabel = "Company name", endpoint = "/api/public/staff-augmentation" }: LeadFormConfig = {}) {
   const [v, setV] = useState({ first: "", last: "", company: "", need: "", email: "", code: "+44", phone: "", brief: "", size: "", timeline: "", consent: false, marketing: false, website: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
@@ -66,11 +66,11 @@ export default function StaffSeatForm({ formName = "staff-augmentation", needLab
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const err: Record<string, string> = {};
-    if (!v.first.trim()) err.first = "Add your first name.";
-    if (!v.last.trim()) err.last = "Add your last name.";
+    if (!v.first.trim()) err.first = "Enter your first name.";
+    if (!v.last.trim()) err.last = "Enter your last name.";
     if (!v.need) err.need = needError;
-    if (!EMAIL.test(v.email.trim())) err.email = "Check your work email.";
-    if (!v.consent) err.consent = "We need your consent to reply.";
+    if (!EMAIL.test(v.email.trim())) err.email = "Please check your work email.";
+    if (!v.consent) err.consent = "We need your consent in order to reply.";
     setErrors(err);
     if (Object.keys(err).length) return;
     setSending(true);
@@ -97,7 +97,7 @@ export default function StaffSeatForm({ formName = "staff-augmentation", needLab
       );
       setDone(true);
     } catch (e2) {
-      setFailure(e2 instanceof ApiError ? e2.message : "Something went wrong. Please try again.");
+      setFailure(e2 instanceof ApiError ? e2.message : "That did not go through. Please try once more.");
     } finally {
       setSending(false);
     }
@@ -109,8 +109,8 @@ export default function StaffSeatForm({ formName = "staff-augmentation", needLab
         <span className="mx-auto grid size-12 place-items-center rounded-full bg-brand text-white">
           <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
         </span>
-        <p className="mt-5 text-[clamp(1.5rem,2.4vw,2rem)] tracking-[-0.03em] text-ink">Thanks, that&apos;s with us.</p>
-        <p className="mx-auto mt-2 max-w-[420px] text-[16px] leading-relaxed text-ink-soft">A TechClues engineer will read it and come back to you, usually within one business day.</p>
+        <p className="mt-5 text-[clamp(1.5rem,2.4vw,2rem)] tracking-[-0.03em] text-ink">Thank you, we have received it.</p>
+        <p className="mx-auto mt-2 max-w-[420px] text-[16px] leading-relaxed text-ink-soft">A TechClues engineer will go through it and reply, normally within one business day.</p>
       </div>
     );
   }
@@ -121,10 +121,10 @@ export default function StaffSeatForm({ formName = "staff-augmentation", needLab
       <Field label="Last name" name="last" autoComplete="family-name" value={v.last} onChange={(e) => set("last", e.target.value)} error={errors.last} />
       <Field label={companyLabel} name="company" autoComplete="organization" value={v.company} onChange={(e) => set("company", e.target.value)} />
       <Select label={needLabel} name="need" options={needOptions} value={v.need} onChange={(e) => set("need", e.target.value)} error={errors.need} />
-      <Field label="Work email" name="email" type="email" autoComplete="email" value={v.email} onChange={(e) => set("email", e.target.value)} error={errors.email} />
+      <Field label="Work email address" name="email" type="email" autoComplete="email" value={v.email} onChange={(e) => set("email", e.target.value)} error={errors.email} />
       <div className="grid gap-4" style={{ gridTemplateColumns: "120px minmax(0,1fr)" }}>
         <label className="group block">
-          <span className="text-[13px] text-muted">Code</span>
+          <span className="text-[13px] text-muted">Dial code</span>
           <select name="code" value={v.code} onChange={(e) => set("code", e.target.value)} className={line} aria-label="Country code">
             {CODES.map(([c, n]) => (
               <option key={n} value={c}>
@@ -141,23 +141,23 @@ export default function StaffSeatForm({ formName = "staff-augmentation", needLab
       </label>
       {extras && (
         <>
-          <Select label="Company size" name="size" options={SIZES} value={v.size} onChange={(e) => set("size", e.target.value)} />
-          <Select label="Timeline to start" name="timeline" options={TIMELINES} value={v.timeline} onChange={(e) => set("timeline", e.target.value)} />
+          <Select label="Size of company" name="size" options={SIZES} value={v.size} onChange={(e) => set("size", e.target.value)} />
+          <Select label="When to start" name="timeline" options={TIMELINES} value={v.timeline} onChange={(e) => set("timeline", e.target.value)} />
         </>
       )}
       <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={v.website} onChange={(e) => set("website", e.target.value)} className="absolute -left-[9999px] h-0 w-0 opacity-0" />
       <div className="grid gap-3 sm:col-span-2">
         <label className="flex items-start gap-3 text-[14px] leading-snug text-ink-soft">
           <input type="checkbox" checked={v.consent} onChange={(e) => set("consent", e.target.checked)} className="mt-0.5 size-4 shrink-0 accent-[#0064ff]" />
-          <span>I agree to allow TechClues to store and process my personal data so it can reply to this request.</span>
+          <span>I consent to TechClues storing and processing my personal data in order to respond to this request.</span>
         </label>
         {errors.consent && <span className="-mt-1 block text-[13px] text-[#d64545]">{errors.consent}</span>}
         <label className="flex items-start gap-3 text-[14px] leading-snug text-ink-soft">
           <input type="checkbox" checked={v.marketing} onChange={(e) => set("marketing", e.target.checked)} className="mt-0.5 size-4 shrink-0 accent-[#0064ff]" />
-          <span>I agree to receive other communications from TechClues.</span>
+          <span>I consent to receiving further communications from TechClues.</span>
         </label>
         <p className="text-[13px] text-muted">
-          We care about your privacy. Learn how we handle your data in our{" "}
+          Your privacy matters to us. See how we look after your data in our{" "}
           <a href="/privacy-policy" className="text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-brand">
             Privacy Policy
           </a>
@@ -171,7 +171,7 @@ export default function StaffSeatForm({ formName = "staff-augmentation", needLab
           </p>
         )}
         <button type="submit" disabled={sending} className="group inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-ink pl-7 pr-6 text-[15px] font-medium text-white transition-all duration-300 hover:bg-brand hover:shadow-[0_14px_40px_-10px_rgba(0,100,255,0.7)] sm:w-auto">
-          {sending ? "Sending…" : "Let's talk"}
+          {sending ? "Sending…" : "Get in touch"}
           <svg viewBox="0 0 24 24" className="size-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
         </button>
       </div>

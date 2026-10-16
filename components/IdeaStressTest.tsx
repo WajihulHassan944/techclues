@@ -22,9 +22,9 @@ const Alert = ({ cls, sw }: { cls: string; sw?: number }) => icon(`lucide lucide
 const Triangle = ({ cls, sw }: { cls: string; sw?: number }) => icon(`lucide lucide-triangle-alert ${cls}`, <><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></>, sw);
 
 const VERDICT: Record<Verdict, { chip: string; label: string; Icon: (p: { cls: string; sw?: number }) => React.ReactElement }> = {
-  strong: { chip: "bg-[#e9f7ef] text-[#146c3b]", label: "Holds up", Icon: Check },
-  watch: { chip: "bg-[#fff4e5] text-[#a35a00]", label: "Watch this", Icon: Triangle },
-  risk: { chip: "bg-[#fdecec] text-[#b22c2c]", label: "Weak point", Icon: Alert },
+  strong: { chip: "bg-[#e9f7ef] text-[#146c3b]", label: "Stands firm", Icon: Check },
+  watch: { chip: "bg-[#fff4e5] text-[#a35a00]", label: "Keep an eye on this", Icon: Triangle },
+  risk: { chip: "bg-[#fdecec] text-[#b22c2c]", label: "Soft spot", Icon: Alert },
 };
 
 /** Spinning dotted sphere shown while the verdict is "worked out". */
@@ -122,7 +122,7 @@ function ReportView({ report, idea }: { report: Report; idea: string }) {
         })}
       </ul>
       <div className="mt-8 rounded-[20px] bg-paper p-5 sm:p-6">
-        <h3 className="text-[17px] tracking-[-0.01em] text-ink">Questions to answer before you build</h3>
+        <h3 className="text-[17px] tracking-[-0.01em] text-ink">Questions to settle before you build</h3>
         <ol className="mt-4 grid gap-3">
           {report.questions.map((q, i) => (
             <li key={q} className="flex gap-3 text-[15px] leading-relaxed text-ink-soft">
@@ -134,24 +134,24 @@ function ReportView({ report, idea }: { report: Report; idea: string }) {
       </div>
       {report.cost && (
         <p className="mt-5 text-[14px] text-muted">
-          For reference, the scope you picked would cost roughly {gbp(report.cost.min)}–{gbp(report.cost.max)} to build as a web MVP.{" "}
+          As a guide, the scope you chose would cost around {gbp(report.cost.min)}–{gbp(report.cost.max)} to build as a web MVP.{" "}
           <a href="/mvp-cost-calculator" className="text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-brand">
-            Refine the estimate
+            Sharpen the estimate
           </a>
           .
         </p>
       )}
       <div className="mt-8 flex flex-col gap-3 rounded-[24px] bg-[linear-gradient(135deg,#0e0f31,#0a1f6b)] p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div>
-          <p className="text-[clamp(1.2rem,2vw,1.6rem)] tracking-[-0.02em]">Still want to build it?</p>
-          <p className="mt-1.5 max-w-[420px] text-[15px] text-white/65">Bring it to a free 30-minute call and we&apos;ll plan what to validate first.</p>
+          <p className="text-[clamp(1.2rem,2vw,1.6rem)] tracking-[-0.02em]">Still keen to build it?</p>
+          <p className="mt-1.5 max-w-[420px] text-[15px] text-white/65">Join us for a free 30-minute call and we will work out what to validate first.</p>
           <a href="/zero-one" className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-white underline decoration-white/30 underline-offset-4 transition-colors hover:decoration-white">
-            Or build the core and test it with BUILD.ONE for £499
+            Or build the core and put it to the test with BUILD.ONE for £499
             <ArrowRight cls="size-3.5" />
           </a>
         </div>
         <a href="/book-a-call" data-cta="kill-my-idea-book-call" className="group inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-6 text-[15px] font-medium text-ink transition-colors duration-300 hover:bg-brand hover:text-white">
-          Let&apos;s talk
+          Get in touch
           <ArrowRight cls="size-4 transition-transform duration-300 group-hover:translate-x-1" />
         </a>
       </div>
@@ -200,10 +200,10 @@ export default function IdeaStressTest() {
     <div className="mx-auto max-w-[900px]">
       <div className="rounded-[28px] border border-ink/[0.08] bg-white p-5 shadow-[0_30px_80px_-50px_rgba(14,15,49,0.35)] sm:rounded-[32px] sm:p-10">
         <div className="flex items-center justify-between gap-4">
-          <p className="text-[13px] text-muted">{phase === "done" ? "The verdict" : `Step ${step + 1} of ${STEPS}`}</p>
+          <p className="text-[13px] text-muted">{phase === "done" ? "Your verdict" : `Step ${step + 1} of ${STEPS}`}</p>
           {(step > 0 || phase === "done") && (
             <button onClick={reset} className="inline-flex items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-ink">
-              <Reset cls="size-3.5" /> Start again
+              <Reset cls="size-3.5" /> Begin again
             </button>
           )}
         </div>
@@ -218,7 +218,7 @@ export default function IdeaStressTest() {
           {phase === "running" ? (
             <div className="kmi-fade grid place-items-center py-16 text-center">
               <Orbs size={72} label="Stress testing your idea" />
-              <p className="mt-6 text-[17px] text-ink">Looking for the weak points…</p>
+              <p className="mt-6 text-[17px] text-ink">Hunting for weak points…</p>
             </div>
           ) : report ? (
             <div className="kmi-rise">
@@ -227,42 +227,42 @@ export default function IdeaStressTest() {
           ) : (
             <div key={step} className="kmi-step">
               {step === 0 && (
-                <Title title="What's the idea?" text="One or two sentences is plenty. Plain words beat pitch language.">
+                <Title title="What is the idea?" text="One or two sentences will do. Plain words work better than pitch jargon.">
                   <textarea
                     value={a.idea}
                     onChange={(e) => set("idea", e.target.value)}
                     rows={4}
                     autoFocus
-                    placeholder="e.g. An app that lets dental clinics fill last-minute cancellations from a waiting list automatically."
+                    placeholder="e.g. An app that helps dental clinics automatically fill late cancellations from a waiting list."
                     className="w-full resize-none rounded-2xl border border-ink/10 bg-paper p-4 text-[16px] leading-relaxed text-ink placeholder:text-muted/70 focus:border-brand focus:bg-white focus:outline-none"
                   />
-                  <p className="mt-2 text-[13px] text-muted">{a.idea.trim().length < 16 ? "A little more detail, please." : "That'll do."}</p>
-                  <Group title="Who is it for?" hint="The narrower, the better your odds.">
+                  <p className="mt-2 text-[13px] text-muted">{a.idea.trim().length < 16 ? "Please add a little more detail." : "That is enough."}</p>
+                  <Group title="Who is it for?" hint="A tighter focus improves your odds.">
                     <Radios label="Who is it for?" options={CUSTOMERS} value={a.customer} onPick={(v) => set("customer", v)} />
                     <input
                       value={a.customerDetail}
                       onChange={(e) => set("customerDetail", e.target.value)}
-                      placeholder="Optional: who exactly? e.g. private dental practices in the UK"
+                      placeholder="Optional: who, precisely? e.g. private dental practices in the UK"
                       className="mt-3 h-12 w-full rounded-xl border border-ink/10 bg-paper px-4 text-[15px] text-ink placeholder:text-muted/70 focus:border-brand focus:bg-white focus:outline-none"
                     />
                   </Group>
                 </Title>
               )}
               {step === 1 && (
-                <Title title="Your market" text="Three quick calls. Be honest: these decide most products.">
-                  <Group title="What do they use today?" hint="Every problem has a workaround, even a bad one." first>
+                <Title title="Your market" text="Three quick judgements. Be frank, because these decide the fate of most products.">
+                  <Group title="What do they use today?" hint="Every problem has some workaround, even a poor one." first>
                     <Radios label="What do they use today?" options={ALTERNATIVES} value={a.alternatives} onPick={(v) => set("alternatives", v)} />
                   </Group>
                   <Group title="How much does the problem hurt?">
                     <Radios label="How much does the problem hurt?" options={PROBLEMS} value={a.problem} onPick={(v) => set("problem", v)} />
                   </Group>
-                  <Group title="Why you, and not them?" hint="The one you'd defend in front of a customer.">
+                  <Group title="Why you, and not them?" hint="Pick the reason you could defend face to face with a customer.">
                     <Radios label="Why you, and not them?" options={EDGES} value={a.edge} onPick={(v) => set("edge", v)} />
                   </Group>
                 </Title>
               )}
               {step === 2 && (
-                <Title title="What must the first version do?" text="Only what's needed to prove people want it. Then add your details to see the verdict.">
+                <Title title="What must the first version do?" text="Only what is needed to prove people want it. After that, add your details to see the verdict.">
                   <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
                     {FEATURE_CHOICES.map((f) => {
                       const on = a.features.includes(f.id);
@@ -278,12 +278,12 @@ export default function IdeaStressTest() {
                       );
                     })}
                   </div>
-                  <p className="mt-3 text-[13px] text-muted">{a.features.length} selected. Fewer is usually better.</p>
+                  <p className="mt-3 text-[13px] text-muted">{a.features.length} selected. Fewer is normally better.</p>
                   <div className="mt-8 grid gap-3 border-t border-ink/10 pt-6 sm:grid-cols-2">
-                    <input value={who.name} onChange={(e) => setWho({ ...who, name: e.target.value })} placeholder="Your name" autoComplete="name" className="h-12 w-full rounded-xl border border-ink/10 bg-paper px-4 text-[15px] text-ink placeholder:text-muted/70 focus:border-brand focus:bg-white focus:outline-none" />
-                    <input value={who.email} onChange={(e) => setWho({ ...who, email: e.target.value })} placeholder="Email" type="email" autoComplete="email" className="h-12 w-full rounded-xl border border-ink/10 bg-paper px-4 text-[15px] text-ink placeholder:text-muted/70 focus:border-brand focus:bg-white focus:outline-none" />
+                    <input value={who.name} onChange={(e) => setWho({ ...who, name: e.target.value })} placeholder="Full name" autoComplete="name" className="h-12 w-full rounded-xl border border-ink/10 bg-paper px-4 text-[15px] text-ink placeholder:text-muted/70 focus:border-brand focus:bg-white focus:outline-none" />
+                    <input value={who.email} onChange={(e) => setWho({ ...who, email: e.target.value })} placeholder="Email address" type="email" autoComplete="email" className="h-12 w-full rounded-xl border border-ink/10 bg-paper px-4 text-[15px] text-ink placeholder:text-muted/70 focus:border-brand focus:bg-white focus:outline-none" />
                   </div>
-                  <p className="mt-2 text-[12px] text-muted">So we can follow up on your verdict. We won&apos;t pass your idea to anyone.</p>
+                  <p className="mt-2 text-[12px] text-muted">This lets us follow up on your verdict. Your idea will not be passed to anyone.</p>
                 </Title>
               )}
             </div>
@@ -299,7 +299,7 @@ export default function IdeaStressTest() {
               disabled={last ? !validWho : !canNext}
               className="group inline-flex h-12 items-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand disabled:cursor-not-allowed disabled:bg-ink/25"
             >
-              {last ? "Try to kill it" : "Next"}
+              {last ? "Try and kill it" : "Continue"}
               {last ? <Skull cls="size-4" /> : <ArrowRight cls="size-4 transition-transform duration-300 group-enabled:group-hover:translate-x-1" />}
             </button>
           </div>

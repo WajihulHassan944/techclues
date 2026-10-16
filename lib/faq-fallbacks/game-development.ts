@@ -4,23 +4,23 @@ import type { AccordionItem } from "@/components/Accordion";
 export const fallbackFaqs: AccordionItem[] = [
   {
     q: "What game engines do you develop with?",
-    a: "Unity and Unreal Engine, with native pipelines for VR and XR and UEFN using Verse. Art is produced in Blender and 3DS Max, shipped cross-platform across mobile, PC and console.",
+    a: "We work in Unity and Unreal Engine, with native VR and XR pipelines and UEFN development in Verse. Artwork is created in Blender and 3DS Max and delivered across mobile, PC and console.",
   },
   {
-    q: "What are the two ways to work with your studio?",
-    a: "As a dedicated extension of your team when you need delivery power, or as the studio behind your player-facing title when you need an idea built end to end.",
+    q: "In what two ways can we work with your studio?",
+    a: "Either as a dedicated extension of your team when you need extra delivery capacity, or as the studio behind your player-facing title when you want an idea built from start to finish.",
   },
   {
-    q: "Do you build metaverse titles with real ownership mechanics?",
-    a: "Yes. We build metaverse and MMO titles with wallet sign-in, digital collectibles and ownable land wired into real gameplay loops.",
+    q: "Can you build metaverse titles with genuine ownership mechanics?",
+    a: "Yes. Our metaverse and MMO titles feature wallet sign-in, digital collectibles and ownable land, all tied into core gameplay loops.",
   },
   {
-    q: "What is UEFN development, and do you build for it?",
-    a: "UEFN, the Unreal Editor for Fortnite, lets studios publish custom games inside Fortnite using Verse. We build bespoke islands using this pipeline.",
+    q: "What does UEFN development involve, and is it something you do?",
+    a: "UEFN, the Unreal Editor for Fortnite, allows studios to release custom games within Fortnite using Verse. We create bespoke islands through this pipeline.",
   },
-  { q: "Do you do architectural visualisation outside of games?", a: "Yes. We deliver real-time property tours and architectural walkthroughs built on the same engines." },
+  { q: "Is architectural visualisation something you offer beyond games?", a: "Yes. We produce real-time property tours and architectural walkthroughs using the same engines." },
   {
-    q: "How much does game development cost?",
-    a: "Cost depends on scope, platform and art fidelity. A prototype or vertical slice is a fixed, lower-cost starting point.",
+    q: "What does game development cost?",
+    a: "The price varies with scope, platform and art fidelity. A prototype or vertical slice gives you a fixed, cheaper place to begin.",
   },
 ];

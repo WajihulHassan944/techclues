@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import FaqMarkup from "@/components/FaqMarkup";
 
 export const metadata: Metadata = {
-  title: "FAQ | Costs, Timelines & How We Build | TechClues",
+  title: "FAQ | Costs, Timelines & How We Work | TechClues",
   description:
-    "Answers to the questions founders actually ask: what an MVP costs, how long it takes, who owns the code, how we use AI, and what happens after launch.",
+    "Straight answers to what founders really ask: the cost of an MVP, how long it takes, who owns the code, how we use AI, and what comes after launch.",
   alternates: { canonical: "https://techclues.co.uk/faq" },
 };
 

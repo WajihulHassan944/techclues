@@ -23,9 +23,9 @@ async function open(page: Page) {
 test.describe("service page: ai-enablement — AI at work widget", () => {
   test("renders with metadata, h1 and no console errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("AI Integration Services for UK Businesses | TechClues");
-    await expect(page.locator("h1")).toContainText("AI integration services");
-    await expect(page.locator("h1")).toContainText("AI that earns its place in your product.");
+    await expect(page).toHaveTitle("UK AI Integration Services for Businesses | TechClues");
+    await expect(page.locator("h1")).toContainText("Services for AI integration");
+    await expect(page.locator("h1")).toContainText("AI worth its place inside your product.");
     expect(errors).toEqual([]);
   });
 
@@ -47,13 +47,13 @@ test.describe("service page: ai-enablement — AI at work widget", () => {
     for (const tab of await tabs.all()) await expect(tab).toHaveAttribute("aria-controls", "ai-feed");
 
     const feed = widget.locator("#ai-feed");
-    await expect(feed).toContainText("A new enquiry comes in");
+    await expect(feed).toContainText("A fresh enquiry arrives");
 
     await tabs.nth(1).click();
     await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
     await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "false");
-    await expect(feed).toContainText("A supplier invoice arrives");
-    await expect(feed.getByRole("heading", { name: "A supplier invoice arrives" })).toBeVisible();
+    await expect(feed).toContainText("An invoice comes in from a supplier");
+    await expect(feed.getByRole("heading", { name: "An invoice comes in from a supplier" })).toBeVisible();
   });
 
   test("steps auto-advance while the widget is in view", async ({ page }) => {
@@ -63,10 +63,10 @@ test.describe("service page: ai-enablement — AI at work widget", () => {
     const feed = widget.locator("#ai-feed");
 
     // Step 0 ("now") starts on the first line of the enquiry job.
-    await expect(feed.locator("li").first()).toContainText("Reads the new enquiry in Gmail");
+    await expect(feed.locator("li").first()).toContainText("Opens the new enquiry in Gmail");
     // After the first step's 1600ms delay it should have advanced onto the second line.
     await page.waitForTimeout(2200);
-    await expect(feed.locator("li").nth(1)).toContainText("Finds the customer's history in HubSpot");
+    await expect(feed.locator("li").nth(1)).toContainText("Looks up the customer's past activity in HubSpot");
   });
 
   test("clicking a tab stops the loop and shows a Replay button at the end", async ({ page }) => {
@@ -82,7 +82,7 @@ test.describe("service page: ai-enablement — AI at work widget", () => {
     await expect(replay).toBeVisible();
 
     await replay.click();
-    await expect(widget.locator("#ai-feed li").first()).toContainText("Picks up the PDF invoice from Gmail");
+    await expect(widget.locator("#ai-feed li").first()).toContainText("Collects the PDF invoice from Gmail");
   });
 
   test("respects prefers-reduced-motion by showing the completed state with no timers", async ({ page }) => {
@@ -127,7 +127,7 @@ test.describe("service page: ai-enablement — AI at work widget", () => {
     await page.goto("/services");
     await rejectCookies(page);
     await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 2));
-    await page.locator("#ai-enablement").getByRole("link", { name: /Learn more/ }).click();
+    await page.locator("#ai-enablement").getByRole("link", { name: /Find out more/ }).click();
     await expect(page).toHaveURL(/\/services\/ai-enablement$/);
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(2);
 

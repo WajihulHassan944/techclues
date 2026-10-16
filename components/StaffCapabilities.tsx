@@ -216,48 +216,48 @@ const TABS = [
     key: "ai",
     tab: "AI and ML",
     title: "AI Engineers and ML Specialists",
-    text: "Model fine-tuning, deployment, and MLOps, embedded directly in your AI roadmap, not handed off as a separate workstream.",
-    points: ["Fine-tuning and evaluation against your own data", "Deployment and MLOps inside your existing pipelines", "Model and data context retained by your team", "Works to your AI roadmap, not a parallel one"],
+    text: "Model fine-tuning, deployment and MLOps, built into your own AI roadmap instead of split off as a separate stream of work.",
+    points: ["Fine-tuning and evaluation run on your own data", "Deployment and MLOps within the pipelines you already have", "Your team keeps the model and data knowledge", "Follows your AI roadmap rather than a parallel one"],
     Visual: AiMl,
   },
   {
     key: "fullstack",
     tab: "Full Stack",
     title: "Full Stack Coverage",
-    text: "Frontend, backend, mobile, DevOps, and QA specialists available individually or as a pod.",
-    points: ["Individual specialists for a single open seat", "Preformed pods when a whole workstream needs staffing", "Mobile, web, and platform engineers from one pool", "DevOps and QA available alongside build roles"],
+    text: "Specialists in frontend, backend, mobile, DevOps and QA, supplied one at a time or as a pod.",
+    points: ["Single specialists to fill one vacant seat", "Ready-made pods when an entire workstream needs people", "Mobile, web and platform engineers drawn from one pool", "DevOps and QA on offer next to the build roles"],
     Visual: FullStack,
   },
   {
     key: "data",
     tab: "Data",
     title: "Data Scientists and Data Engineers",
-    text: "Pipeline architecture and AI-ready data infrastructure built alongside your own team.",
-    points: ["Pipeline architecture designed with your data owners", "AI-ready infrastructure rather than one-off extracts", "Warehouse and streaming experience across stacks", "Knowledge stays with your team after the engagement"],
+    text: "Pipeline architecture and AI-ready data infrastructure, created side by side with your own team.",
+    points: ["Pipelines designed together with your data owners", "AI-ready infrastructure instead of one-time extracts", "Experience with warehouses and streaming on many stacks", "The knowledge remains with your team once we finish"],
     Visual: DataFlow,
   },
   {
     key: "onboarding",
     tab: "Onboarding",
     title: "Rapid Onboarding",
-    text: "Vetted engineers matched and integrated into your team, typically within weeks.",
-    points: ["Matching from an already vetted engineer pool", "Role-specific vetting before profiles reach you", "Final approval always sits with your team", "Start dates measured in weeks, not hiring quarters"],
+    text: "Vetted engineers are matched to you and brought into your team, usually in a matter of weeks.",
+    points: ["Matches drawn from a pool of engineers we have already vetted", "Vetting tailored to the role before you see any profile", "Your team always has the last word", "Start dates counted in weeks rather than hiring quarters"],
     Visual: Onboarding,
   },
   {
     key: "integration",
     tab: "Integration",
     title: "Direct Team Integration",
-    text: "Engineers work inside your sprint cadence, your stand-ups, and your tools, not a separate reporting line.",
-    points: ["Your sprint cadence and ceremonies, not ours", "Your tools: Jira, Slack, GitHub, and the rest", "Reports into your existing team structure", "No separate vendor status calls to manage"],
+    text: "Engineers follow your sprint rhythm, join your stand-ups and use your tools, with no separate reporting line.",
+    points: ["Your sprint rhythm and ceremonies, not ours", "Your tools, whether Jira, Slack, GitHub or the others", "Reports within the team structure you already have", "No extra vendor status calls for you to run"],
     Visual: Integration,
   },
   {
     key: "scaling",
     tab: "Scaling",
     title: "Flexible Scaling",
-    text: "Add or reduce headcount as the roadmap shifts, without a hiring or layoff cycle.",
-    points: ["Scale up for a delivery push, scale back after", "Swap a role when the roadmap changes shape", "No severance or bench cost carried by you", "Employment and payroll handled by TechClues"],
+    text: "Increase or cut headcount as the roadmap changes, with no hiring or redundancy round.",
+    points: ["Grow for a delivery push, then shrink afterwards", "Change a role when the roadmap takes a new shape", "You carry no severance or bench cost", "TechClues takes care of employment and payroll"],
     Visual: Scaling,
   },
 ];
@@ -318,7 +318,7 @@ export default function StaffCapabilities() {
             ))}
           </ul>
           <a href="/book-a-call" className="group mt-8 inline-flex h-11 items-center gap-2 rounded-full border border-ink/15 px-5 text-[14px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white">
-            Talk to us about this role
+            Speak with us about this role
             <svg viewBox="0 0 24 24" className="size-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
           </a>
         </div>

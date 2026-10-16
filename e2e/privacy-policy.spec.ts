@@ -21,25 +21,25 @@ async function open(page: Page) {
 }
 
 const SECTIONS: [string, string][] = [
-  ["1-information-we-collect", "1. Information we collect"],
-  ["2-how-we-use-your-information", "2. How we use your information"],
-  ["3-how-we-share-your-information", "3. How we share your information"],
-  ["4-international-data-transfers", "4. International data transfers"],
-  ["5-data-security", "5. Data security"],
-  ["6-data-retention", "6. Data retention"],
-  ["7-your-legal-rights", "7. Your legal rights"],
+  ["1-information-we-collect", "1. What information we collect"],
+  ["2-how-we-use-your-information", "2. What we do with your information"],
+  ["3-how-we-share-your-information", "3. Sharing your information with others"],
+  ["4-international-data-transfers", "4. Transfers of data abroad"],
+  ["5-data-security", "5. Keeping data secure"],
+  ["6-data-retention", "6. Retention of data"],
+  ["7-your-legal-rights", "7. Your statutory rights"],
   ["8-cookies", "8. Cookies"],
-  ["9-third-party-links", "9. Third-party links"],
-  ["10-changes-to-this-policy", "10. Changes to this policy"],
-  ["contact-us", "Contact us"],
+  ["9-third-party-links", "9. External site links"],
+  ["10-changes-to-this-policy", "10. Updates to this policy"],
+  ["contact-us", "Get in touch"],
 ];
 
 test.describe("privacy policy page", () => {
   test("renders with metadata, heading, date and no errors", async ({ page }) => {
     const errors = await open(page);
     await expect(page).toHaveTitle("Privacy Policy | TechClues");
-    await expect(page.locator("h1")).toHaveText("Privacy policy");
-    await expect(page.getByText("Last updated", { exact: false }).first()).toBeVisible();
+    await expect(page.locator("h1")).toHaveText("Privacy notice");
+    await expect(page.getByText("Most recently updated", { exact: false }).first()).toBeVisible();
     await expect(page.locator("time")).toHaveAttribute("datetime", "2026-10-09");
     await expect(page.locator("time")).toHaveText("9 October 2026");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -63,7 +63,7 @@ test.describe("privacy policy page", () => {
     const toc = page.getByRole("navigation", { name: "On this page" });
     await toc.getByRole("link", { name: "8. Cookies", exact: true }).click();
     await expect.poll(() => page.evaluate(() => document.getElementById("8-cookies")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
-    await toc.getByRole("link", { name: "Contact us", exact: true }).click();
+    await toc.getByRole("link", { name: "Get in touch", exact: true }).click();
     await expect.poll(() => page.evaluate(() => document.getElementById("contact-us")!.getBoundingClientRect().top), { timeout: 6000 }).toBeLessThan(220);
   });
 
@@ -81,7 +81,7 @@ test.describe("privacy policy page", () => {
     const c = page.locator("#contact-us").locator("xpath=following::ul[1]");
     await expect(c).toContainText("TechClues Limited:");
     await expect(c).toContainText("125 Hazelville Road, West Midlands, United Kingdom");
-    await expect(c).toContainText("SC879816 (registered in Scotland)");
+    await expect(c).toContainText("SC879816 (incorporated in Scotland)");
     await expect(page.locator("main").getByRole("link", { name: "techcluesltd@gmail.com" }).first()).toHaveAttribute("href", "mailto:techcluesltd@gmail.com");
     await expect(page.locator('main a[href="/terms-conditions"]').first()).toBeVisible();
     await expect(page.locator('main a[href="/contact"]').first()).toBeVisible();
@@ -93,7 +93,7 @@ test.describe("privacy policy page", () => {
     await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 2));
     await page.locator("footer").getByRole("link", { name: "Privacy policy" }).click();
     await expect(page).toHaveURL(/\/privacy-policy$/);
-    await expect(page.locator("h1")).toHaveText("Privacy policy");
+    await expect(page.locator("h1")).toHaveText("Privacy notice");
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(2);
   });
 

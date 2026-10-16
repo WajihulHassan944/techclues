@@ -7,11 +7,11 @@ test.describe("idea stress-test invitation", () => {
       localStorage.setItem("tc-cookie-consent", "rejected");
     });
     await page.goto("/");
-    const dialog = page.getByRole("dialog", { name: "Think your idea is brilliant?" });
+    const dialog = page.getByRole("dialog", { name: "Sure your idea is a winner?" });
     await expect(dialog).toBeVisible({ timeout: 15_000 });
-    await expect(dialog).toContainText("Free idea stress test");
+    await expect(dialog).toContainText("Idea stress test, free");
     await dialog.getByLabel("Your idea").fill("An app that splits bills");
-    await dialog.getByRole("button", { name: "Try to kill it" }).click();
+    await dialog.getByRole("button", { name: "Try and kill it" }).click();
     await expect(page).toHaveURL(/\/kill-my-idea\?idea=An%20app%20that%20splits%20bills/);
   });
 
@@ -20,9 +20,9 @@ test.describe("idea stress-test invitation", () => {
     await page.goto("/");
     await expect(page.locator("#cookie-title")).toBeVisible();
     await page.waitForTimeout(5000);
-    await expect(page.getByRole("dialog", { name: "Think your idea is brilliant?" })).toHaveCount(0);
+    await expect(page.getByRole("dialog", { name: "Sure your idea is a winner?" })).toHaveCount(0);
     await page.getByRole("button", { name: "Reject all" }).click();
-    const dialog = page.getByRole("dialog", { name: "Think your idea is brilliant?" });
+    const dialog = page.getByRole("dialog", { name: "Sure your idea is a winner?" });
     await expect(dialog).toBeVisible({ timeout: 10_000 });
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveCount(0);
@@ -38,6 +38,6 @@ test.describe("idea stress-test invitation", () => {
     });
     await page.goto("/contact");
     await page.waitForTimeout(9500);
-    await expect(page.getByRole("dialog", { name: "Think your idea is brilliant?" })).toHaveCount(0);
+    await expect(page.getByRole("dialog", { name: "Sure your idea is a winner?" })).toHaveCount(0);
   });
 });

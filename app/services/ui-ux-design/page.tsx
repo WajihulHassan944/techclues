@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import UiUxDesignMarkup from "@/components/UiUxDesignMarkup";
 
 export const metadata: Metadata = {
-  title: "UI/UX Design & Prototyping Agency in West Midlands | TechClues",
+  title: "West Midlands UI/UX Design & Prototyping Agency | TechClues",
   description:
-    "UI/UX design for UK startups and product teams: user research, wireframes and clickable Figma prototypes, tested with real users before development.",
+    "UI/UX design for UK startups and product teams, from user research and wireframes to clickable Figma prototypes that real users have tested before development starts.",
   alternates: { canonical: "https://techclues.co.uk/services/ui-ux-design" },
 };
 

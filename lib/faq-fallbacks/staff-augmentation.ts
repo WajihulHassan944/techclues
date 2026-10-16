@@ -3,22 +3,22 @@ import type { AccordionItem } from "@/components/Accordion";
 /* Shown until the admin-managed "staff-augmentation" FAQ group has questions. */
 export const fallbackFaqs: AccordionItem[] = [
   {
-    q: "How is this different from a full project outsourcing engagement?",
-    a: "You keep full ownership of the roadmap and management; we add engineering capacity into your existing team rather than taking over delivery.",
+    q: "How does this differ from outsourcing an entire project?",
+    a: "The roadmap and management stay entirely with you. We add engineering capacity to your current team instead of taking delivery over.",
   },
-  { q: "How fast can someone start?", a: "Typically within a few weeks from scoping to start date, depending on the specialisation required." },
+  { q: "How quickly can someone begin?", a: "Usually a few weeks pass between scoping and the start date, depending on the specialism you need." },
   {
-    q: "Can we interview candidates before they join?",
-    a: "Yes, we share matched candidates for your approval before onboarding. Team size or roles can also flex as your roadmap shifts.",
+    q: "Can we interview candidates first?",
+    a: "Yes, matched candidates come to you for approval before onboarding. You can also adjust team size or roles as your roadmap changes.",
   },
-  { q: "Do you handle payroll and employment, or do we?", a: "TechClues handles employment, payroll, and benefits; you manage day-to-day work." },
-  { q: "Can this scale up or down as our project changes?", a: "Yes, headcount flexes with your roadmap without a hiring or layoff cycle on your end." },
+  { q: "Who looks after payroll and employment, you or us?", a: "TechClues takes care of employment, payroll, and benefits, and you direct the daily work." },
+  { q: "Can the team grow or shrink as our project evolves?", a: "Yes, headcount follows your roadmap, and you never have to go through hiring or redundancies yourself." },
   {
-    q: "Who owns the code, models, and IP built by embedded engineers?",
-    a: "You do. All code, AI models, and data pipelines built during the engagement belong to your organisation.",
+    q: "Who owns the code, models, and IP that embedded engineers create?",
+    a: "You do. Every piece of code, every AI model, and all data pipelines produced during the engagement are your organisation's.",
   },
   {
-    q: "What is the difference between nearshore, onshore, and offshore?",
-    a: "Nearshore gives close time zone overlap at lower cost than onshore; onshore puts engineers in your own region; offshore operates from our global delivery centres as a cost-efficient extension of your team.",
+    q: "How do nearshore, onshore, and offshore differ?",
+    a: "Nearshore offers strong time zone overlap at a lower cost than onshore. Onshore places engineers in your own region. Offshore works from our global delivery centres as an economical extension of your team.",
   },
 ];

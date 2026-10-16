@@ -23,8 +23,8 @@ async function open(page: Page, path = "/services/game-development") {
 test.describe("game development page", () => {
   test("renders the hero, every section and metadata with no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Game Development Services for UK Studios | TechClues");
-    await expect(page.locator("h1")).toContainText("Game development that ships and scales.");
+    await expect(page).toHaveTitle("UK Game Development Services for Studios | TechClues");
+    await expect(page.locator("h1")).toContainText("Game builds that launch and scale well.");
     for (const s of ["In numbers", "Overview", "The difference", "Under the hood", "Engagement models", "Process", "Industries", "Tools and technologies", "Questions", "Get started"]) {
       await expect(page.locator(`section[aria-label="${s}"]`)).toHaveCount(1);
     }
@@ -38,9 +38,9 @@ test.describe("game development page", () => {
 
   test("hero buttons jump to the form and the engagement models", async ({ page }) => {
     await open(page);
-    await page.getByRole("link", { name: "See how we work with you" }).click();
+    await page.getByRole("link", { name: "Find out how we collaborate" }).click();
     await expect(page).toHaveURL(/#engagement$/);
-    await page.getByRole("link", { name: /Discuss your game project/ }).click();
+    await page.getByRole("link", { name: /Talk through your game idea/ }).click();
     await expect(page).toHaveURL(/#get-started$/);
   });
 
@@ -92,19 +92,19 @@ test.describe("game development page", () => {
     const form = page.locator('form[data-form="game-development"]');
     await expect(form.getByLabel("Studio / Company")).toBeVisible();
     await expect(form.getByLabel("Company size")).toHaveCount(0);
-    await form.getByRole("button", { name: /Let's talk/ }).click();
-    for (const t of ["Add your first name.", "Add your last name.", "Choose what brings you here.", "Check your work email.", "We need your consent to reply."]) await expect(form).toContainText(t);
+    await form.getByRole("button", { name: /Get in touch/ }).click();
+    for (const t of ["Enter your first name.", "Enter your last name.", "Choose what brings you here.", "Please check your work email.", "We need your consent in order to reply."]) await expect(form).toContainText(t);
     await form.getByLabel("First name").fill("Sam");
     await form.getByLabel("Last name").fill("Taylor");
     await form.getByLabel("What brings you here today?").selectOption("Just a concept");
     await form.getByLabel("Work email").fill("sam@example.com");
     await form.getByRole("checkbox").first().check();
-    await form.getByRole("button", { name: /Let's talk/ }).click();
+    await form.getByRole("button", { name: /Get in touch/ }).click();
     await expect(form.getByRole("alert")).toBeVisible();
-    await expect(page.getByText("Thanks, that's with us.")).toHaveCount(0);
+    await expect(page.getByText("Thank you, we have received it.")).toHaveCount(0);
     fail = false;
-    await form.getByRole("button", { name: /Let's talk/ }).click();
-    await expect(page.getByText("Thanks, that's with us.")).toBeVisible();
+    await form.getByRole("button", { name: /Get in touch/ }).click();
+    await expect(page.getByText("Thank you, we have received it.")).toBeVisible();
     expect(body).toMatchObject({ firstName: "Sam", lastName: "Taylor", email: "sam@example.com", need: "Just a concept", consent: true });
   });
 
@@ -113,7 +113,7 @@ test.describe("game development page", () => {
     await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 7));
     await page.locator('footer a[href="/services/game-development"]').click();
     await expect(page).toHaveURL(/\/services\/game-development$/);
-    await expect(page.locator("h1")).toContainText("Game development");
+    await expect(page.locator("h1")).toContainText("Game builds");
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(7);
   });
 });

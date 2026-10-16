@@ -34,12 +34,12 @@ async function fillStep1(page: Page) {
 test.describe("grant funding page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Grant Application Support for UK Tech Projects | TechClues");
-    await expect(page.locator("h1")).toContainText("Could your project be");
+    await expect(page).toHaveTitle("Help Applying for Grants for UK Tech Projects | TechClues");
+    await expect(page.locator("h1")).toContainText("Might your project be");
     await expect(page.locator("h1")).toContainText("grant-funded?");
-    for (const t of ["Eligibility checks", "Business case", "Budgets and costs", "Application review", "Tell us about the business and the project", "We check what could fit", "We prepare the application with you"]) await expect(page.locator("main")).toContainText(t);
+    for (const t of ["Qualification screening", "Case for investment", "Budgeting and expenses", "Application check", "Describe your company and what you", "We spot what might suit you", "We put the application together alongside you"]) await expect(page.locator("main")).toContainText(t);
     await expect(page.getByText("Funding decisions are made by the grant provider.")).toBeVisible();
-    await expect(page.getByRole("link", { name: "UK funding guide" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Guide to UK funding" })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -61,13 +61,13 @@ test.describe("grant funding page", () => {
     await open(page);
     const f = form(page);
     await f.scrollIntoViewIfNeeded();
-    await expect(f).toContainText("Check your funding options");
-    await expect(f).toContainText("Free, with no obligation. Takes about two minutes.");
-    await expect(f.getByText("Your business", { exact: true })).toBeVisible();
+    await expect(f).toContainText("Explore your funding options");
+    await expect(f).toContainText("Free and without obligation. It takes around two minutes.");
+    await expect(f.getByText("About your business", { exact: true })).toBeVisible();
     await expect(f.getByText("Step 1 of 3")).toBeVisible();
-    for (const t of ["Company legal name", "Company no.", "Type of business", "Where is the business based?", "Company size (employees)", "Annual turnover", "Trading for"]) await expect(f).toContainText(t);
+    for (const t of ["Company legal name", "Company number", "Business type", "Where is the business located?", "Number of employees", "Annual turnover", "Time trading"]) await expect(f).toContainText(t);
     for (const o of ["Scotland", "England", "Wales", "Northern Ireland", "Outside the UK", "Just me", "2–9", "10–49", "50–249", "250+"]) await expect(f.getByRole("button", { name: o, exact: true })).toBeVisible();
-    await expect(f.locator('[data-field="businessType"] option')).toHaveText(["Choose…", "Limited company", "LLP", "Sole trader", "Partnership", "Charity or CIC", "Not registered yet"]);
+    await expect(f.locator('[data-field="businessType"] option')).toHaveText(["Select…", "Limited company", "LLP", "Sole trader", "Partnership", "Charity or CIC", "Not registered yet"]);
     await expect(f.getByRole("button", { name: "Back" })).toHaveCount(0);
   });
 
@@ -76,13 +76,13 @@ test.describe("grant funding page", () => {
     const f = form(page);
     await f.scrollIntoViewIfNeeded();
     await cont(page).click();
-    for (const m of ["Add the company's legal name.", "Choose the type of business.", "Choose where the business is based.", "Choose the company size."]) await expect(f.getByText(m)).toBeVisible();
+    for (const m of ["Enter the company's legal name.", "Select the type of business.", "Select where the business is based.", "Select the company size."]) await expect(f.getByText(m)).toBeVisible();
     await expect(f.locator('[data-field="legalName"]')).toBeFocused();
     await expect(f.getByText("Step 1 of 3")).toBeVisible(); // did not move on
     await f.locator('[data-field="legalName"]').fill("Acme");
-    await expect(f.getByText("Add the company's legal name.")).toHaveCount(0);
+    await expect(f.getByText("Enter the company's legal name.")).toHaveCount(0);
     await f.getByRole("button", { name: "England" }).click();
-    await expect(f.getByText("Choose where the business is based.")).toHaveCount(0);
+    await expect(f.getByText("Select where the business is based.")).toHaveCount(0);
     await f.getByRole("button", { name: "England" }).click();
     await expect(f.getByRole("button", { name: "England" })).toHaveAttribute("aria-pressed", "false"); // click again to unselect
   });
@@ -103,18 +103,18 @@ test.describe("grant funding page", () => {
     await fillStep1(page);
     await cont(page).click();
     await expect(f.getByText("Step 2 of 3")).toBeVisible();
-    await expect(f.getByText("Your project", { exact: true })).toBeVisible();
+    await expect(f.getByText("About your project", { exact: true })).toBeVisible();
     for (const o of ["Website", "Software platform", "Automation", "AI solution", "Something else"]) await expect(f.getByRole("button", { name: o, exact: true })).toBeVisible();
-    for (const t of ["Estimated budget", "When to start", "Match funding", "Public funding", "About the project"]) await expect(f).toContainText(t);
+    for (const t of ["Expected budget", "Preferred start", "Match funding", "Public funding", "Project details"]) await expect(f).toContainText(t);
     await expect(f.getByRole("button", { name: "Back" })).toBeVisible();
     await cont(page).click();
-    await expect(f.getByText("Choose what the project is.")).toBeVisible();
+    await expect(f.getByText("Select the kind of project.")).toBeVisible();
     await f.getByRole("button", { name: "Automation" }).click();
     await f.locator("select").nth(1).selectOption("In 1–3 months");
     await cont(page).click();
     await expect(f.getByText("Step 3 of 3")).toBeVisible();
-    await expect(f.getByText("Your details", { exact: true })).toBeVisible();
-    await expect(f.getByRole("button", { name: "Check my options" })).toBeVisible();
+    await expect(f.getByText("Contact details", { exact: true })).toBeVisible();
+    await expect(f.getByRole("button", { name: "Review my options" })).toBeVisible();
     await f.getByRole("button", { name: "Back" }).click();
     await expect(f.getByRole("button", { name: "Automation" })).toHaveAttribute("aria-pressed", "true");
     await f.getByRole("button", { name: "Back" }).click();
@@ -130,16 +130,16 @@ test.describe("grant funding page", () => {
     await cont(page).click();
     await f.getByRole("button", { name: "Website" }).click();
     await cont(page).click();
-    await f.getByRole("button", { name: "Check my options" }).click();
-    await expect(f.getByText("Add your name.")).toBeVisible();
-    await expect(f.getByText("Check your email address.")).toBeVisible();
+    await f.getByRole("button", { name: "Review my options" }).click();
+    await expect(f.getByText("Enter your name.")).toBeVisible();
+    await expect(f.getByText("Please check your email address.")).toBeVisible();
     await f.locator('[data-field="name"]').fill("Sam Example");
     await f.locator('[data-field="email"]').fill("nope");
-    await f.getByRole("button", { name: "Check my options" }).click();
-    await expect(f.getByText("Check your email address.")).toBeVisible();
+    await f.getByRole("button", { name: "Review my options" }).click();
+    await expect(f.getByText("Please check your email address.")).toBeVisible();
     await f.locator('[data-field="email"]').fill("sam@example.com");
-    await f.getByRole("button", { name: "Check my options" }).click();
-    await expect(f.getByText("Add your name.")).toHaveCount(0);
+    await f.getByRole("button", { name: "Review my options" }).click();
+    await expect(f.getByText("Enter your name.")).toHaveCount(0);
     await expect(page).toHaveURL(/\/grant-funding$/);
     await expect(f.getByText("Step 3 of 3")).toBeVisible(); // not wired up: nothing happens
     await expect(f.getByRole("link", { name: "Privacy policy" })).toHaveAttribute("href", "/privacy-policy");

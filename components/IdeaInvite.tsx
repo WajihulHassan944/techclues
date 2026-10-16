@@ -90,10 +90,10 @@ export default function IdeaInvite() {
             <circle cx="15" cy="12" r="1" />
             <circle cx="9" cy="12" r="1" />
           </svg>
-          Free idea stress test
+          Idea stress test, free
         </span>
-        <h2 id="idea-invite-title">Think your idea is brilliant?</h2>
-        <p>Give us two minutes to try to kill it. We&apos;ll aim at your customer, your competition and your problem, then tell you honestly what to test first.</p>
+        <h2 id="idea-invite-title">Sure your idea is a winner?</h2>
+        <p>Spare us two minutes and we will try to knock it down. We will go after your customer, your rivals and your problem, then say plainly what you should test first.</p>
         <form
           data-form="idea_invite"
           data-clarity-mask="True"
@@ -104,16 +104,16 @@ export default function IdeaInvite() {
             router.push(v ? `/kill-my-idea?idea=${encodeURIComponent(v.slice(0, 300))}` : "/kill-my-idea");
           }}
         >
-          <input ref={input} value={idea} onChange={(e) => setIdea(e.target.value)} placeholder="In a sentence, what's the idea?" aria-label="Your idea" />
+          <input ref={input} value={idea} onChange={(e) => setIdea(e.target.value)} placeholder="Describe your idea in a sentence" aria-label="Your idea" />
           <div className="ii-actions">
             <button type="submit" className="ii-go" data-cta="idea-invite-start">
-              Try to kill it
+              Try and kill it
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12h14m-7-7 7 7-7 7" />
               </svg>
             </button>
             <button type="button" className="ii-skip" onClick={close}>
-              Not now
+              Maybe later
             </button>
           </div>
         </form>

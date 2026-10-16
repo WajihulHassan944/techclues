@@ -25,10 +25,10 @@ const PHASES = ["Ignition", "Compass", "Pillar", "Canvas", "Forge", "Bridge", "S
 test.describe("how we work page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("How We Work | Our 8-Phase MVP Development Process");
-    await expect(page.locator("h1")).toContainText("From idea to launch,");
-    await expect(page.locator("h1")).toContainText("step by step.");
-    await expect(page.getByText("Eight phases, each with a clear purpose, take your idea from a first spark to a product live in the world.")).toBeVisible();
+    await expect(page).toHaveTitle("How We Work | Our 8-Phase Process for MVP Development");
+    await expect(page.locator("h1")).toContainText("Idea through to launch,");
+    await expect(page.locator("h1")).toContainText("stage by stage.");
+    await expect(page.getByText("Each of the eight phases has a distinct purpose, and together they carry your idea from a first spark to a live product.")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -42,7 +42,7 @@ test.describe("how we work page", () => {
   test("hero entrance animation settles into the visible state", async ({ page }) => {
     await open(page);
     await page.waitForTimeout(2200);
-    await expect(page.getByRole("link", { name: "Scroll through the journey" })).toHaveCSS("opacity", "1");
+    await expect(page.getByRole("link", { name: "Scroll along the journey" })).toHaveCSS("opacity", "1");
     await expect(page.locator("main p.svc-in").first()).toHaveCSS("opacity", "1");
     const lines = page.locator("h1 .svc-rise");
     await expect(lines).toHaveCount(2);
@@ -54,7 +54,7 @@ test.describe("how we work page", () => {
 
   test("the scroll prompt jumps to the journey", async ({ page }) => {
     await open(page);
-    await page.getByRole("link", { name: "Scroll through the journey" }).click();
+    await page.getByRole("link", { name: "Scroll along the journey" }).click();
     await expect.poll(() => page.evaluate(() => document.querySelector("#journey")!.getBoundingClientRect().top), { timeout: 5000 }).toBeLessThan(200);
   });
 
@@ -69,8 +69,8 @@ test.describe("how we work page", () => {
       await expect(steps.nth(i)).toContainText("TechClues");
     }
     await expect(steps.nth(4)).toContainText("Weekly demos");
-    await expect(steps.nth(4)).toContainText("Typically weeks 4–7");
-    await expect(steps.nth(7)).toContainText("Go-live approved");
+    await expect(steps.nth(4)).toContainText("Usually weeks 4–7");
+    await expect(steps.nth(7)).toContainText("Go-live signed off");
     await expect(steps.nth(0)).toContainText("Idea map");
   });
 
@@ -100,13 +100,13 @@ test.describe("how we work page", () => {
     await expect(bars.nth(7)).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
     const section = page.locator('section[aria-label="A typical timeline"]');
     for (const w of ["Week 1", "Week 8"]) await expect(section).toContainText(w);
-    await expect(section).toContainText("Timelines vary with scope.");
+    await expect(section).toContainText("Timelines shift with scope.");
   });
 
   test("transparency promises and the call to action are there", async ({ page }) => {
     await open(page);
     const t = page.locator('section[aria-label="Nothing hidden"]');
-    for (const x of ["Live in Vebtrack", "Price agreed up front", "Weekly demos", "Direct access", "Honest timelines", "You own everything", "No lock-in"]) await expect(t).toContainText(x);
+    for (const x of ["Real time in Vebtrack", "Price fixed at the outset", "Weekly demos", "Direct access", "Honest timelines", "You own it all", "No lock-in"]) await expect(t).toContainText(x);
     await expect(page.locator('section[aria-label="Start your project"]')).toHaveCount(1);
   });
 
@@ -134,7 +134,7 @@ test.describe("how we work page", () => {
     await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 9));
     await page.locator("header nav").getByRole("link", { name: "How we work" }).click();
     await expect(page).toHaveURL(/\/how-we-work$/);
-    await expect(page.locator("h1")).toContainText("From idea to launch,");
+    await expect(page.locator("h1")).toContainText("Idea through to launch,");
     expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(9);
   });
 });

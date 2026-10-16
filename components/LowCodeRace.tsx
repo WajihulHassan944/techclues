@@ -15,15 +15,15 @@ const LANES: Lane[] = [
   {
     key: "low",
     label: "Low-code",
-    note: "Proven platforms",
+    note: "Established platforms",
     live: 24,
     phases: [
-      { from: 0, name: "Scope", text: "Agree what it must do and who will use it." },
-      { from: 5, name: "Choose the platform", text: "Pick the tool that fits, not the trendiest one." },
-      { from: 9, name: "Build and connect", text: "Screens, data and automations, built from proven blocks." },
-      { from: 24, name: "Live", text: "Real users are in, and their feedback shapes each new version." },
+      { from: 0, name: "Scope", text: "Settle what it needs to do and who it is for." },
+      { from: 5, name: "Choose the platform", text: "Select the tool that suits the job, not the most fashionable." },
+      { from: 9, name: "Build and connect", text: "Screens, data and automations, assembled from tried and tested blocks." },
+      { from: 24, name: "Live", text: "Genuine users are on board, and what they say guides every new version." },
     ],
-    learning: "Improving with real users",
+    learning: "Getting better with real users",
     versions: [
       { at: 46, label: "v2" },
       { at: 68, label: "v3" },
@@ -33,14 +33,14 @@ const LANES: Lane[] = [
   {
     key: "custom",
     label: "Custom code",
-    note: "Written from scratch",
+    note: "Coded from the ground up",
     live: 85,
     phases: [
-      { from: 0, name: "Scope", text: "Agree what it must do and who will use it." },
-      { from: 8, name: "Design", text: "Every screen designed and tested before any code." },
-      { from: 24, name: "Build", text: "Every feature written to your exact needs." },
-      { from: 64, name: "Test", text: "Checked across devices before launch." },
-      { from: 85, name: "Live", text: "Live, and built to grow without limits." },
+      { from: 0, name: "Scope", text: "Settle what it needs to do and who it is for." },
+      { from: 8, name: "Design", text: "All screens are designed and tested before a line of code is written." },
+      { from: 24, name: "Build", text: "Each feature is coded to fit your precise requirements." },
+      { from: 64, name: "Test", text: "Tried out on different devices ahead of launch." },
+      { from: 85, name: "Live", text: "Live, and built to scale with no ceiling." },
     ],
   },
 ];
@@ -225,19 +225,19 @@ export default function LowCodeRace() {
           <div data-reveal="" style={{ "--reveal-delay": "0s", "--reveal-y": "28px" } as React.CSSProperties}>
             <p className="flex items-center gap-2 text-[14px] font-medium text-muted">
               <span className="size-1.5 rounded-full bg-brand" />
-              Speed to launch
+              How fast you launch
             </p>
-            <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em] text-ink">Days, not months.</h2>
+            <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em] text-ink">Days rather than months.</h2>
           </div>
         </div>
         <div data-reveal="" style={{ "--reveal-delay": "0s", "--reveal-y": "28px" } as React.CSSProperties}>
           <p className="mt-5 max-w-[580px] text-[17px] leading-relaxed text-ink-soft">
-            The same product, built two ways. Press play or drag the timeline to see what each side is doing, and why low-code gets you in front of real users first.
+            One product, two build methods. Hit play or drag the timeline to watch what each side is up to, and see why low-code puts you in front of real users sooner.
           </p>
         </div>
         <div ref={card} className="mt-10 rounded-[28px] bg-white p-5 shadow-[0_40px_80px_-50px_rgba(14,15,49,0.35)] ring-1 ring-ink/10 sm:p-8 lg:mt-12 lg:p-10">
           <div className="flex items-center justify-between gap-4">
-            <p className="text-[14px] text-ink-soft">Drag the timeline, or press play.</p>
+            <p className="text-[14px] text-ink-soft">Press play, or drag the timeline.</p>
             <button onClick={playing ? stop : play} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-ink px-4 py-2 text-[13.5px] font-medium text-white transition-colors duration-300 hover:bg-brand">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-3.5" aria-hidden="true">
                 {playing ? (
@@ -360,7 +360,7 @@ export default function LowCodeRace() {
           </div>
         </div>
         <p className="mt-5 max-w-[760px] text-[13px] leading-relaxed text-muted">
-          Illustrative timelines. Your scope sets the real one, and we confirm it before we start. Many products begin in low-code and move to custom code once they know what to build.
+          These timelines are illustrations. Your scope determines the real one, and we confirm it before work begins. Plenty of products start in low-code and switch to custom code once it is clear what to build.
         </p>
       </div>
     </section>

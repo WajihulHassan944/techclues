@@ -88,27 +88,27 @@ export default async function GameDevelopmentMarkup() {
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-3.5 text-white/50" aria-hidden="true">
               <path d="m9 18 6-6-6-6" />
             </svg>
-            <span className="text-white">Game Development</span>
+            <span className="text-white">Game Creation</span>
           </nav>
           <h1 className="mt-7 max-w-[980px] text-white">
-            <span className="gd-kicker">Game development</span>
+            <span className="gd-kicker">Game creation</span>
             <span className="mt-5 block overflow-hidden pb-[0.12em] text-[clamp(2.7rem,6.2vw,6.4rem)] font-normal leading-[1.02] tracking-[-0.05em]">
               <span className="svc-rise block" style={{ "--d": "0.1s" } as React.CSSProperties}>
-                Game development that ships and scales.
+                Game builds that launch and scale well.
               </span>
             </span>
           </h1>
           <div className="svc-in" style={{ "--d": "0.3s", "--y": "16px" } as React.CSSProperties}>
             <p className="mt-6 max-w-[620px] text-[18px] leading-relaxed text-white/75">
-              Unlock boundless potential with enterprise-grade game development across Unity, Unreal Engine, VR and XR, UEFN and the metaverse, from first concept to launch and live ops.
+              Tap limitless possibilities through professional-grade game production, whether in Unreal Engine, Unity, UEFN, VR and XR or the metaverse, covering everything from initial concept to release and live ops.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
               <a href="#get-started" data-cta="service-hero-game-project" className="group inline-flex h-13 items-center gap-2 rounded-full bg-white pl-6 pr-5 text-[15px] font-medium text-ink transition-colors duration-300 hover:bg-brand hover:text-white">
-                Discuss your game project
+                Talk through your game idea
                 <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
               <a href="#engagement" className="group relative inline-flex items-center gap-1.5 text-[16px] font-medium text-white">
-                See how we work with you
+                Find out how we collaborate
                 <span className="absolute -bottom-1 left-0 h-px w-full bg-white/40 transition-transform duration-500 group-hover:scale-x-0" />
                 <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-white transition-transform delay-150 duration-500 group-hover:scale-x-100" />
               </a>
@@ -159,12 +159,12 @@ export default async function GameDevelopmentMarkup() {
         <div className={`${WRAP} grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-20`}>
           <div data-reveal="" style={rv()}>
             <Eyebrow>Overview</Eyebrow>
-            <H2>From concept to live ops, one studio.</H2>
+            <H2>One studio covers concept through to live ops.</H2>
             <p className="mt-6 max-w-[540px] text-[17px] leading-relaxed text-ink-soft">
-              TechClues builds games and real-time 3D experiences across Unity, Unreal, VR and XR, UEFN and the metaverse, from MMOs and VR platforms to metaverse worlds, UEFN islands and architectural visualisation.
+              At TechClues we create games and real-time 3D experiences using Unreal, Unity, UEFN, VR and XR and the metaverse, whether that means MMOs, VR platforms, metaverse worlds, UEFN islands or architectural visualisation.
             </p>
             <p className="mt-4 max-w-[540px] text-[17px] leading-relaxed text-ink-soft">
-              Art, engineering and platform work sit together, so a title moves from concept through launch and into live ops without being handed between vendors.
+              Because art, engineering and platform teams work side by side, a game progresses from concept to launch and on to live ops without passing between suppliers.
             </p>
             <ul className="mt-8 flex flex-wrap gap-2.5">
               {STACK.map((t) => (
@@ -189,8 +189,8 @@ export default async function GameDevelopmentMarkup() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/game/stage.jpg" alt="" loading="lazy" data-parallax="50" className="gd-parallax-img absolute inset-0 -z-20 size-full object-cover" />
               <span className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,7,28,0.88),rgba(5,7,28,0.94))]" />
-              <Eyebrow light>The difference</Eyebrow>
-              <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em]">Why studios pick TechClues over a dev shop.</h2>
+              <Eyebrow light>Our edge</Eyebrow>
+              <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em]">Studios prefer TechClues to a regular dev shop.</h2>
               <div className="mt-12 grid gap-4 md:grid-cols-3">
                 {DIFFERENCE.map(([t, d, icon]) => (
                   <div key={t} data-tilt="" className="gd-tilt gd-glass rounded-[22px] p-7">
@@ -211,8 +211,8 @@ export default async function GameDevelopmentMarkup() {
         <div className={WRAP}>
           <div className="rounded-[28px] bg-[#f1f0f6] p-5 sm:rounded-[36px] sm:p-10 lg:p-14">
             <div data-reveal="" style={rv()} className="flex flex-col items-center text-center">
-              <Eyebrow>Under the hood</Eyebrow>
-              <h2 className="mx-auto mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em] text-ink">Every discipline your title needs, under one roof.</h2>
+              <Eyebrow>Behind the scenes</Eyebrow>
+              <h2 className="mx-auto mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em] text-ink">Every skill your game requires, in one place.</h2>
             </div>
             <GameCapabilities />
           </div>
@@ -223,12 +223,12 @@ export default async function GameDevelopmentMarkup() {
         <div className={WRAP}>
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div data-reveal="" style={rv()}>
-              <Eyebrow>Engagement models</Eyebrow>
-              <H2>Two ways to bring us in.</H2>
+              <Eyebrow>Collaboration options</Eyebrow>
+              <H2>Two routes to working with us.</H2>
             </div>
             <div data-reveal="" style={rv("0.1s")}>
               <a href="#get-started" className="group inline-flex h-12 items-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand">
-                Let&apos;s talk
+                Get in touch
                 <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </div>
@@ -245,7 +245,7 @@ export default async function GameDevelopmentMarkup() {
               <img src="/images/game/team.jpg" alt="" loading="lazy" className="absolute inset-0 -z-20 size-full object-cover" />
               <span className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,7,28,0.93),rgba(5,7,28,0.97))]" />
               <Eyebrow light>Process</Eyebrow>
-              <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em]">From first call to live ops.</h2>
+              <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em]">Opening call through to live ops.</h2>
               <ol className="relative mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-5 lg:gap-4">
                 <span className="gd-path" aria-hidden="true">
                   <i />
@@ -271,11 +271,11 @@ export default async function GameDevelopmentMarkup() {
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div data-reveal="" style={rv()}>
               <Eyebrow>Industries</Eyebrow>
-              <H2>Where our worlds go to work.</H2>
+              <H2>The sectors our worlds serve.</H2>
             </div>
             <div data-reveal="" style={rv("0.1s")}>
               <a className="text-[15px] font-medium text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-brand" href="/industries">
-                All industries
+                Every industry
               </a>
             </div>
           </div>
@@ -299,8 +299,8 @@ export default async function GameDevelopmentMarkup() {
       <section aria-label="Tools and technologies" className={`${SEC} gd-tools`}>
         <div className={WRAP}>
           <div data-reveal="" style={rv()}>
-            <Eyebrow>Tools &amp; technologies</Eyebrow>
-            <H2>The stack behind every title we ship.</H2>
+            <Eyebrow>Technologies &amp; tools</Eyebrow>
+            <H2>Technology powering each game we release.</H2>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:mt-14">
             {TOOLS.map(([g, items], n) => (
@@ -325,10 +325,10 @@ export default async function GameDevelopmentMarkup() {
         <div className={`${WRAP} grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20`}>
           <div data-reveal="" style={rv()}>
             <Eyebrow>FAQs</Eyebrow>
-            <h2 className="mt-4 text-[clamp(1.9rem,3.2vw,3rem)] font-normal leading-[1.06] tracking-[-0.04em] text-ink">Frequently asked questions.</h2>
-            <p className="mt-5 max-w-[380px] text-[16px] leading-relaxed text-ink-soft">The vision stays yours. We build it. Bring a napkin sketch or a stalled build. In one free call we will map the fastest route to a title players love.</p>
+            <h2 className="mt-4 text-[clamp(1.9rem,3.2vw,3rem)] font-normal leading-[1.06] tracking-[-0.04em] text-ink">Common questions answered.</h2>
+            <p className="mt-5 max-w-[380px] text-[16px] leading-relaxed text-ink-soft">You keep the vision. We make it real. Arrive with a napkin drawing or a stalled project. During one free call we will plot the quickest path to a game players adore.</p>
             <a href="#get-started" className="mt-6 inline-flex text-[15px] font-medium text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-brand">
-              Let&apos;s talk
+              Get in touch
             </a>
           </div>
           <div data-reveal="" style={rv("0.1s")} className="gd-faq">
@@ -345,8 +345,8 @@ export default async function GameDevelopmentMarkup() {
             <img src="/images/game/coding.jpg" alt="" loading="lazy" className="absolute inset-0 -z-20 size-full object-cover" />
             <span className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,rgba(5,7,28,0.94),rgba(10,18,80,0.9))]" />
             <div data-reveal="" style={rv()}>
-              <Eyebrow light>Get started</Eyebrow>
-              <h2 className="mt-4 text-[clamp(2.1rem,4vw,3.6rem)] font-normal leading-[1.05] tracking-[-0.04em] text-white">Tell us about the title you want to build.</h2>
+              <Eyebrow light>Begin here</Eyebrow>
+              <h2 className="mt-4 text-[clamp(2.1rem,4vw,3.6rem)] font-normal leading-[1.05] tracking-[-0.04em] text-white">Describe the game you would like us to make.</h2>
               <ul className="mt-8 grid gap-3">
                 {["Bring a concept, a stalled build, or a live title", "One call to map scope, platform and art fidelity", "A route to a vertical slice, not a vague estimate"].map((t) => (
                   <li key={t} className="flex items-start gap-3 text-[16px] text-white/90">

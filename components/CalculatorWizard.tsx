@@ -141,8 +141,8 @@ export default function CalculatorWizard() {
     );
     body = (
       <div>
-        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">First, a little about you.</h2>
-        <p className="mt-2 text-[16px] text-ink-soft">So we can send your estimate and follow up if you'd like a proposal.</p>
+        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">To begin, tell us a bit about yourself.</h2>
+        <p className="mt-2 text-[16px] text-ink-soft">This lets us send your estimate and get in touch if you would like a proposal.</p>
         <div className="mt-8">
           <form
             className="grid gap-3 sm:grid-cols-2"
@@ -155,12 +155,12 @@ export default function CalculatorWizard() {
           >
             {field("Full name*", "name", { autoComplete: "name", placeholder: "Jane Smith" })}
             {field("Email*", "email", { type: "email", autoComplete: "email", placeholder: "jane@company.com" })}
-            {field("Phone", "phone", { type: "tel", autoComplete: "tel", placeholder: "+44" })}
-            {field("Company", "company", { autoComplete: "organization", placeholder: "Optional" })}
+            {field("Phone number", "phone", { type: "tel", autoComplete: "tel", placeholder: "+44" })}
+            {field("Company", "company", { autoComplete: "organization", placeholder: "Not required" })}
             <div className="mt-4 flex flex-col-reverse gap-4 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
-              <p className="max-w-[340px] text-[12px] leading-relaxed text-muted">We'll only use your details to share your estimate and reply to you. No spam.</p>
+              <p className="max-w-[340px] text-[12px] leading-relaxed text-muted">Your details are used only to share your estimate and respond to you. No spam.</p>
               <button type="submit" disabled={!validDetails} className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand disabled:cursor-not-allowed disabled:bg-ink/30">
-                Start my estimate
+                Begin my estimate
                 <Arrow cls="size-4 transition-transform duration-300 group-enabled:group-hover:translate-x-1" />
               </button>
             </div>
@@ -171,24 +171,24 @@ export default function CalculatorWizard() {
   } else if (step === 1) {
     body = (
       <div>
-        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">What would you like to do?</h2>
-        <p className="mt-2 text-[16px] text-ink-soft">Choose the option closest to where you are today.</p>
+        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">What do you want to do?</h2>
+        <p className="mt-2 text-[16px] text-ink-soft">Pick the option that best matches your situation now.</p>
         <OptionGrid kind="goal" options={goals} value={a.goal} onPick={(v) => set("goal", v)} />
       </div>
     );
   } else if (step === 2) {
     body = (
       <div>
-        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">Which platform do you need?</h2>
-        <p className="mt-2 text-[16px] text-ink-soft">You can always add another platform later.</p>
+        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">Which platform are you after?</h2>
+        <p className="mt-2 text-[16px] text-ink-soft">Another platform can be added at any point.</p>
         <OptionGrid kind="platform" options={platforms} value={a.platform} onPick={(v) => set("platform", v)} />
       </div>
     );
   } else if (step === 3) {
     body = (
       <div>
-        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">What features do you need?</h2>
-        <p className="mt-2 text-[16px] text-ink-soft">Select everything your first version must have.</p>
+        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">Which features do you need?</h2>
+        <p className="mt-2 text-[16px] text-ink-soft">Tick everything the first version has to include.</p>
         <div className="mt-8">
           <div className="-mr-2 max-h-[46vh] overflow-y-auto overscroll-contain pr-2 sm:max-h-[420px]" data-lenis-prevent="true">
             <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
@@ -214,16 +214,16 @@ export default function CalculatorWizard() {
   } else if (step === 4) {
     body = (
       <div>
-        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">What pace suits you?</h2>
-        <p className="mt-2 text-[16px] text-ink-soft">A faster pace needs a bigger team at once.</p>
+        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">What speed suits you?</h2>
+        <p className="mt-2 text-[16px] text-ink-soft">A quicker pace calls for a larger team working together.</p>
         <OptionGrid kind="pace" options={paces} value={a.pace} onPick={(v) => set("pace", v)} />
       </div>
     );
   } else if (result) {
     body = (
       <div>
-        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">Your estimate is ready.</h2>
-        <p className="mt-2 text-[16px] text-ink-soft">Here's how it breaks down. Prices include design, development and testing.</p>
+        <h2 className="text-[clamp(1.6rem,2.6vw,2.3rem)] font-normal leading-tight tracking-[-0.035em] text-ink">Your estimate is in.</h2>
+        <p className="mt-2 text-[16px] text-ink-soft">Here is the breakdown. Prices cover design, development and testing.</p>
         <ul className="mt-8 border-t border-ink/10">
           {a.features.map((id) => (
             <li key={id} className="flex items-center justify-between gap-4 border-b border-ink/10 py-3.5 text-[15px]">
@@ -245,9 +245,9 @@ export default function CalculatorWizard() {
         <div className="mt-8 rounded-2xl bg-paper p-5 sm:p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-[17px] tracking-[-0.01em] text-ink">Want a detailed proposal?</p>
+              <p className="text-[17px] tracking-[-0.01em] text-ink">Would you like a detailed proposal?</p>
               <p className="mt-1 text-[14px] text-ink-soft">
-                We'll send it to <span className="text-ink">{details.email}</span>.{" "}
+                It will go to <span className="text-ink">{details.email}</span>.{" "}
                 <button onClick={() => setStep(0)} className="inline-flex items-center gap-1 text-brand hover:underline">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-3" aria-hidden="true">
                     <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
@@ -285,12 +285,12 @@ export default function CalculatorWizard() {
                   setSubmitState("sent");
                 } catch (err) {
                   setSubmitState("error");
-                  setSubmitError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+                  setSubmitError(err instanceof ApiError ? err.message : "That did not go through. Please try once more.");
                 }
               }}
               className="group inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand disabled:cursor-wait disabled:bg-ink/60"
             >
-              {submitState === "sending" ? "Sending…" : submitState === "sent" ? "Sent — we'll be in touch" : "Submit my estimate"}
+              {submitState === "sending" ? "Sending…" : submitState === "sent" ? "Sent, we will be in touch" : "Send my estimate"}
               {submitState !== "sent" && <Arrow cls="size-4 transition-transform duration-300 group-hover:translate-x-1" />}
             </button>
           </div>
@@ -324,7 +324,7 @@ export default function CalculatorWizard() {
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
                 <path d="M3 3v5h5" />
               </svg>{" "}
-              Start over
+              Begin again
             </button>
           )}
         </div>
@@ -348,7 +348,7 @@ export default function CalculatorWizard() {
         {step > 0 && (
           <div className="mt-6 flex items-center justify-between rounded-2xl bg-paper px-4 py-3 lg:hidden">
             <span className="text-[13px] text-muted">Estimate</span>
-            <span className="text-[15px] font-medium text-ink">{result ? range : "Pick features"}</span>
+            <span className="text-[15px] font-medium text-ink">{result ? range : "Choose features"}</span>
           </div>
         )}
         <div className="relative mt-8 min-h-[340px] sm:mt-10">
@@ -365,7 +365,7 @@ export default function CalculatorWizard() {
                 onClick={() => setStep(step + 1)}
                 className="group inline-flex h-12 items-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand disabled:cursor-not-allowed disabled:bg-ink/30"
               >
-                {step === 4 ? "See my estimate" : "Next"}
+                {step === 4 ? "View my estimate" : "Continue"}
                 <Arrow cls="size-4 transition-transform duration-300 group-enabled:group-hover:translate-x-1" />
               </button>
             </div>
@@ -374,7 +374,7 @@ export default function CalculatorWizard() {
         {step === 5 && (
           <div className="mt-8 border-t border-ink/[0.08] pt-6">
             <button onClick={() => setStep(1)} className="inline-flex items-center gap-1.5 text-[15px] text-ink">
-              <Back /> Adjust answers
+              <Back /> Change answers
             </button>
           </div>
         )}
@@ -396,7 +396,7 @@ export default function CalculatorWizard() {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                 </span>
-                <p className="max-w-[260px] text-[18px] leading-snug text-white/70">Add your details to unlock your instant estimate.</p>
+                <p className="max-w-[260px] text-[18px] leading-snug text-white/70">Enter your details to unlock your instant estimate.</p>
               </div>
             ) : result ? (
               <>
@@ -408,22 +408,22 @@ export default function CalculatorWizard() {
                 </p>
               </>
             ) : (
-              <p className="max-w-[260px] text-[18px] leading-snug text-white/70">Pick your features to see an instant estimate.</p>
+              <p className="max-w-[260px] text-[18px] leading-snug text-white/70">Choose your features to see an instant estimate.</p>
             )}
           </div>
           <dl className="mt-8 grid gap-3 border-t border-white/10 pt-6 text-[14px]">
             {dd("Project", unlocked ? labelOf.goal(a.goal) : "—")}
             {dd("Platform", unlocked ? labelOf.platform(a.platform) : "—")}
-            {dd("Features", !unlocked ? "—" : hasFeatures ? `${a.features.length} selected` : "None yet")}
+            {dd("Features", !unlocked ? "—" : hasFeatures ? `${a.features.length} selected` : "None so far")}
             {dd("Pace", unlocked ? labelOf.pace(a.pace) : "—")}
           </dl>
           <a href="/book-a-call" className="group mt-8 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white text-[15px] font-medium text-ink transition-colors duration-300 hover:bg-brand hover:text-white">
-            Refine it on a free call
+            Fine-tune it on a free call
             <Arrow cls="size-4 transition-transform duration-300 group-hover:translate-x-1" />
           </a>
-          <p className="mt-4 text-center text-[12px] text-white/45">An estimate to plan with, not a quote.</p>
+          <p className="mt-4 text-center text-[12px] text-white/45">A planning estimate, not a quote.</p>
           <a href="/zero-one" className="group mt-5 block border-t border-white/10 pt-5 text-center text-[13.5px] leading-relaxed text-white/70 transition-colors hover:text-white">
-            Not ready for a full MVP? Test your core feature with <span className="font-medium text-white">BUILD.ONE</span> for £499
+            Not ready for a full MVP? Try out your core feature with <span className="font-medium text-white">BUILD.ONE</span> for £499
             <Arrow cls="ml-1 inline size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
           </a>
         </div>

@@ -4,7 +4,7 @@ import OdogwuMarkup from "@/components/OdogwuMarkup";
 export const metadata: Metadata = {
   title: "Odogwu Foods Case Study | TechClues",
   description:
-    "A custom online grocery store for African and Afro-Caribbean food. Built for UK shoppers, with smart delivery rules.",
+    "A bespoke online grocery store selling African and Afro-Caribbean food, made for UK shoppers and featuring intelligent delivery rules.",
   alternates: { canonical: "https://techclues.co.uk/case-studies/odogwu" },
 };
 

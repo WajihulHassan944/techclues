@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import CaseStudiesMarkup from "@/components/CaseStudiesMarkup";
 
 export const metadata: Metadata = {
-  title: "Case Studies | MVPs & Products Built by TechClues",
+  title: "Case Studies | MVPs & Products TechClues Has Built",
   description:
-    "How TechClues helped founders validate, design and launch real products, from a relay running league to dental practice software.",
+    "See how TechClues supported founders to validate, design and launch real products, ranging from a relay running league to dental practice software.",
   alternates: { canonical: "https://techclues.co.uk/case-studies" },
 };
 

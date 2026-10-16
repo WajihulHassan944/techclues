@@ -26,11 +26,11 @@ async function open(page: Page) {
 async function details(page: Page) {
   await page.locator('input[autocomplete="name"]').fill("Test User");
   await page.locator('input[autocomplete="email"]').fill("test@example.com");
-  await page.getByRole("button", { name: "Start my estimate" }).click();
+  await page.getByRole("button", { name: "Begin my estimate" }).click();
 }
 
 const side = (page: Page) => page.locator("aside .min-h-\\[92px\\]");
-const next = (page: Page) => page.getByRole("button", { name: "Next", exact: true });
+const next = (page: Page) => page.getByRole("button", { name: "Continue", exact: true });
 
 /** Runs the wizard and returns the sidebar estimate text. */
 async function run(page: Page, goal: string, platform: string, feats: string[], pace: string) {
@@ -42,7 +42,7 @@ async function run(page: Page, goal: string, platform: string, feats: string[], 
   for (const f of feats) await page.getByRole("button", { name: new RegExp(`^${f}`) }).first().click();
   await next(page).click();
   await page.getByRole("button", { name: new RegExp(`^${pace}`) }).click();
-  await page.getByRole("button", { name: "See my estimate" }).click();
+  await page.getByRole("button", { name: "View my estimate" }).click();
   // The sidebar numbers ease toward their final values, so wait for them to settle.
   const read = async () => (await side(page).innerText()).replace(/\s+/g, " ").trim();
   let last = "";
@@ -53,12 +53,12 @@ async function run(page: Page, goal: string, platform: string, feats: string[], 
 test.describe("MVP cost calculator", () => {
   test("renders the page, shell and static sections without errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("MVP Cost Calculator UK | Estimate Your App Build | TechClues");
-    await expect(page.locator("h1")).toHaveText("What will your MVP cost?");
+    await expect(page).toHaveTitle("UK MVP Cost Calculator | Estimate Your App Build | TechClues");
+    await expect(page.locator("h1")).toHaveText("What's your MVP's price tag?");
     await expect(page.getByText("Step 1 of 6")).toBeVisible();
-    await expect(page.getByText("Add your details to unlock your instant estimate.")).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Five things that shape your price." })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "About your estimate." })).toBeVisible();
+    await expect(page.getByText("Enter your details to unlock your instant estimate.")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Five factors that determine what you pay." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Your estimate explained." })).toBeVisible();
     await expect(page.locator("header nav")).toBeVisible();
     await expect(page.locator("footer")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -67,7 +67,7 @@ test.describe("MVP cost calculator", () => {
 
   test("details step validates, locks later steps and unlocks on submit", async ({ page }) => {
     await open(page);
-    const start = page.getByRole("button", { name: "Start my estimate" });
+    const start = page.getByRole("button", { name: "Begin my estimate" });
     await expect(start).toBeDisabled();
     for (const label of ["Goal", "Platform", "Features", "Timeline", "Estimate"]) {
       await expect(page.getByRole("button", { name: label, exact: true })).toBeDisabled();
@@ -79,10 +79,10 @@ test.describe("MVP cost calculator", () => {
     await expect(start).toBeEnabled();
     await start.click();
     await expect(page.getByText("Step 2 of 6")).toBeVisible();
-    await expect(page.getByRole("heading", { name: "What would you like to do?" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "What do you want to do?" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Goal", exact: true })).toHaveAttribute("aria-current", "step");
     await expect(page.getByRole("button", { name: "Timeline", exact: true })).toBeDisabled();
-    await expect(page.getByText("Pick your features to see an instant estimate.")).toBeVisible();
+    await expect(page.getByText("Choose your features to see an instant estimate.")).toBeVisible();
   });
 
   test("walks every step and matches the reference estimate", async ({ page }) => {
@@ -91,21 +91,21 @@ test.describe("MVP cost calculator", () => {
     // Goal and platform default to MVP / Web app
     await expect(page.getByRole("button", { name: /^Start with an MVP/ })).toHaveAttribute("aria-pressed", "true");
     await next(page).click();
-    await expect(page.getByRole("heading", { name: "Which platform do you need?" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Which platform are you after?" })).toBeVisible();
     await expect(page.getByRole("button", { name: /^Web app/ })).toHaveAttribute("aria-pressed", "true");
     await next(page).click();
     // Features: Next is disabled until something is picked
-    await expect(page.getByRole("heading", { name: "What features do you need?" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Which features do you need?" })).toBeVisible();
     await expect(next(page)).toBeDisabled();
     for (const f of ["Sign up & log in", "Payments", "Real-time chat"]) await page.getByRole("button", { name: new RegExp(`^${f}`) }).click();
     await expect(page.getByText("3 selected")).toBeVisible();
     await expect(side(page)).toContainText("£5,000 – £5,282");
     await expect(side(page)).toContainText("Around £5,121 · 4 weeks");
     await next(page).click();
-    await expect(page.getByRole("heading", { name: "What pace suits you?" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "What speed suits you?" })).toBeVisible();
     await expect(page.getByRole("button", { name: /^Standard/ })).toHaveAttribute("aria-pressed", "true");
-    await page.getByRole("button", { name: "See my estimate" }).click();
-    await expect(page.getByRole("heading", { name: "Your estimate is ready." })).toBeVisible();
+    await page.getByRole("button", { name: "View my estimate" }).click();
+    await expect(page.getByRole("heading", { name: "Your estimate is in." })).toBeVisible();
     await expect(page.getByText("Step 6 of 6")).toBeVisible();
     await expect(page.getByText("Estimated total")).toBeVisible();
     await expect(page.getByText("£5,121", { exact: true }).first()).toBeVisible();
@@ -137,23 +137,23 @@ test.describe("MVP cost calculator", () => {
     await next(page).click();
     await page.getByRole("button", { name: /^Payments/ }).click();
     await next(page).click();
-    await page.getByRole("button", { name: "See my estimate" }).click();
+    await page.getByRole("button", { name: "View my estimate" }).click();
     // Jump back through the step bar, features stay selected
     await page.getByRole("button", { name: "Features", exact: true }).click();
     await expect(page.getByRole("button", { name: /^Payments/ })).toHaveAttribute("aria-pressed", "true");
     await page.getByRole("button", { name: "Back" }).click();
-    await expect(page.getByRole("heading", { name: "Which platform do you need?" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Which platform are you after?" })).toBeVisible();
     await page.getByRole("button", { name: "Estimate", exact: true }).click();
-    await page.getByRole("button", { name: "Adjust answers" }).click();
-    await expect(page.getByRole("heading", { name: "What would you like to do?" })).toBeVisible();
+    await page.getByRole("button", { name: "Change answers" }).click();
+    await expect(page.getByRole("heading", { name: "What do you want to do?" })).toBeVisible();
     await page.getByRole("button", { name: "Estimate", exact: true }).click();
     await page.getByRole("button", { name: "Edit" }).click();
-    await expect(page.getByRole("heading", { name: "First, a little about you." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "To begin, tell us a bit about yourself." })).toBeVisible();
     await expect(page.locator('input[autocomplete="name"]')).toHaveValue("Test User");
-    await page.getByRole("button", { name: "Start my estimate" }).click();
-    await page.getByRole("button", { name: "Start over" }).click();
+    await page.getByRole("button", { name: "Begin my estimate" }).click();
+    await page.getByRole("button", { name: "Begin again" }).click();
     await expect(page.getByText("Step 1 of 6")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Start over" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Begin again" })).toHaveCount(0);
   });
 
   test("FAQ accordion opens one answer at a time", async ({ page }) => {
@@ -198,7 +198,7 @@ test.describe("MVP cost calculator on mobile", () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     await details(page);
     await next(page).click();
-    await expect(page.locator(".lg\\:hidden", { hasText: "Pick features" })).toBeVisible();
+    await expect(page.locator(".lg\\:hidden", { hasText: "Choose features" })).toBeVisible();
     await next(page).click();
     await page.getByRole("button", { name: /^Payments/ }).click();
     await expect(page.locator(".lg\\:hidden", { hasText: "£" }).first()).toBeVisible();

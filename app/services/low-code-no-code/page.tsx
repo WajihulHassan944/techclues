@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import LowCodeNoCodeMarkup from "@/components/LowCodeNoCodeMarkup";
 
 export const metadata: Metadata = {
-  title: "No-Code & Low-Code Development Agency UK | TechClues",
+  title: "UK Agency for No-Code & Low-Code Development | TechClues",
   description:
-    "No-code and low-code development for UK startups. Launch a working MVP or internal tool in days on Bubble, Webflow or Softr, with automations built in.",
+    "UK startups can get a working MVP or internal tool live within days using no-code and low-code development on Bubble, Webflow or Softr, automations included.",
   alternates: { canonical: "https://techclues.co.uk/services/low-code-no-code" },
 };
 

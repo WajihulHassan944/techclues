@@ -50,11 +50,12 @@ async function dismissCookies(page: Page) {
   }).toPass({ timeout: 20_000 });
 }
 
+// Panel headings are worded differently from their tab labels in the current copy.
 test.describe("homepage", () => {
   test("renders the page with correct metadata, no console errors and no overflow", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle(/Custom Software Development Company in West Midlands/);
-    await expect(page.locator("h1")).toContainText("Launch-ready MVPs.");
+    await expect(page).toHaveTitle(/West Midlands Custom Software Development Company/);
+    await expect(page.locator("h1")).toContainText("Ready-to-launch MVPs.");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -287,17 +288,17 @@ test.describe("homepage", () => {
     const section = page.locator('section[aria-label="Testimonials"]');
     const quote = section.locator("blockquote");
     await section.scrollIntoViewIfNeeded();
-    await expect(quote).toContainText("rough sketch to a live MVP");
+    await expect(quote).toContainText("rough sketch into a live MVP");
     await expect(section.getByRole("button", { name: /^Show review/ })).toHaveCount(4);
     await section.getByRole("button", { name: "Show review 3" }).click();
-    await expect(quote).toContainText("half-finished prototype built with AI tools");
+    await expect(quote).toContainText("part-built prototype made using AI tools");
     await section.getByRole("button", { name: "Next review" }).click();
     await expect(quote).toContainText("custom dashboard");
     await section.getByRole("button", { name: "Previous review" }).click();
-    await expect(quote).toContainText("half-finished prototype built with AI tools");
+    await expect(quote).toContainText("part-built prototype made using AI tools");
     await section.getByRole("button", { name: "Show review 4" }).click();
     await section.getByRole("button", { name: "Next review" }).click();
-    await expect(quote).toContainText("rough sketch to a live MVP"); // wraps around
+    await expect(quote).toContainText("rough sketch into a live MVP"); // wraps around
     // Hovering the card pauses the progress bar
     await section.locator('[class*="rounded-[28px]"]').first().hover();
     await expect(section.locator(".testimonial-bar")).toHaveCSS("animation-play-state", "paused");
@@ -312,9 +313,9 @@ test.describe("homepage", () => {
     await section.scrollIntoViewIfNeeded();
     await page.mouse.move(5, 5);
     await section.getByRole("button", { name: "Show review 1", exact: true }).click();
-    await expect(section.locator("blockquote")).toContainText("rough sketch to a live MVP");
+    await expect(section.locator("blockquote")).toContainText("rough sketch into a live MVP");
     await page.mouse.move(5, 5); // the click left the pointer over the card, which pauses rotation
-    await expect(section.locator("blockquote")).toContainText("Our old website looked fine", { timeout: 12_000 });
+    await expect(section.locator("blockquote")).toContainText("The old site looked decent", { timeout: 12_000 });
   });
 
   test("FAQ accordion opens one answer at a time", async ({ page }) => {
@@ -335,7 +336,7 @@ test.describe("homepage", () => {
   test("cookie banner: manage preferences, toggle and save", async ({ page }) => {
     await open(page);
     await page.getByRole("button", { name: "Manage" }).click();
-    await expect(page.locator("#cookie-title")).toHaveText("Cookie preferences");
+    await expect(page.locator("#cookie-title")).toHaveText("Your cookie choices");
     const analytics = page.getByRole("switch", { name: "Analytics" });
     await expect(analytics).toHaveAttribute("aria-checked", "false");
     await analytics.click();
@@ -350,7 +351,7 @@ test.describe("homepage", () => {
     await page.locator(".chat-launcher").click();
     const dialog = page.getByRole("dialog", { name: /enquiry/i });
     await expect(dialog).toBeVisible();
-    await expect(dialog).toContainText("Tell us what you need");
+    await expect(dialog).toContainText("Describe what you are after");
     await dialog.getByRole("button", { name: "An existing product" }).click();
     await expect(dialog.getByRole("button", { name: "An existing product" })).toHaveAttribute("aria-pressed", "true");
     const before = page.url();

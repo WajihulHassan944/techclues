@@ -157,7 +157,7 @@ export default function MobileMenu() {
       </div>
       <div className="shrink-0 border-t border-ink/[0.08] bg-white px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-5 sm:px-8">
         <a href="/book-a-call" className="flex h-14 items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand">
-          Book a free strategy call
+          Schedule a free strategy call
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4" aria-hidden="true">
             <path d="M5 12h14" />
             <path d="m12 5 7 7-7 7" />

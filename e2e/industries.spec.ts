@@ -1,14 +1,14 @@
 import { test, expect, type Page } from "@playwright/test";
 
 const SECTORS = [
-  ["Healthcare & medical", "healthcare-medical"],
-  ["Logistics & transportation", "logistics-transportation"],
-  ["Retail & e-commerce", "retail-ecommerce"],
-  ["Education & consulting", "education-consulting"],
-  ["Pre-seed & seed startups", "pre-seed-seed-startups"],
-  ["Recruitment & staffing", "recruitment-staffing"],
+  ["Medical & healthcare", "healthcare-medical"],
+  ["Transport & logistics", "logistics-transportation"],
+  ["E-commerce & retail", "retail-ecommerce"],
+  ["Consulting & education", "education-consulting"],
+  ["Seed & pre-seed startups", "pre-seed-seed-startups"],
+  ["Staffing & recruitment", "recruitment-staffing"],
   ["SaaS startups", "saas-startups"],
-  ["Industry & manufacturing", "industry-manufacturing"],
+  ["Manufacturing & industry", "industry-manufacturing"],
 ] as const;
 
 async function rejectCookies(page: Page) {
@@ -34,10 +34,10 @@ async function open(page: Page) {
 test.describe("industries page", () => {
   test("renders with the right metadata, intro and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Industries We Serve | Sector Software & MVPs | TechClues");
-    await expect(page.locator("h1")).toContainText("Built for your sector.");
-    await expect(page.locator("h1")).toContainText("Not just your screen.");
-    await expect(page.locator("main").getByText("Eight sectors where we know the users, the rules and what good looks like.")).toBeVisible();
+    await expect(page).toHaveTitle("Sectors We Work In | Industry Software & MVPs | TechClues");
+    await expect(page.locator("h1")).toContainText("Made for your sector.");
+    await expect(page.locator("h1")).toContainText("More than a screen.");
+    await expect(page.locator("main").getByText("Eight sectors where we understand the users, the regulations and what a good result looks like.")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -68,9 +68,9 @@ test.describe("industries page", () => {
     await open(page);
     for (const label of ["Why sector knowledge matters", "Your product partner", "What clients say", "Start your project"])
       await expect(page.locator(`section[aria-label="${label}"]`)).toHaveCount(1);
-    await expect(page.getByText("We know the workflows")).toBeVisible();
-    await expect(page.getByText("Standards built in")).toBeAttached();
-    await expect(page.getByText("Faster from the start")).toBeAttached();
+    await expect(page.getByText("We understand the workflows")).toBeVisible();
+    await expect(page.getByText("Standards included")).toBeAttached();
+    await expect(page.getByText("Quicker from the outset")).toBeAttached();
   });
 
   test("a sector card goes there without reloading the site", async ({ page }) => {

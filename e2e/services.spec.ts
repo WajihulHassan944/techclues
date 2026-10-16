@@ -1,17 +1,17 @@
 import { test, expect, type Page } from "@playwright/test";
 
 const SERVICES = [
-  ["MVPs & Custom Platforms", "mvp-development", "01"],
-  ["Prototype to Production", "prototype-to-production", "02"],
-  ["AI Integration & Automation", "ai-enablement", "03"],
-  ["Web & Mobile Apps", "web-mobile-apps", "04"],
-  ["UI/UX & Prototyping", "ui-ux-design", "05"],
-  ["Low-Code / No-Code", "low-code-no-code", "06"],
-  ["E-commerce & Marketplaces", "ecommerce-marketplace-development", "07"],
+  ["MVPs & Bespoke Platforms", "mvp-development", "01"],
+  ["Prototype into Production", "prototype-to-production", "02"],
+  ["Automation & AI Integration", "ai-enablement", "03"],
+  ["Web & Mobile Applications", "web-mobile-apps", "04"],
+  ["UI/UX & Prototype work", "ui-ux-design", "05"],
+  ["No-Code / Low-Code", "low-code-no-code", "06"],
+  ["Marketplaces & E-commerce", "ecommerce-marketplace-development", "07"],
   ["Performance Marketing", "performance-marketing", "08"],
-  ["Strategy & Brand Identity", "brand-strategy", "09"],
+  ["Brand Identity & Strategy", "brand-strategy", "09"],
   ["Staff Augmentation", "staff-augmentation", "10"],
-  ["Game Development", "game-development", "11"],
+  ["Game Creation", "game-development", "11"],
 ] as const;
 
 /** Dismisses the cookie banner; it only goes away once React has hydrated, so retry the click until it does. */
@@ -38,10 +38,10 @@ async function open(page: Page) {
 test.describe("services page", () => {
   test("renders with the right metadata, intro and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Services | MVP Development, Apps, Design & Growth | TechClues");
-    await expect(page.locator("h1")).toContainText("Everything your");
-    await expect(page.locator("h1")).toContainText("product needs.");
-    await expect(page.getByText("From validating the idea to growing after launch, one team takes care of it all.")).toBeVisible();
+    await expect(page).toHaveTitle("Our Services | MVP Development, Apps, Design & Growth | TechClues");
+    await expect(page.locator("h1")).toContainText("Whatever your");
+    await expect(page.locator("h1")).toContainText("product requires.");
+    await expect(page.getByText("A single team covers everything, from testing the idea to expanding once live.")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -71,8 +71,8 @@ test.describe("services page", () => {
       await expect(card).toHaveCount(1);
       await expect(card.getByRole("heading", { name })).toBeVisible();
       await expect(card).toContainText(num);
-      await expect(card.getByRole("link", { name: /Learn more/ })).toHaveAttribute("href", `/services/${slug}`);
-      await expect(card).toContainText("What's included");
+      await expect(card.getByRole("link", { name: /Find out more/ })).toHaveAttribute("href", `/services/${slug}`);
+      await expect(card).toContainText("What we cover");
       await expect(card).toContainText("Best for:");
     }
   });
@@ -89,11 +89,11 @@ test.describe("services page", () => {
     await open(page);
     const section = page.locator('section[aria-label="Ways to work with us"]');
     await section.scrollIntoViewIfNeeded();
-    await expect(section).toContainText("Pick the model that fits.");
+    await expect(section).toContainText("Choose the model that suits.");
     await expect(section).toContainText("From £2,500");
     await expect(section).toContainText("From £10,000");
-    await expect(section.getByRole("link", { name: "Estimate your MVP cost" })).toHaveAttribute("href", "/mvp-cost-calculator");
-    await expect(section.getByRole("link", { name: "Talk to us" }).first()).toBeVisible();
+    await expect(section.getByRole("link", { name: "Work out your MVP cost" })).toHaveAttribute("href", "/mvp-cost-calculator");
+    await expect(section.getByRole("link", { name: "Get in touch" }).first()).toBeVisible();
     await expect(page.locator('section[aria-label="Start your project"]')).toBeVisible();
   });
 

@@ -256,9 +256,9 @@ function SlotPicker({ timeZone: tz, onTimeZoneChange, h12, selected, onSelect, r
       <div ref={timesRef} className="scroll-mt-24">
         {failed ? (
           <div className="rounded-2xl bg-[#f1f0f6] p-5 text-[14px] text-ink-soft" role="alert">
-            We couldn&apos;t load the times.
+            The available times would not load.
             <button type="button" onClick={() => setRetry((r) => r + 1)} className="mt-3 block font-medium text-ink underline underline-offset-4">
-              Try again
+              Retry
             </button>
           </div>
         ) : loading ? (
@@ -305,10 +305,10 @@ function SlotPicker({ timeZone: tz, onTimeZoneChange, h12, selected, onSelect, r
           </div>
         ) : (
           <div className="rounded-2xl bg-[#f1f0f6] p-5 text-[14px] leading-relaxed text-ink-soft">
-            No free times in {monthTitle(ym.y, ym.m).split(" ")[0]}.
+            Nothing available in {monthTitle(ym.y, ym.m).split(" ")[0]}.
             {canNext && (
               <button type="button" onClick={() => go(1)} className="mt-3 block font-medium text-ink underline underline-offset-4">
-                See next month
+                View next month
               </button>
             )}
           </div>
@@ -386,8 +386,8 @@ function Widget() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const er: { name?: string; email?: string } = {};
-    if (!form.name.trim()) er.name = "Add your name.";
-    if (!EMAIL_RE.test(form.email.trim())) er.email = "Check your email address.";
+    if (!form.name.trim()) er.name = "Enter your name.";
+    if (!EMAIL_RE.test(form.email.trim())) er.email = "Please check your email address.";
     setErrors(er);
     if (Object.keys(er).length) {
       document.getElementById(`booking-${Object.keys(er)[0]}`)?.focus();
@@ -426,11 +426,11 @@ function Widget() {
         setStep("done");
       } catch (err) {
         if (err instanceof ApiError && err.statusCode === 400) {
-          setFormError(err.message || "That time is no longer available — please pick another slot.");
+          setFormError(err.message || "That time has just been taken, so please choose another slot.");
           setStep("pick");
           setRefresh((r) => r + 1);
         } else {
-          setFormError("Something went wrong booking your call. Please try again.");
+          setFormError("We could not book your call. Please try once more.");
         }
       } finally {
         setBusy(false);
@@ -460,7 +460,7 @@ function Widget() {
       {step === "pick" && (
         <section key="pick" className="step-in" aria-labelledby="booking-step">
           <h2 id="booking-step" ref={headRef} tabIndex={-1} className="text-[22px] font-normal tracking-[-0.02em] text-ink outline-none">
-            Choose a time
+            Pick a time
           </h2>
           {notice && (
             <p role="alert" className="mt-3 rounded-xl bg-[#fff4e5] px-4 py-3 text-[14px] text-[#8a4b00]">
@@ -488,10 +488,10 @@ function Widget() {
         <section key="details" className="step-in" aria-labelledby="booking-step">
           <button type="button" onClick={() => setStep("pick")} className="group mb-4 inline-flex items-center gap-1.5 text-[14px] text-muted transition-colors hover:text-ink">
             <ArrowLeft className="size-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
-            Change time
+            Pick another time
           </button>
           <h2 id="booking-step" ref={headRef} tabIndex={-1} className="text-[22px] font-normal tracking-[-0.02em] text-ink outline-none">
-            Your details
+            Your information
           </h2>
           <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl bg-[#f1f0f6] px-4 py-3.5 text-[14px] text-ink">
             <span className="inline-flex items-center gap-2 font-medium">
@@ -505,14 +505,14 @@ function Widget() {
           <form data-form="booking" data-clarity-mask="True" onSubmit={submit} noValidate className="mt-6 grid gap-4 sm:grid-cols-2">
             <Field id="name" label="Name" value={form.name} onChange={set("name")} error={errors.name} autoComplete="name" required />
             <Field id="email" label="Email" type="email" value={form.email} onChange={set("email")} error={errors.email} autoComplete="email" inputMode="email" required />
-            <Field id="company" label="Company" hint="Optional" value={form.company} onChange={set("company")} autoComplete="organization" />
-            <Field id="phone" label="Phone" hint="Optional" type="tel" value={form.phone} onChange={set("phone")} autoComplete="tel" inputMode="tel" />
+            <Field id="company" label="Company name" hint="Not required" value={form.company} onChange={set("company")} autoComplete="organization" />
+            <Field id="phone" label="Phone number" hint="Not required" type="tel" value={form.phone} onChange={set("phone")} autoComplete="tel" inputMode="tel" />
             <label className="sm:col-span-2">
               <span className="mb-1.5 flex justify-between text-[14px] font-medium text-ink">
-                What would you like to talk about?
-                <span className="font-normal text-muted">Optional</span>
+                What would you like to discuss?
+                <span className="font-normal text-muted">Not required</span>
               </span>
-              <textarea id="booking-notes" value={form.notes} onChange={set("notes")} rows={3} maxLength={2000} placeholder="A line or two about your idea helps us prepare." className="w-full resize-y rounded-2xl border border-ink/12 bg-white px-4 py-3 text-[15px] text-ink transition-[border-color,box-shadow] duration-200 placeholder:text-muted/70 hover:border-ink/25 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10" />
+              <textarea id="booking-notes" value={form.notes} onChange={set("notes")} rows={3} maxLength={2000} placeholder="A short note about your idea helps us prepare." className="w-full resize-y rounded-2xl border border-ink/12 bg-white px-4 py-3 text-[15px] text-ink transition-[border-color,box-shadow] duration-200 placeholder:text-muted/70 hover:border-ink/25 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10" />
             </label>
             <input type="text" name="website" value={form.website} onChange={set("website")} tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-px w-px opacity-0" />
             {formError && (
@@ -522,7 +522,7 @@ function Widget() {
             )}
             <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-[13px] leading-relaxed text-muted">
-                We&apos;ll use your details only to arrange this call. See our{" "}
+                Your details are used only to arrange this call. Read our{" "}
                 <a href={PRIVACY} className="underline underline-offset-2 hover:text-ink">
                   privacy policy
                 </a>
@@ -536,7 +536,7 @@ function Widget() {
                   </>
                 ) : (
                   <>
-                    Confirm booking
+                    Book this slot
                     <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </>
                 )}
@@ -552,22 +552,22 @@ function Widget() {
             <Check className="size-7" strokeWidth={2.5} />
           </span>
           <h2 id="booking-step" ref={headRef} tabIndex={-1} className="mt-5 text-[clamp(1.6rem,2.6vw,2.1rem)] font-normal leading-[1.15] tracking-[-0.03em] text-ink outline-none">
-            You&apos;re booked, {booked.name.split(" ")[0]}.
+            Your call is booked, {booked.name.split(" ")[0]}.
           </h2>
           <p className="mt-2 text-[16px] leading-relaxed text-ink-soft [overflow-wrap:anywhere]">
-            We&apos;ve sent a confirmation and calendar invite to <strong className="font-medium text-ink">{booked.email}</strong>.
+            A confirmation and calendar invite are on their way to <strong className="font-medium text-ink">{booked.email}</strong>.
           </p>
           <dl className="mt-6 divide-y divide-ink/[0.08] rounded-2xl border border-ink/[0.08]">
             <Row label="When">
               {new Intl.DateTimeFormat("en-GB", { timeZone: tz, weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(booked.start))}, {timeText(booked.start, tz, h12)} ({cityOf(tz)} time)
             </Row>
             <Row label="Length">{DURATION} minutes</Row>
-            <Row label="Where">Video call. We&apos;ll email you the link before the call.</Row>
+            <Row label="Where">Video call. The link will be emailed to you ahead of the call.</Row>
           </dl>
           <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
             <a href={booked.googleUrl} target="_blank" rel="nofollow noopener noreferrer" className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink px-6 text-[14px] font-medium text-white transition-colors duration-300 hover:bg-brand">
               <CalendarPlus className="size-4" />
-              Add to Google Calendar
+              Add it to Google Calendar
             </a>
             <a href={booked.icsUrl} download="techclues-call.ics" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-ink/15 px-6 text-[14px] font-medium text-ink transition-colors duration-300 hover:border-ink">
               <Download className="size-4" />
@@ -575,11 +575,11 @@ function Widget() {
             </a>
           </div>
           <p className="mt-6 text-[14px] text-muted">
-            Need to change it?{" "}
+            Need to make a change?{" "}
             <a href={booked.manageUrl} className="font-medium text-ink underline underline-offset-4 hover:text-brand">
               Reschedule or cancel
             </a>
-            . The link is in your email too.
+            . You will find the link in your email as well.
           </p>
         </section>
       )}

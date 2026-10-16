@@ -4,6 +4,8 @@ import GameCapabilities from "./GameCapabilities";
 import GameFx from "./GameFx";
 import GameHero from "./GameHero";
 import GameModes from "./GameModes";
+import GameCube from "./GameCube";
+import GameCollage from "./GameCollage";
 import StaffSeatForm from "./StaffSeatForm";
 import { Arrow, Eyebrow, H2, SEC, WRAP, rv } from "./ServiceParts";
 import { getFaqs } from "@/lib/api/faqs";
@@ -123,7 +125,7 @@ export default async function GameDevelopmentMarkup() {
       <section aria-label="In numbers" className="gd-stats">
         <div className={WRAP}>
           <div data-reveal="" style={rv()}>
-            <div className="gd-stats-panel relative isolate overflow-hidden rounded-[28px] px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
+            <div data-scrub="" className="gd-scrub gd-stats-panel relative isolate overflow-hidden rounded-[28px] px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/game/street.jpg" alt="" loading="lazy" data-parallax="60" className="gd-parallax-img absolute inset-0 -z-20 size-full object-cover" />
               <span className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,7,28,0.92),rgba(5,7,28,0.7))]" />
@@ -172,15 +174,8 @@ export default async function GameDevelopmentMarkup() {
               ))}
             </ul>
           </div>
-          <div data-reveal="" style={rv("0.1s")} className="gd-collage">
-            <div className="gd-collage-a" data-parallax="30">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/game/setup.jpg" alt="A neon-lit game development workspace" loading="lazy" />
-            </div>
-            <div className="gd-collage-b" data-parallax="-40">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/game/controller.jpg" alt="A game controller in blue and orange light" loading="lazy" />
-            </div>
+          <div data-reveal="" style={rv("0.1s")}>
+            <GameCollage />
           </div>
         </div>
       </section>
@@ -188,7 +183,9 @@ export default async function GameDevelopmentMarkup() {
       <section aria-label="The difference" className="py-[clamp(24px,4vw,48px)]">
         <div className={WRAP}>
           <div data-reveal="" style={rv()}>
-            <div className="gd-dark relative isolate overflow-hidden rounded-[28px] px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
+            <div data-scrub="" className="gd-scrub gd-dark relative isolate overflow-hidden rounded-[28px] px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
+              <GameCube size={150} className="gd-cube-r" />
+              <GameCube size={70} tint="#ff8fd0" className="gd-cube-r2" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/game/stage.jpg" alt="" loading="lazy" data-parallax="50" className="gd-parallax-img absolute inset-0 -z-20 size-full object-cover" />
               <span className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,7,28,0.88),rgba(5,7,28,0.94))]" />
@@ -243,7 +240,7 @@ export default async function GameDevelopmentMarkup() {
       <section aria-label="Process" className="py-[clamp(24px,4vw,48px)]">
         <div className={WRAP}>
           <div data-reveal="" style={rv()}>
-            <div data-quest="" className="gd-dark relative isolate overflow-hidden rounded-[28px] px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
+            <div data-quest="" data-scrub="" className="gd-scrub gd-dark relative isolate overflow-hidden rounded-[28px] px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/game/team.jpg" alt="" loading="lazy" className="absolute inset-0 -z-20 size-full object-cover" />
               <span className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,7,28,0.93),rgba(5,7,28,0.97))]" />
@@ -285,7 +282,7 @@ export default async function GameDevelopmentMarkup() {
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:mt-14">
             {INDUSTRIES.map(([t, d, img], n) => (
               <div key={t} data-reveal="" style={rv(`${(n % 3) * 0.07}s`)}>
-                <article className="gd-card group relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[26px] p-7 text-white">
+                <article data-tilt="" className="gd-tilt gd-card group relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[26px] p-7 text-white">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={img} alt="" loading="lazy" className="gd-card-img absolute inset-0 -z-20 size-full object-cover" />
                   <span className="gd-card-shade absolute inset-0 -z-10" />
@@ -342,8 +339,9 @@ export default async function GameDevelopmentMarkup() {
 
       <section id="get-started" aria-label="Get started" className="scroll-mt-24 pb-[clamp(72px,10vw,160px)] pt-[clamp(32px,4vw,64px)]">
         <div className={WRAP}>
-          <div className="gd-dark gd-form relative isolate grid gap-12 overflow-hidden rounded-[28px] p-7 sm:rounded-[36px] sm:p-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:p-16">
+          <div data-scrub="" className="gd-scrub gd-dark gd-form relative isolate grid gap-12 overflow-hidden rounded-[28px] p-7 sm:rounded-[36px] sm:p-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:p-16">
             {/* eslint-disable-next-line @next/next/no-img-element */}
+            <GameCube size={110} tint="#9b6bff" className="gd-cube-bl" />
             <img src="/images/game/coding.jpg" alt="" loading="lazy" className="absolute inset-0 -z-20 size-full object-cover" />
             <span className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,rgba(5,7,28,0.94),rgba(10,18,80,0.9))]" />
             <div data-reveal="" style={rv()}>

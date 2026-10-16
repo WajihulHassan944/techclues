@@ -15,6 +15,7 @@ export default function GameFx() {
     const cleanups: (() => void)[] = [];
     const par = Array.from(document.querySelectorAll<HTMLElement>("[data-parallax]"));
     const quests = Array.from(document.querySelectorAll<HTMLElement>("[data-quest]"));
+    const scrubs = Array.from(document.querySelectorAll<HTMLElement>("[data-scrub]"));
     let tick = 0;
     const onScroll = () => {
       if (tick) return;
@@ -28,6 +29,14 @@ export default function GameFx() {
             if (r.bottom < -100 || r.top > innerHeight + 100) continue;
             const k = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
             el.style.setProperty("--py", `${(-k * Number(el.dataset.parallax || 40)).toFixed(1)}px`);
+          }
+        }
+        if (!reduce) {
+          for (const el of scrubs) {
+            const r = el.getBoundingClientRect();
+            const k = Math.max(0, Math.min(1, (r.top - innerHeight * 0.25) / (innerHeight * 0.7)));
+            el.style.setProperty("--sx", `${(k * 9).toFixed(2)}deg`);
+            el.style.setProperty("--ss", (1 - k * 0.05).toFixed(3));
           }
         }
         for (const el of quests) {

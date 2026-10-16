@@ -17,7 +17,7 @@ export default function GameModes({ modes }: { modes: Mode[] }) {
         const on = sel === n;
         return (
           <div key={m.title} data-reveal="" style={{ "--reveal-delay": `${n * 0.08}s`, "--reveal-y": "28px" } as React.CSSProperties}>
-            <div role="radio" aria-checked={on} tabIndex={on ? 0 : -1} onClick={() => setSel(n)} className={`gd-mode group relative isolate flex h-full min-h-[420px] cursor-pointer flex-col justify-end overflow-hidden rounded-[28px] p-7 outline-none sm:p-9 ${on ? "is-on" : ""}`}>
+            <div role="radio" aria-checked={on} tabIndex={on ? 0 : -1} onClick={() => setSel(n)} data-tilt="" className={`gd-tilt gd-mode group relative isolate flex h-full min-h-[420px] cursor-pointer flex-col justify-end overflow-hidden rounded-[28px] p-7 outline-none sm:p-9 ${on ? "is-on" : ""}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={m.img} alt="" loading="lazy" className="gd-mode-img absolute inset-0 -z-20 size-full object-cover" />
               <span className="gd-mode-shade absolute inset-0 -z-10" />

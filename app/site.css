@@ -8565,3 +8565,74 @@ html.lenis body {
 .top-7{top:1.75rem}
 @media (min-width:640px){.sm\:bottom-6{bottom:1.5rem}.sm\:grid-cols-\[auto_1fr\]{grid-template-columns:auto 1fr}.sm\:inset-x-6{left:1.5rem;right:1.5rem}.sm\:items-end{align-items:flex-end}.sm\:left-9{left:2.25rem}.sm\:right-9{right:2.25rem}.sm\:top-9{top:2.25rem}}
 @media (min-width:1024px){.lg\:min-h-\[420px\]{min-height:420px}}
+
+/* ===== game page: real 3D ===== */
+.gd-hero-gl { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.gd-hero-img { animation-duration: 30s; object-position: 60% 38%; }
+
+/* panels lean back and settle as you scroll */
+.gd-scrub { transform: perspective(1500px) rotateX(var(--sx, 0deg)) scale(var(--ss, 1)); transform-origin: 50% 0; will-change: transform; }
+
+/* 3D reveal: blocks tip up into place */
+.js-reveal .gdp [data-reveal]:not([data-shown]) { transform: perspective(1200px) translate3d(0, var(--reveal-y, 28px), 0) rotateX(12deg); transform-origin: 50% 100%; }
+
+/* turning glass cubes */
+.gd-cube { position: absolute; width: var(--s); height: var(--s); perspective: 800px; pointer-events: none; z-index: 1; display: none; }
+@media (min-width: 900px) { .gd-cube { display: block; } }
+.gd-cube-r { right: 5%; top: 14%; }
+.gd-cube-r2 { right: 21%; top: 5%; }
+.gd-cube-bl { left: 3%; bottom: 6%; opacity: 0.8; }
+.gd-cube-spin { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: gd-spin 18s linear infinite; }
+@keyframes gd-spin { from { transform: rotateX(-22deg) rotateY(0deg); } to { transform: rotateX(338deg) rotateY(360deg); } }
+.gd-cube-spin > i { position: absolute; inset: 0; border: 1.5px solid color-mix(in srgb, var(--t) 85%, transparent); background: linear-gradient(135deg, color-mix(in srgb, var(--t) 16%, transparent), transparent 70%); box-shadow: inset 0 0 26px color-mix(in srgb, var(--t) 30%, transparent), 0 0 22px color-mix(in srgb, var(--t) 22%, transparent); }
+.gd-cube-spin > i:nth-child(1) { transform: translateZ(calc(var(--s) / 2)); }
+.gd-cube-spin > i:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); }
+.gd-cube-spin > i:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); }
+.gd-cube-spin > i:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
+.gd-cube-spin > i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
+.gd-cube-spin > i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
+.gd-cube-core { position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; transform-style: preserve-3d; animation: gd-spin-rev 11s linear infinite; }
+@keyframes gd-spin-rev { from { transform: rotateY(0) rotateZ(0); } to { transform: rotateY(-360deg) rotateZ(360deg); } }
+.gd-cube-core b { position: absolute; inset: 0; background: color-mix(in srgb, var(--t) 38%, transparent); border: 1px solid var(--t); box-shadow: 0 0 20px var(--t); }
+.gd-cube-core b:nth-child(1) { transform: translateZ(calc(var(--s) / 4)); }
+.gd-cube-core b:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--s) / 4)); }
+.gd-cube-core b:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--s) / 4)); }
+.gd-cube-core b:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--s) / 4)); }
+.gd-cube-core b:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--s) / 4)); }
+.gd-cube-core b:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--s) / 4)); }
+
+/* overview collage in 3D */
+.gd-stage { position: relative; min-height: 460px; perspective: 1300px; }
+@media (min-width: 640px) { .gd-stage { min-height: 580px; } }
+.gd-stage-idle { position: absolute; inset: 0; transform-style: preserve-3d; animation: gd-idle 9s ease-in-out infinite alternate; }
+@keyframes gd-idle { from { transform: rotateY(-5deg) rotateX(2deg); } to { transform: rotateY(5deg) rotateX(-2deg); } }
+.gd-stage-in { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.35s ease-out; }
+.gd-layer { position: absolute; overflow: hidden; border-radius: 28px; box-shadow: 0 50px 90px -40px rgba(14, 15, 49, 0.65); }
+.gd-layer img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gd-layer-a { left: 0; top: 0; width: 68%; aspect-ratio: 4 / 5; transform: translateZ(0); }
+.gd-layer-b { right: 0; bottom: 0; width: 56%; aspect-ratio: 1; border: 6px solid #fbfcff; transform: translateZ(90px); }
+.gd-glass-light { display: grid; gap: 2px; padding: 14px 18px; border-radius: 16px; color: #fff; background: rgba(8, 12, 48, 0.62); border: 1px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 24px 50px -20px rgba(5, 7, 28, 0.7); }
+.gd-glass-light span { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #8fd0ff; }
+.gd-glass-light b { font-size: 15px; font-weight: 500; }
+.gd-layer-c { left: 4%; bottom: 14%; overflow: visible; transform: translateZ(150px); }
+.gd-layer-d { right: 6%; top: 8%; overflow: visible; transform: translateZ(120px); }
+
+/* tab panel flips in */
+[role="tabpanel"] { perspective: 1600px; }
+.gd-flip { animation: gd-flip 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; transform-origin: 50% 60%; }
+@keyframes gd-flip { from { opacity: 0; transform: rotateY(-22deg) translateX(-24px) scale(0.96); } to { opacity: 1; transform: none; } }
+
+/* tilt cards: separate lift so it doesn't fight the 3D tilt */
+.gd-mode.is-on { translate: 0 -6px; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+.gd-tilt::after { z-index: 3; }
+
+/* process steps tip up */
+.js-reveal .gd-step > div { transform: perspective(700px) rotateX(24deg) translateY(10px); transform-origin: 50% 100%; }
+.gd-step.is-unlocked > div { transform: none !important; }
+
+/* tech strip leans back */
+.gd-marquee { perspective: 600px; }
+.gd-marquee-track { transform: rotateX(14deg); transform-origin: 50% 100%; }
+@keyframes gd-marq { from { transform: rotateX(14deg) translateX(0); } to { transform: rotateX(14deg) translateX(-50%); } }
+
+@media (prefers-reduced-motion: reduce) { .gd-cube-spin, .gd-cube-core, .gd-stage-idle, .gd-flip { animation: none !important; } .gd-scrub { transform: none; } }

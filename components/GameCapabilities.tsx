@@ -112,7 +112,7 @@ export default function GameCapabilities() {
         ))}
       </div>
       <div id="game-panel" role="tabpanel" aria-labelledby={`game-tab-${cur.key}`} className="mt-6 grid items-center gap-8 rounded-[28px] bg-white p-6 sm:p-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14 lg:p-10">
-        <div key={cur.key} className="staff-fade text-left">
+        <div key={cur.key} className="gd-flip text-left">
           <h3 className="text-[clamp(1.6rem,2.4vw,2.2rem)] font-normal leading-tight tracking-[-0.03em] text-ink">{cur.title}</h3>
           <p className="mt-4 max-w-[460px] text-[16px] leading-relaxed text-ink-soft">{cur.text}</p>
           <ul className="mt-6 grid gap-3">
@@ -128,7 +128,7 @@ export default function GameCapabilities() {
             <svg viewBox="0 0 24 24" className="size-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
           </a>
         </div>
-        <div key={`${cur.key}-v`} className="staff-fade gd-shot relative isolate min-h-[340px] overflow-hidden rounded-[24px] bg-ink text-left lg:min-h-[420px]">
+        <div key={`${cur.key}-v`} className="gd-flip gd-shot relative isolate min-h-[340px] overflow-hidden rounded-[24px] bg-ink text-left lg:min-h-[420px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={cur.img} alt="" loading="lazy" className="absolute inset-0 -z-20 size-full object-cover" />
           <span className="gd-shot-shade absolute inset-0 -z-10" />

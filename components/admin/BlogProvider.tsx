@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminContentSkeleton } from "./AdminSkeleton";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api/client";
 import { preload } from "@/lib/admin/prefetch";
@@ -200,6 +201,6 @@ export default function BlogProvider({ children }: { children: React.ReactNode }
     };
   }, [state, toast, uniqueSlug, slugTaken, load]);
 
-  if (!ctx) return <div aria-busy="true" style={{ minHeight: "60vh" }} />;
+  if (!ctx) return <AdminContentSkeleton />;
   return <BlogCtx.Provider value={ctx}>{children}</BlogCtx.Provider>;
 }

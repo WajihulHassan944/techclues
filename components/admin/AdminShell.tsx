@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { getAdminEmail, logout as apiLogout, restoreSession } from "@/lib/api/auth";
+import { getAccessToken } from "@/lib/api/client";
+import AdminSkeleton from "./AdminSkeleton";
 import { NAV, itemFor } from "./nav";
 import InboxProvider, { preloadInbox, useInbox } from "./InboxProvider";
 import BookingsProvider, { preloadBookings, useBookings } from "./BookingsProvider";
@@ -101,8 +103,16 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const userRef = useRef<HTMLDivElement>(null);
   const current = itemFor(path);
 
-  // The panel opens only once a session is restored from the refresh-token cookie.
+  // The panel opens only once a session is confirmed. Arriving here right after LoginForm's own
+  // call to login() already set the in-memory access token in this same page load (client-side
+  // navigation, no reload) — re-running the refresh+/me round trip would just add latency and a
+  // longer blank-skeleton window for no reason, so skip straight to ready in that case.
   useEffect(() => {
+    if (getAccessToken()) {
+      prefetchAdminData();
+      setReady(true);
+      return;
+    }
     restoreSession().then((ok) => {
       if (!ok) router.replace("/admin/login");
       else {
@@ -130,7 +140,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     apiLogout().finally(() => router.replace("/admin/login"));
   };
 
-  if (!ready) return <div className="adm-shell" aria-busy="true" style={{ minHeight: "100vh" }} />;
+  if (!ready) return <AdminSkeleton />;
 
   return (
     <InboxProvider>

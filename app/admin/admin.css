@@ -1696,3 +1696,34 @@ button.adm-calcell:hover { border-color: rgb(0 100 255 / 0.4); }
 
 .adm-search-pop { left: 0; right: auto; width: 100%; min-width: 320px; max-height: 420px; overflow-y: auto; }
 .adm-search-pop .adm-pop-item { height: auto; min-height: 44px; padding: 8px 14px; }
+
+/* ---------- skeleton (shown while a session is being restored) ---------- */
+.adm-sk {
+  display: block;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgb(14 15 49 / 0.06) 25%, rgb(14 15 49 / 0.1) 37%, rgb(14 15 49 / 0.06) 63%);
+  background-size: 400% 100%;
+  animation: adm-sk-shimmer 1.6s ease-in-out infinite;
+}
+@keyframes adm-sk-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+.adm-sk-logo { width: 140px; height: 28px; border-radius: 6px; }
+.adm-sk-group { padding: 0 8px; margin-top: 18px; }
+.adm-sk-label { width: 70px; height: 11px; margin: 0 0 12px; opacity: 0.6; }
+.adm-sk-link { height: 40px; border-radius: 12px; margin-bottom: 6px; }
+.adm-sk-title { width: 140px; height: 22px; }
+.adm-sk-pill { width: 92px; height: 36px; border-radius: 999px; }
+.adm-sk-avatar { width: 108px; height: 36px; border-radius: 999px; }
+.adm-sk-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.adm-sk-card { height: 110px; border-radius: 20px; }
+.adm-sk-block { height: 320px; border-radius: 20px; }
+@media (prefers-reduced-motion: reduce) {
+  .adm-sk { animation: none; }
+}

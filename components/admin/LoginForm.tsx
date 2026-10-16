@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { login, restoreSession } from "@/lib/api/auth";
-import { ApiError } from "@/lib/api/client";
 import { ADMIN_EMAIL } from "./nav";
 import { IconArrowLeft, IconArrowRight, IconEye, IconEyeOff } from "./icons";
 import LoadingWorkspace from "./LoadingWorkspace";
@@ -37,16 +36,21 @@ export default function LoginForm() {
       return;
     }
     setBusy(true);
-    try {
-      await login(email.trim(), password);
-      setSignedIn(true);
-    } catch (err) {
-      setErrors({ form: err instanceof ApiError ? err.message : "Something went wrong. Please try again." });
-      setBusy(false);
-    }
+    setSignedIn(true);
   }
 
-  if (signedIn) return <LoadingWorkspace onDone={() => router.replace("/admin")} />;
+  if (signedIn)
+    return (
+      <LoadingWorkspace
+        run={() => login(email.trim(), password).then(() => {})}
+        onDone={() => router.replace("/admin")}
+        onError={(message) => {
+          setSignedIn(false);
+          setBusy(false);
+          setErrors({ form: message });
+        }}
+      />
+    );
 
   return (
     <div className="adm-login">
@@ -95,16 +99,8 @@ export default function LoginForm() {
               {errors.form}
             </p>
           )}
-          <button type="submit" className="adm-btn" disabled={busy}>
-            {busy ? (
-              <>
-                <span className="adm-spin" aria-hidden="true" /> Signing in…
-              </>
-            ) : (
-              <>
-                Sign in <IconArrowRight />
-              </>
-            )}
+          <button type="submit" className="adm-btn">
+            Sign in <IconArrowRight />
           </button>
         </form>
         <p className="adm-login-foot">

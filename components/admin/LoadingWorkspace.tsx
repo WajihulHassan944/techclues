@@ -5,28 +5,44 @@ import { IconArrowLeft, IconCheck } from "./icons";
 
 type StepState = "done" | "active" | "pending";
 const STEPS = ["Authenticating session", "Loading dashboard data", "Preparing your tools"];
-/** `active` = index of the step currently spinning (1-based); login already happened, so step 0
- * ("Authenticating session") starts done. Once `active` exceeds STEPS.length, every step is done. */
-const SCHEDULE: [number, number][] = [
-  [2, 900],
-  [3, 1700],
-];
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** Shown after a successful admin login, before routing into the panel. */
-export default function LoadingWorkspace({ onDone }: { onDone: () => void }) {
-  const [active, setActive] = useState(1);
+type Props = {
+  /** The actual login call. Step 0 stays "active" for as long as this takes — no fixed timer
+   * pretends it's instant, so slow or cold-started logins are shown honestly. */
+  run: () => Promise<void>;
+  onDone: () => void;
+  onError: (message: string) => void;
+};
+
+/** Shown for the whole login attempt — replaces the sign-in button's busy state — then carries
+ * through into the panel so there's no gap between "signed in" and a ready dashboard. */
+export default function LoadingWorkspace({ run, onDone, onError }: Props) {
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
+    let cancelled = false;
+    (async () => {
+      try {
+        await run();
+      } catch (err) {
+        if (!cancelled) onError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+        return;
+      }
+      if (cancelled) return;
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        onDone();
+        return;
+      }
+      for (const [step, delay] of [[1, 700], [2, 700], [3, 400]] as const) {
+        setActive(step);
+        await sleep(delay);
+        if (cancelled) return;
+      }
       onDone();
-      return;
-    }
-    const timers = SCHEDULE.map(([step, delay]) => setTimeout(() => setActive(step), delay));
-    const done = setTimeout(onDone, 2200);
+    })();
     return () => {
-      timers.forEach(clearTimeout);
-      clearTimeout(done);
+      cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -53,7 +69,7 @@ export default function LoadingWorkspace({ onDone }: { onDone: () => void }) {
         </p>
         <ul className="adm-load-steps">
           {STEPS.map((label, i) => {
-            const state: StepState = active > STEPS.length || i < active - 1 ? "done" : i === active - 1 ? "active" : "pending";
+            const state: StepState = i < active ? "done" : i === active ? "active" : "pending";
             return (
               <li key={label} className={`adm-load-step adm-load-step-${state}`}>
                 <span className="adm-load-step-icon">{state === "active" ? <span className="adm-spin" /> : <IconCheck />}</span>

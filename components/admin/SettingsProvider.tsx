@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminContentSkeleton } from "./AdminSkeleton";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api/client";
 import { preload } from "@/lib/admin/prefetch";
@@ -49,6 +50,6 @@ export default function SettingsProvider({ children }: { children: React.ReactNo
     };
   }, [settings, toast, load]);
 
-  if (!ctx) return <div aria-busy="true" style={{ minHeight: "60vh" }} />;
+  if (!ctx) return <AdminContentSkeleton />;
   return <SettingsCtx.Provider value={ctx}>{children}</SettingsCtx.Provider>;
 }

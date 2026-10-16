@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminContentSkeleton } from "./AdminSkeleton";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/lib/api/client";
 import { getAdminEmail } from "@/lib/api/auth";
@@ -176,7 +177,7 @@ export default function InboxProvider({ children }: { children: React.ReactNode 
     };
   }, [state, patch, toast, load]);
 
-  if (!ctx) return <div aria-busy="true" style={{ minHeight: "60vh" }} />;
+  if (!ctx) return <AdminContentSkeleton />;
   return (
     <InboxCtx.Provider value={ctx}>
       {children}

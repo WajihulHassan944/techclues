@@ -192,7 +192,7 @@ export default function GameCapabilities() {
             <svg viewBox="0 0 24 24" className="size-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
           </a>
         </div>
-        <div key={`${cur.key}-v`} className="staff-fade relative isolate grid min-h-[300px] gap-4 overflow-hidden rounded-[24px] bg-[linear-gradient(135deg,#0e0f31_0%,#111a4a_55%,#13307f_100%)] p-5 text-left sm:grid-cols-[1.2fr_1fr] sm:p-6">
+        <div key={`${cur.key}-v`} className="staff-fade gx-crt relative isolate grid min-h-[300px] gap-4 overflow-hidden rounded-[24px] bg-[linear-gradient(135deg,#0e0f31_0%,#111a4a_55%,#13307f_100%)] p-5 text-left sm:grid-cols-[1.2fr_1fr] sm:p-6">
           <span className="pointer-events-none absolute -right-20 -top-24 -z-10 size-64 rounded-full bg-brand/35 blur-[80px]" />
           <div className="grid place-items-center rounded-2xl border border-white/10 bg-white/[0.03] p-4">{arts[cur.art]}</div>
           <div className="grid content-start gap-3">

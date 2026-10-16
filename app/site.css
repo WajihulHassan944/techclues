@@ -8458,3 +8458,72 @@ html.lenis body {
 
 /* homepage services grid: 6 cards across, last row of two wider cards */
 @media (min-width:1024px){.lg\:grid-cols-6{grid-template-columns:repeat(6,minmax(0,1fr))}.lg\:col-span-3{grid-column:span 3/span 3}}
+
+/* ===== game development page: arcade layer ===== */
+.game-hero { position: relative; isolation: isolate; overflow: hidden; margin: 84px 12px 0; padding: 72px 0 96px !important; border-radius: 36px; background: radial-gradient(120% 90% at 50% 0%, #11195a 0%, #070a24 55%, #04061a 100%); }
+@media (min-width: 640px) { .game-hero { margin: 92px 20px 0; padding: 92px 0 120px !important; border-radius: 44px; } }
+.game-hero h1, .game-hero h1 > span:last-child, .game-hero .text-ink { color: #fff; }
+.game-hero h1 .svc-rise { text-shadow: 0 0 40px rgba(47, 168, 255, 0.5), 0 2px 0 rgba(0, 100, 255, 0.35); }
+.game-hero h1 > span:first-child { color: #5cc0ff; letter-spacing: 0.22em; text-transform: uppercase; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+.game-hero .text-muted, .game-hero nav a { color: rgba(255, 255, 255, 0.6); }
+.game-hero .text-ink-soft { color: rgba(255, 255, 255, 0.78); }
+.game-hero a[data-cta] { background: linear-gradient(135deg, #0064ff, #2fa8ff); box-shadow: 0 0 0 1px rgba(120, 200, 255, 0.5), 0 14px 40px -10px rgba(0, 120, 255, 0.9); }
+.game-hero a[data-cta]:hover { transform: translateY(-2px) scale(1.03); }
+.game-hero .bg-ink\/30 { background: rgba(255, 255, 255, 0.35); }
+.game-hero .group.relative .bg-ink\/30 { background: rgba(255, 255, 255, 0.35); }
+.game-hero > div:not(.gh-root) { position: relative; z-index: 2; }
+
+.gh-root { position: absolute; inset: 0; z-index: 0; perspective: 900px; pointer-events: none; overflow: hidden; border-radius: inherit; }
+.gh-stars { position: absolute; inset: 0; width: 100%; height: 100%; }
+.gh-glow { position: absolute; border-radius: 999px; filter: blur(90px); opacity: 0.55; }
+.gh-glow-a { width: 420px; height: 420px; left: -80px; top: -120px; background: #0064ff; }
+.gh-glow-b { width: 360px; height: 360px; right: -60px; bottom: -100px; background: #7a3cff; opacity: 0.4; }
+.gh-scene { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(calc(var(--mx, 0) * 6deg)) rotateX(calc(var(--my, 0) * -4deg)); will-change: transform; }
+.gh-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 62%; overflow: hidden; -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 100%); mask-image: linear-gradient(to top, #000 10%, transparent 100%); }
+.gh-floor span { position: absolute; left: -50%; right: -50%; top: 0; bottom: -80%; transform-origin: 50% 0; transform: perspective(420px) rotateX(62deg); background-image: linear-gradient(rgba(60, 170, 255, 0.6) 2px, transparent 2px), linear-gradient(90deg, rgba(60, 170, 255, 0.6) 2px, transparent 2px); background-size: 70px 70px; animation: gh-floor 1.8s linear infinite; }
+@keyframes gh-floor { to { background-position: 0 70px; } }
+.gh-float { position: absolute; transform: translateZ(var(--z, 0)); animation: gh-bob 7s ease-in-out infinite; transform-style: preserve-3d; }
+@keyframes gh-bob { 0%, 100% { margin-top: -12px; } 50% { margin-top: 14px; } }
+.gh-cube { position: relative; width: var(--s); height: var(--s); transform-style: preserve-3d; animation: gh-spin 16s linear infinite; }
+@keyframes gh-spin { from { transform: rotateX(-20deg) rotateY(0); } to { transform: rotateX(340deg) rotateY(360deg); } }
+.gh-cube i { position: absolute; inset: 0; border: 1.5px solid rgba(92, 192, 255, 0.9); background: linear-gradient(135deg, rgba(0, 100, 255, 0.22), rgba(122, 60, 255, 0.12)); box-shadow: inset 0 0 22px rgba(47, 168, 255, 0.35), 0 0 18px rgba(47, 168, 255, 0.25); }
+.gh-cube i:nth-child(1) { transform: translateZ(calc(var(--s) / 2)); }
+.gh-cube i:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); }
+.gh-cube i:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); }
+.gh-cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
+.gh-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
+.gh-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
+.gh-hud { position: absolute; z-index: 1; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; letter-spacing: 0.16em; color: rgba(150, 210, 255, 0.85); display: none; }
+.gh-hud-tl { left: 28px; top: 24px; gap: 16px; align-items: center; }
+.gh-hud-tl em { font-style: normal; color: #fff; margin-left: 6px; }
+.gh-hearts { color: #ff4d7a; letter-spacing: 0.3em; }
+.gh-hud-br { right: 28px; bottom: 22px; animation: gh-blink 1.1s steps(2, jump-none) infinite; }
+.gh-hud-br i { display: inline-block; width: 8px; height: 13px; margin-left: 8px; vertical-align: -2px; background: #5cc0ff; }
+@keyframes gh-blink { 50% { opacity: 0.15; } }
+@media (min-width: 900px) { .gh-hud { display: flex; } }
+
+/* page-wide game feel */
+.gx-xp { position: fixed; left: 0; right: 0; top: 0; height: 4px; z-index: 80; background: rgba(14, 15, 49, 0.08); pointer-events: none; }
+.gx-xp-fill { display: block; height: 100%; transform-origin: 0 50%; background: linear-gradient(90deg, #0064ff, #2fa8ff, #9b6bff); box-shadow: 0 0 14px rgba(47, 168, 255, 0.9); }
+.gx-xp b { position: fixed; left: 14px; bottom: 14px; padding: 6px 12px; border-radius: 8px; font: 600 11px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.16em; color: #9fdcff; background: rgba(7, 10, 36, 0.88); border: 1px solid rgba(92, 192, 255, 0.5); box-shadow: 0 0 18px -4px rgba(47, 168, 255, 0.7); }
+.gx-toast { position: fixed; left: 50%; bottom: 28px; z-index: 80; transform: translate(-50%, 24px); opacity: 0; padding: 10px 18px; border-radius: 10px; font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.2em; color: #fff; background: linear-gradient(135deg, #0064ff, #7a3cff); box-shadow: 0 14px 40px -10px rgba(0, 100, 255, 0.9); transition: opacity 0.35s, transform 0.35s; pointer-events: none; }
+.gx-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+.gh-spark { position: fixed; z-index: 90; width: 8px; height: 8px; margin: -4px 0 0 -4px; background: #ffd23f; box-shadow: 0 0 10px #ffb800; pointer-events: none; animation: gh-spark 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+.gh-spark:nth-child(3n) { background: #5cc0ff; box-shadow: 0 0 10px #2fa8ff; }
+@keyframes gh-spark { to { transform: translate(var(--dx), var(--dy)) rotate(180deg); opacity: 0; } }
+
+.gx-tilt { position: relative; transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.25s ease-out, background-color 0.5s, box-shadow 0.5s; will-change: transform; }
+.gx-tilt::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.3s; background: radial-gradient(260px circle at var(--gx, 50%) var(--gy, 50%), rgba(47, 168, 255, 0.22), transparent 60%); }
+.gx-tilt:hover::after { opacity: 1; }
+
+.js-reveal .gx-level > div { opacity: 0.4; transform: translateY(10px); transition: opacity 0.6s, transform 0.6s, box-shadow 0.6s, border-color 0.6s; }
+.js-reveal .gx-level > span { transition: box-shadow 0.6s, background 0.6s; opacity: 0.5; }
+.gx-level.is-unlocked > div { opacity: 1 !important; transform: none !important; border-color: rgba(92, 192, 255, 0.75); box-shadow: 0 0 34px -8px rgba(47, 168, 255, 0.8), inset 0 0 24px rgba(47, 168, 255, 0.12); }
+.gx-level.is-unlocked > span { opacity: 1 !important; box-shadow: 0 0 0 5px rgba(92, 192, 255, 0.25), 0 0 16px #2fa8ff; }
+
+.gx-crt::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 3px); }
+.gx-crt::before { content: ""; position: absolute; left: 0; right: 0; top: -30%; height: 30%; pointer-events: none; background: linear-gradient(180deg, transparent, rgba(92, 192, 255, 0.12), transparent); animation: gx-scan 4.5s linear infinite; }
+@keyframes gx-scan { to { top: 110%; } }
+.gx-pulse { animation: gx-pulse 2.4s ease-in-out infinite; }
+@keyframes gx-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(0, 100, 255, 0.35); } 50% { box-shadow: 0 0 0 14px rgba(0, 100, 255, 0); } }
+@media (prefers-reduced-motion: reduce) { .gh-floor span, .gh-float, .gh-cube, .gh-hud-br, .gx-crt::before, .gx-pulse { animation: none !important; } }

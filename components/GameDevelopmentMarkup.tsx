@@ -1,6 +1,8 @@
 /* game-development service page. Content follows the reference service; layout uses the site's own theme. */
 import Accordion from "./Accordion";
 import GameCapabilities from "./GameCapabilities";
+import GameFx from "./GameFx";
+import GameHero from "./GameHero";
 import StaffSeatForm from "./StaffSeatForm";
 import { Arrow, Eyebrow, H2, SEC, WRAP, rv } from "./ServiceParts";
 import { getFaqs } from "@/lib/api/faqs";
@@ -69,7 +71,9 @@ export default async function GameDevelopmentMarkup() {
   const faqs = serviceFaqs["game-development"]?.length ? serviceFaqs["game-development"] : fallbackFaqs;
   return (
     <main>
-      <section className="pb-4 pt-[124px] sm:pt-[150px] lg:pt-[170px]">
+      <GameFx />
+      <section className="game-hero pb-4 pt-[124px] sm:pt-[150px] lg:pt-[170px]">
+        <GameHero />
         <div className={`${WRAP} flex flex-col items-center text-center`}>
           <nav aria-label="Breadcrumb" className="svc-in flex items-center gap-1.5 text-[14px] text-muted" style={{ "--d": "0s", "--y": "10px" } as React.CSSProperties}>
             <a className="transition-colors hover:text-ink" href="/services">
@@ -117,7 +121,7 @@ export default async function GameDevelopmentMarkup() {
                   <div key={l} className="border-t border-white/15 pt-6">
                     <dt className="sr-only">{l}</dt>
                     <dd>
-                      <span className="block text-[clamp(2rem,3.4vw,3.2rem)] font-normal leading-none tracking-[-0.04em]">{n}</span>
+                      <span className="block text-[clamp(2rem,3.4vw,3.2rem)] font-normal leading-none tracking-[-0.04em]" {...(/^\d+$/.test(n) ? { "data-count": n } : {})}>{n}</span>
                       <span className="mt-3 block text-[15px] text-white/65">{l}</span>
                     </dd>
                   </div>
@@ -166,7 +170,7 @@ export default async function GameDevelopmentMarkup() {
               <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em]">Why studios pick TechClues over a dev shop.</h2>
               <div className="mt-12 grid gap-4 md:grid-cols-3">
                 {DIFFERENCE.map(([t, d, icon]) => (
-                  <div key={t} className="rounded-[22px] border border-white/12 bg-white/[0.04] p-7">
+                  <div key={t} data-tilt="" className="gx-tilt rounded-[22px] border border-white/12 bg-white/[0.04] p-7">
                     <svg viewBox="0 0 24 24" className="size-6 text-brand-soft" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       {icon}
                     </svg>
@@ -209,7 +213,7 @@ export default async function GameDevelopmentMarkup() {
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:mt-14">
             {MODELS.map(([tag, title, text, best], n) => (
               <div key={tag} data-reveal="" style={rv(`${n * 0.07}s`)}>
-                <div className="relative flex h-full flex-col rounded-[24px] border border-ink/[0.08] bg-white p-7 sm:p-8">
+                <div data-tilt="" className="gx-tilt relative flex h-full flex-col rounded-[24px] border border-ink/[0.08] bg-white p-7 sm:p-8">
                   <span className="absolute right-7 top-6 text-[clamp(2.4rem,4vw,3.6rem)] leading-none tracking-[-0.04em] text-ink/[0.07]">0{n + 1}</span>
                   <span className="staff-chip staff-chip-0 w-fit">{tag}</span>
                   <h3 className="mt-6 text-[clamp(1.4rem,2vw,1.8rem)] tracking-[-0.03em] text-ink">{title}</h3>
@@ -234,7 +238,7 @@ export default async function GameDevelopmentMarkup() {
               <ol className="relative mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-5 lg:gap-4">
                 <span className="absolute left-0 right-0 top-[5px] hidden h-px bg-white/15 lg:block" aria-hidden="true" />
                 {STEPS.map(([t, d], n) => (
-                  <li key={t} className="relative">
+                  <li key={t} data-level={n + 1} className="gx-level relative">
                     <span className="relative block size-[11px] rounded-full bg-brand-soft" />
                     <div className="mt-6 h-[calc(100%-1.5rem)] rounded-[22px] border border-white/12 bg-white/[0.04] p-6">
                       <p className="font-mono text-[12px] text-brand-soft">0{n + 1}</p>
@@ -265,7 +269,7 @@ export default async function GameDevelopmentMarkup() {
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:mt-14">
             {INDUSTRIES.map(([t, d], n) => (
               <div key={t} data-reveal="" style={rv(`${(n % 3) * 0.06}s`)}>
-                <div className="h-full rounded-[24px] bg-[#f1f0f6] p-7 transition-colors duration-500 hover:bg-white hover:shadow-[0_30px_60px_-40px_rgba(14,15,49,0.4)] sm:p-8">
+                <div data-tilt="" className="gx-tilt h-full rounded-[24px] bg-[#f1f0f6] p-7 transition-colors duration-500 hover:bg-white hover:shadow-[0_30px_60px_-40px_rgba(14,15,49,0.4)] sm:p-8">
                   <span className="text-[13px] tabular-nums text-brand">0{n + 1}</span>
                   <h3 className="mt-6 text-[clamp(1.25rem,1.7vw,1.5rem)] leading-snug tracking-[-0.025em] text-ink">{t}</h3>
                   <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{d}</p>
@@ -285,7 +289,7 @@ export default async function GameDevelopmentMarkup() {
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:mt-14">
             {TOOLS.map(([g, items], n) => (
               <div key={g} data-reveal="" style={rv(`${(n % 2) * 0.07}s`)}>
-                <div className="h-full rounded-[24px] border border-ink/[0.08] bg-white p-7 sm:p-8">
+                <div data-tilt="" className="gx-tilt h-full rounded-[24px] border border-ink/[0.08] bg-white p-7 sm:p-8">
                   <p className="text-[13px] font-medium uppercase tracking-[0.12em] text-brand">{g}</p>
                   <ul className="mt-5 flex flex-wrap gap-2.5">
                     {items.map((t) => (

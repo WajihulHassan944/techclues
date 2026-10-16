@@ -18,3 +18,8 @@ export const TEMPLATES: Template[] = [
 
 export const firstName = (e: Pick<Enquiry, "name">) => e.name.trim().split(/\s+/)[0] || "there";
 export const fillTemplate = (t: Template, e: Pick<Enquiry, "name">) => t.body.replace(/\{first\}/g, firstName(e));
+
+/** A template with no sources, or an empty sources list, applies to every enquiry — the latter
+ * can happen because the backend stores an unset `sources` as `[]`, not `undefined`. */
+export const templateAppliesToEverySource = (t: Pick<Template, "sources">) => !t.sources || t.sources.length === 0;
+export const templateMatchesSource = (t: Template, source: SourceKey) => templateAppliesToEverySource(t) || t.sources!.includes(source);

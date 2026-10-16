@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fmtFull, fmtWhen, initials } from "@/lib/admin/format";
 import { SOURCES, STATUSES, STATUS_KEYS, type StatusKey } from "@/lib/admin/inbox-types";
-import { fillTemplate, firstName } from "@/lib/admin/templates";
+import { fillTemplate, firstName, templateMatchesSource } from "@/lib/admin/templates";
 import { useSettings } from "./SettingsProvider";
 import { useInbox } from "./InboxProvider";
 import { SourcePill, StatusBadge } from "./EnquiryList";
@@ -207,7 +207,7 @@ export default function EnquiryDetail({ id }: { id: string }) {
                     }}
                   >
                     <option value="">Insert a saved reply…</option>
-                    {TEMPLATES.filter((t) => !t.sources || t.sources.includes(e.source)).map((t) => (
+                    {TEMPLATES.filter((t) => templateMatchesSource(t, e.source)).map((t) => (
                       <option key={t.id} value={t.id}>
                         {t.label}
                       </option>

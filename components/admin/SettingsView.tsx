@@ -7,7 +7,7 @@ import { fmtWhen } from "@/lib/admin/format";
 import { DEFAULT_SETTINGS, type Settings } from "@/lib/admin/settings-defaults";
 import { SOURCES, SOURCE_KEYS, type SourceKey } from "@/lib/admin/inbox-types";
 import { EMAIL_RE, downloadText } from "@/lib/admin/newsletter";
-import type { Template } from "@/lib/admin/templates";
+import { templateAppliesToEverySource, type Template } from "@/lib/admin/templates";
 import { dateKey } from "@/lib/admin/tz";
 import { changePassword, logout as apiLogout } from "@/lib/api/auth";
 import { api, ApiError } from "@/lib/api/client";
@@ -141,7 +141,7 @@ function Notifications() {
 function TemplateDialog({ initial, onClose, onSave }: { initial?: Template; onClose: () => void; onSave: (t: Template) => void }) {
   const [label, setLabel] = useState(initial?.label ?? "");
   const [body, setBody] = useState(initial?.body ?? "");
-  const [all, setAll] = useState(!initial?.sources);
+  const [all, setAll] = useState(!initial || templateAppliesToEverySource(initial));
   const [sources, setSources] = useState<SourceKey[]>(initial?.sources ?? []);
   const valid = label.trim() && body.trim() && (all || sources.length > 0);
   return (
@@ -210,7 +210,7 @@ function Templates() {
               <div>
                 <strong>{t.label}</strong>
                 <p>{t.body.replace(/\s+/g, " ").slice(0, 150)}…</p>
-                <span className="adm-tpl-for">{t.sources ? t.sources.map((s) => SOURCES[s].label).join(", ") : "Every enquiry"}</span>
+                <span className="adm-tpl-for">{templateAppliesToEverySource(t) ? "Every enquiry" : t.sources!.map((s) => SOURCES[s].label).join(", ")}</span>
               </div>
               <span className="adm-dlg-foot-btns">
                 <button type="button" className="adm-mini" aria-label={`Edit ${t.label}`} onClick={() => setEdit(t)}>

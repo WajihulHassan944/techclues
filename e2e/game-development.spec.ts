@@ -65,7 +65,8 @@ test.describe("game development page", () => {
     await modes.nth(1).click();
     await expect(modes.nth(1)).toHaveAttribute("aria-checked", "true");
     await expect(modes.first()).toHaveAttribute("aria-checked", "false");
-    await page.locator('section[aria-label="Under the hood"]').scrollIntoViewIfNeeded();
+    await page.getByRole("tabpanel").evaluate((el) => el.scrollIntoView({ block: "center" }));
+    await page.waitForTimeout(600);
     await page.keyboard.press("3");
     await expect(page.getByRole("tabpanel")).toContainText("AR, VR and XR Development");
     await expect(page.locator('section[aria-label="Continue"]')).toContainText("Continue");

@@ -187,8 +187,8 @@ test.describe("homepage", () => {
     await dismissCookies(page);
     await page.locator(STACK).scrollIntoViewIfNeeded();
     await page.locator(`${STACK} ol button`).nth(1).click();
+    await expect.poll(async () => (await stackGeometry(page)).root).toContain("scale(0.78)");
     const g = await stackGeometry(page);
-    expect(g.root).toContain("scale(0.78)");
     expect(g.zs.slice(0, 4).map(Math.round)).toEqual([-214, -129, -43, 43]); // 0.17 x 504px container
     expect(g.lift.x).toBeCloseTo(-390, 0);
     expect(g.lift.y).toBeCloseTo(433.1, 0);
@@ -196,28 +196,50 @@ test.describe("homepage", () => {
     expect(g.lift.scale).toBeCloseTo(1.044, 2);
   });
 
-  test("stack tab hover previews its layer and resets on leave", async ({ page }) => {
+  test("stack tab hover fans the layers and slides its layer out, then resets on leave (matches vebryx.co.uk)", async ({ page }) => {
     await open(page);
     await dismissCookies(page);
     await page.locator(STACK).scrollIntoViewIfNeeded();
     const tabs = page.locator(`${STACK} ol button`);
     const root = page.locator(`${STACK} [style*="perspective"] > div`);
-    await expect(root).not.toHaveAttribute("style", /scale\(0\.8\d*\)/);
+    await expect(root).not.toHaveAttribute("style", /scale\(/);
     await tabs.nth(3).hover(); // 04 Data
-    await expect(root).toHaveAttribute("style", /scale\(0\.80\d*\)/);
-    // Previewed, not lifted: the layers peek apart (about half the lifted spread) and nothing is dimmed
-    const g = await stackGeometry(page);
-    expect(g.zs.map(Math.round)).toEqual([-113, -68, -23, 23, 68, 113]);
+    await expect(root).toHaveAttribute("style", /scale\(0\.78\d*\)/);
+    await expect.poll(async () => (await stackGeometry(page)).zs.map(Math.round)).toEqual([-214, -129, -43, 43, 129, 214]);
     await expect(page.locator(`${STACK} .opacity-55`)).toHaveCount(0);
     await expect(page.locator(`${STACK} .border-brand\\/60`)).toHaveCount(1);
     await expect(tabs.nth(3).locator("span span").first()).toHaveClass(/text-ink(?!\/)/);
     await expect(page.locator(`${STACK} [role='dialog']`)).toHaveCount(0);
     await expect(page.locator("button.stack-overlay")).toHaveCount(0);
-    const shifted = await page.evaluate((sel) => [...document.querySelectorAll(sel + " [style*='translateX(-22px)']")].length, STACK);
+    const shifted = await page.evaluate((sel) => [...document.querySelectorAll(sel + " [style*='translateX(-56px)']")].length, STACK);
     expect(shifted).toBe(1);
     await page.mouse.move(700, 100);
-    await expect(root).not.toHaveAttribute("style", /scale\(0\.80\d*\)/);
+    await expect(root).not.toHaveAttribute("style", /scale\(/);
     await expect(page.locator(`${STACK} .border-brand\\/60`)).toHaveCount(0);
+  });
+
+  test("hovering the stack itself fans it, tilts with the pointer and stays steady", async ({ page }) => {
+    await open(page);
+    await dismissCookies(page);
+    await page.locator(STACK).scrollIntoViewIfNeeded();
+    const root = page.locator(`${STACK} [style*="perspective"] > div`);
+    await page.evaluate((sel) => {
+      const r = document.querySelector(sel + ' [style*="perspective"]')!.getBoundingClientRect();
+      window.scrollTo(0, window.scrollY + r.top + r.height / 2 - window.innerHeight / 2);
+    }, STACK);
+    await page.waitForTimeout(1500);
+    const box = (await page.locator(`${STACK} [style*="perspective"]`).boundingBox())!;
+    await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5, { steps: 6 });
+    await expect(root).toHaveAttribute("style", /scale\(0\.78\d*\)/);
+    await expect(page.locator(`${STACK} .border-brand\\/60`)).toHaveCount(1);
+    await page.mouse.move(box.x + box.width * 0.9, box.y + box.height * 0.5, { steps: 6 });
+    await expect(root).toHaveAttribute("style", /rotateZ\(-3[67]\./);
+    // Small movements over the cards never make the stack flicker or collapse
+    for (let i = 0; i < 6; i++) await page.mouse.move(box.x + box.width * 0.6 + i * 6, box.y + box.height * 0.5 + i * 3);
+    await expect(root).toHaveAttribute("style", /scale\(0\.78\d*\)/);
+    await page.mouse.move(20, 300);
+    await expect(root).not.toHaveAttribute("style", /scale\(/);
+    await expect(root).toHaveAttribute("style", /rotateZ\(-42/);
   });
 
   test("AI section switches panels for each capability", async ({ page }) => {
@@ -381,12 +403,12 @@ test.describe("homepage on mobile", () => {
     await dismissCookies(page);
     await page.locator(STACK).scrollIntoViewIfNeeded();
     await page.waitForTimeout(500);
+    await expect.poll(async () => (await stackGeometryIdle(page)).root).toContain("scale(0.86)");
     const idle = await stackGeometryIdle(page);
-    expect(idle.root).toContain("scale(0.86)");
     expect(idle.zs.map(Math.round)).toEqual([-195, -117, -39, 39, 117, 195]);
     await page.locator(`${STACK} ol button`).nth(1).click();
+    await expect.poll(async () => (await stackGeometry(page)).root).toContain("scale(0.86)");
     const g = await stackGeometry(page);
-    expect(g.root).toContain("scale(0.86)");
     expect(g.zs.map(Math.round)).toEqual([-195, -117, -39, 39, 345, 195]); // only the lifted layer moves
     expect(g.lift.x).toBeCloseTo(-369.4, 0);
     expect(g.lift.y).toBeCloseTo(410.3, 0);

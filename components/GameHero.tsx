@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const CUBES = [
   { s: 74, x: "9%", y: "26%", d: "0s", t: "13s", z: 40 },
@@ -14,6 +14,13 @@ const CUBES = [
 export default function GameHero() {
   const root = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  const [score, setScore] = useState(4200);
+
+  useEffect(() => {
+    const on = (e: Event) => setScore((v) => v + ((e as CustomEvent<number>).detail || 0));
+    addEventListener("gx:score", on);
+    return () => removeEventListener("gx:score", on);
+  }, []);
 
   useEffect(() => {
     const el = root.current;
@@ -82,7 +89,7 @@ export default function GameHero() {
       <div className="gh-scene">
         <div className="gh-floor"><span /></div>
         {CUBES.map((c, i) => (
-          <div key={i} className="gh-float" style={{ left: c.x, top: c.y, animationDelay: c.d, animationDuration: c.t, ["--z" as string]: `${c.z}px` }}>
+          <div key={i} className="gh-float gh-coin" onClick={() => dispatchEvent(new CustomEvent("gx:score", { detail: 100 }))} style={{ left: c.x, top: c.y, animationDelay: c.d, animationDuration: c.t, ["--z" as string]: `${c.z}px` }}>
             <div className="gh-cube" style={{ ["--s" as string]: `${c.s}px`, animationDuration: `${parseInt(c.t) + 6}s`, animationDelay: c.d }}>
               <i /><i /><i /><i /><i /><i />
             </div>
@@ -91,7 +98,7 @@ export default function GameHero() {
       </div>
       <div className="gh-hud gh-hud-tl">
         <span>P1</span>
-        <b>SCORE <em>004200</em></b>
+        <b>SCORE <em>{String(score).padStart(6, "0")}</em></b>
         <span className="gh-hearts">♥ ♥ ♥</span>
       </div>
       <div className="gh-hud gh-hud-br">INSERT COIN <i /></div>

@@ -3,19 +3,33 @@ import Accordion from "./Accordion";
 import GameCapabilities from "./GameCapabilities";
 import GameFx from "./GameFx";
 import GameHero from "./GameHero";
+import GameModes from "./GameModes";
+import GameContinue from "./GameContinue";
+import GameWorlds from "./GameWorlds";
 import StaffSeatForm from "./StaffSeatForm";
 import { Arrow, Eyebrow, H2, SEC, WRAP, rv } from "./ServiceParts";
 import { getFaqs } from "@/lib/api/faqs";
 import { fallbackFaqs } from "@/lib/faq-fallbacks/game-development";
 
-const STATS = [
-  ["2", "Production engines: Unity and Unreal"],
-  ["6", "Platforms, console to XR"],
-  ["5", "Disciplines under one roof"],
-  ["Free", "Discovery call to start"],
+const STATS: [string, string, number][] = [
+  ["2", "Production engines: Unity and Unreal", 60],
+  ["6", "Platforms, console to XR", 88],
+  ["5", "Disciplines under one roof", 100],
+  ["Free", "Discovery call to start", 100],
 ];
 
-const STACK = ["Unity3D", "Unreal Engine", "UEFN and Verse", "Blender", "3DS Max", "Mobile", "PC", "Console", "VR and XR headsets", "Web"];
+const STACK: [string, string][] = [
+  ["Unreal Engine", "legendary"],
+  ["Unity3D", "legendary"],
+  ["UEFN and Verse", "epic"],
+  ["Blender", "rare"],
+  ["3DS Max", "rare"],
+  ["VR and XR headsets", "epic"],
+  ["Mobile", "common"],
+  ["PC", "common"],
+  ["Console", "common"],
+  ["Web", "common"],
+];
 
 const DIFFERENCE: [string, string, React.ReactNode][] = [
   [
@@ -36,8 +50,8 @@ const DIFFERENCE: [string, string, React.ReactNode][] = [
 ];
 
 const MODELS = [
-  ["Ongoing", "Dedicated Team Extension", "Game developers, artists and engineers embedded directly into your team and pipeline.", "Best for delivery power without hiring overhead"],
-  ["Project-based", "Full Studio Build", "The studio behind your player-facing title, owning the build end to end from concept through launch and live ops.", "Best for a defined title"],
+  ["Co-op mode", "Dedicated Team Extension", "Game developers, artists and engineers embedded directly into your team and pipeline.", "Best for delivery power without hiring overhead"],
+  ["Studio mode", "Full Studio Build", "The studio behind your player-facing title, owning the build end to end from concept through launch and live ops.", "Best for a defined title"],
 ];
 
 const STEPS = [
@@ -70,7 +84,7 @@ export default async function GameDevelopmentMarkup() {
   const serviceFaqs = await getFaqs();
   const faqs = serviceFaqs["game-development"]?.length ? serviceFaqs["game-development"] : fallbackFaqs;
   return (
-    <main>
+    <main className="gdp">
       <GameFx />
       <section className="game-hero pb-4 pt-[124px] sm:pt-[150px] lg:pt-[170px]">
         <GameHero />
@@ -114,14 +128,21 @@ export default async function GameDevelopmentMarkup() {
       <section aria-label="In numbers" className="py-[clamp(24px,4vw,48px)]">
         <div className={WRAP}>
           <div data-reveal="" style={rv()}>
-            <div className="relative isolate overflow-hidden rounded-[28px] bg-ink px-7 py-10 text-white sm:rounded-[36px] sm:px-12 sm:py-12 lg:px-16">
-              <span className="pointer-events-none absolute -right-28 -top-36 -z-10 size-[420px] rounded-full bg-brand/40 blur-[100px]" />
+            <div className="gx-hudpanel relative isolate overflow-hidden rounded-[28px] px-7 py-10 text-white sm:rounded-[36px] sm:px-12 sm:py-12 lg:px-16">
+              <p className="gx-mono mb-8 flex items-center gap-3 text-[#7fd0ff]">
+                <span className="gx-caret" /> Player stats
+              </p>
               <dl className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
-                {STATS.map(([n, l]) => (
-                  <div key={l} className="border-t border-white/15 pt-6">
-                    <dt className="sr-only">{l}</dt>
+                {STATS.map(([n, l, f], i) => (
+                  <div key={l} className="gx-stat pt-2">
+                    <dt className="gx-mono text-white/45">{`STAT 0${i + 1}`}</dt>
                     <dd>
-                      <span className="block text-[clamp(2rem,3.4vw,3.2rem)] font-normal leading-none tracking-[-0.04em]" {...(/^\d+$/.test(n) ? { "data-count": n } : {})}>{n}</span>
+                      <span className="mt-3 block text-[clamp(2.2rem,4vw,3.8rem)] font-normal leading-none tracking-[-0.04em]" {...(/^\d+$/.test(n) ? { "data-count": n } : {})}>
+                        {n}
+                      </span>
+                      <span className="gx-bar mt-4 block" aria-hidden="true">
+                        <i style={{ ["--f" as string]: `${f}%` }} />
+                      </span>
                       <span className="mt-3 block text-[15px] text-white/65">{l}</span>
                     </dd>
                   </div>
@@ -146,14 +167,15 @@ export default async function GameDevelopmentMarkup() {
           </div>
           <div data-reveal="" style={rv("0.1s")}>
             <p className="flex items-center gap-4 text-[13px] font-medium uppercase tracking-[0.12em] text-brand">
-              The stack we build on
+              Inventory: the stack we build on
               <span className="h-px flex-1 bg-ink/10" />
             </p>
-            <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
-              {STACK.map((s) => (
-                <li key={s} className="flex items-center gap-3 rounded-2xl bg-[#f1f0f6] px-5 py-3.5 text-[16px] text-ink">
-                  <span className="size-1.5 shrink-0 rounded-full bg-brand" />
-                  {s}
+            <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {STACK.map(([t, tier]) => (
+                <li key={t} data-tilt="" className={`gx-tilt gx-slot gx-${tier}`}>
+                  <span className="gx-slot-icon">{t.slice(0, 2)}</span>
+                  <span className="block text-[15px] leading-tight text-ink">{t}</span>
+                  <span className="gx-mono mt-1 block">{tier}</span>
                 </li>
               ))}
             </ul>
@@ -164,14 +186,15 @@ export default async function GameDevelopmentMarkup() {
       <section aria-label="The difference" className="py-[clamp(24px,4vw,48px)]">
         <div className={WRAP}>
           <div data-reveal="" style={rv()}>
-            <div className="relative isolate overflow-hidden rounded-[28px] bg-ink px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
+            <div className="gx-hudpanel relative isolate overflow-hidden rounded-[28px] px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
               <span className="pointer-events-none absolute -right-28 -top-36 -z-10 size-[420px] rounded-full bg-brand/40 blur-[100px]" />
               <Eyebrow light>The difference</Eyebrow>
               <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em]">Why studios pick TechClues over a dev shop.</h2>
               <div className="mt-12 grid gap-4 md:grid-cols-3">
                 {DIFFERENCE.map(([t, d, icon]) => (
-                  <div key={t} data-tilt="" className="gx-tilt rounded-[22px] border border-white/12 bg-white/[0.04] p-7">
-                    <svg viewBox="0 0 24 24" className="size-6 text-brand-soft" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <div key={t} data-tilt="" className="gx-tilt gx-foil rounded-[22px] border border-white/12 bg-white/[0.04] p-7">
+                    <span className="gx-mono mb-5 block text-[#7fd0ff]">Power-up</span>
+                    <svg viewBox="0 0 24 24" className="size-7 text-brand-soft" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       {icon}
                     </svg>
                     <h3 className="mt-6 text-[clamp(1.25rem,1.7vw,1.5rem)] leading-snug tracking-[-0.02em]">{t}</h3>
@@ -201,7 +224,7 @@ export default async function GameDevelopmentMarkup() {
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div data-reveal="" style={rv()}>
               <Eyebrow>Engagement models</Eyebrow>
-              <H2>Two ways to bring us in.</H2>
+              <H2>Select your mode.</H2>
             </div>
             <div data-reveal="" style={rv("0.1s")}>
               <a href="#get-started" className="group inline-flex h-12 items-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand">
@@ -210,39 +233,27 @@ export default async function GameDevelopmentMarkup() {
               </a>
             </div>
           </div>
-          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:mt-14">
-            {MODELS.map(([tag, title, text, best], n) => (
-              <div key={tag} data-reveal="" style={rv(`${n * 0.07}s`)}>
-                <div data-tilt="" className="gx-tilt relative flex h-full flex-col rounded-[24px] border border-ink/[0.08] bg-white p-7 sm:p-8">
-                  <span className="absolute right-7 top-6 text-[clamp(2.4rem,4vw,3.6rem)] leading-none tracking-[-0.04em] text-ink/[0.07]">0{n + 1}</span>
-                  <span className="staff-chip staff-chip-0 w-fit">{tag}</span>
-                  <h3 className="mt-6 text-[clamp(1.4rem,2vw,1.8rem)] tracking-[-0.03em] text-ink">{title}</h3>
-                  <p className="mt-3 max-w-[520px] text-[15px] leading-relaxed text-ink-soft">{text}</p>
-                  <p className="mt-auto border-t border-ink/10 pt-5 text-[12px] font-medium uppercase tracking-[0.08em] text-brand-ink" style={{ marginTop: "auto" }}>
-                    {best}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <GameModes modes={MODELS.map(([badge, title, text, best]) => ({ badge, title, text, best }))} />
         </div>
       </section>
 
       <section aria-label="Process" className="py-[clamp(24px,4vw,48px)]">
         <div className={WRAP}>
           <div data-reveal="" style={rv()}>
-            <div className="relative isolate overflow-hidden rounded-[28px] bg-ink px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
-              <span className="pointer-events-none absolute -right-28 -top-36 -z-10 size-[420px] rounded-full bg-brand/40 blur-[100px]" />
+            <div data-quest="" className="gx-hudpanel relative isolate overflow-hidden rounded-[28px] px-7 py-12 text-white sm:rounded-[36px] sm:px-12 sm:py-16 lg:px-16">
               <Eyebrow light>Process</Eyebrow>
               <h2 className="mt-4 max-w-[900px] text-[clamp(2.1rem,4.2vw,4.25rem)] font-normal leading-[1.04] tracking-[-0.04em]">From first call to live ops.</h2>
-              <ol className="relative mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-5 lg:gap-4">
-                <span className="absolute left-0 right-0 top-[5px] hidden h-px bg-white/15 lg:block" aria-hidden="true" />
+              <ol className="relative mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-5 lg:gap-4">
+                <span className="gx-path" aria-hidden="true">
+                  <i />
+                  <b />
+                </span>
                 {STEPS.map(([t, d], n) => (
                   <li key={t} data-level={n + 1} className="gx-level relative">
-                    <span className="relative block size-[11px] rounded-full bg-brand-soft" />
+                    <span className="gx-node" />
                     <div className="mt-6 h-[calc(100%-1.5rem)] rounded-[22px] border border-white/12 bg-white/[0.04] p-6">
-                      <p className="font-mono text-[12px] text-brand-soft">0{n + 1}</p>
-                      <h3 className="mt-5 text-[clamp(1.2rem,1.6vw,1.4rem)] tracking-[-0.02em]">{t}</h3>
+                      <p className="gx-mono text-brand-soft">{`Stage 0${n + 1}`}</p>
+                      <h3 className="mt-4 text-[clamp(1.2rem,1.6vw,1.4rem)] tracking-[-0.02em]">{t}</h3>
                       <p className="mt-3 text-[15px] leading-relaxed text-white/65">{d}</p>
                     </div>
                   </li>
@@ -258,7 +269,7 @@ export default async function GameDevelopmentMarkup() {
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div data-reveal="" style={rv()}>
               <Eyebrow>Industries</Eyebrow>
-              <H2>Where our worlds go to work.</H2>
+              <H2>Choose your world.</H2>
             </div>
             <div data-reveal="" style={rv("0.1s")}>
               <a className="text-[15px] font-medium text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-brand" href="/industries">
@@ -266,17 +277,7 @@ export default async function GameDevelopmentMarkup() {
               </a>
             </div>
           </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:mt-14">
-            {INDUSTRIES.map(([t, d], n) => (
-              <div key={t} data-reveal="" style={rv(`${(n % 3) * 0.06}s`)}>
-                <div data-tilt="" className="gx-tilt h-full rounded-[24px] bg-[#f1f0f6] p-7 transition-colors duration-500 hover:bg-white hover:shadow-[0_30px_60px_-40px_rgba(14,15,49,0.4)] sm:p-8">
-                  <span className="text-[13px] tabular-nums text-brand">0{n + 1}</span>
-                  <h3 className="mt-6 text-[clamp(1.25rem,1.7vw,1.5rem)] leading-snug tracking-[-0.025em] text-ink">{t}</h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{d}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <GameWorlds />
         </div>
       </section>
 
@@ -293,7 +294,7 @@ export default async function GameDevelopmentMarkup() {
                   <p className="text-[13px] font-medium uppercase tracking-[0.12em] text-brand">{g}</p>
                   <ul className="mt-5 flex flex-wrap gap-2.5">
                     {items.map((t) => (
-                      <li key={t} className="rounded-full bg-[#f1f0f6] px-4 py-2 text-[15px] text-ink">
+                      <li key={t} className="gx-chip rounded-full bg-[#f1f0f6] px-4 py-2 text-[15px] text-ink">
                         {t}
                       </li>
                     ))}
@@ -308,7 +309,7 @@ export default async function GameDevelopmentMarkup() {
       <section aria-label="Questions" className={SEC}>
         <div className={`${WRAP} grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20`}>
           <div data-reveal="" style={rv()}>
-            <Eyebrow>FAQs</Eyebrow>
+            <Eyebrow>FAQs: quest log</Eyebrow>
             <h2 className="mt-4 text-[clamp(1.9rem,3.2vw,3rem)] font-normal leading-[1.06] tracking-[-0.04em] text-ink">Frequently asked questions.</h2>
             <p className="mt-5 max-w-[380px] text-[16px] leading-relaxed text-ink-soft">The vision stays yours. We build it. Bring a napkin sketch or a stalled build. In one free call we will map the fastest route to a title players love.</p>
             <a href="#get-started" className="mt-6 inline-flex text-[15px] font-medium text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-brand">
@@ -321,8 +322,11 @@ export default async function GameDevelopmentMarkup() {
         </div>
       </section>
 
+      <GameContinue />
+
       <section id="get-started" aria-label="Get started" className="scroll-mt-24 pb-[clamp(72px,10vw,160px)] pt-[clamp(32px,4vw,64px)]">
-        <div className={`${WRAP} grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20`}>
+        <div className={WRAP}>
+        <div className="gx-dark gx-hudpanel relative isolate grid gap-12 overflow-hidden rounded-[28px] p-7 sm:rounded-[36px] sm:p-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:p-16">
           <div data-reveal="" style={rv()}>
             <Eyebrow>Get started</Eyebrow>
             <h2 className="mt-4 text-[clamp(2.1rem,4vw,3.6rem)] font-normal leading-[1.05] tracking-[-0.04em] text-ink">Tell us about the title you want to build.</h2>
@@ -339,9 +343,11 @@ export default async function GameDevelopmentMarkup() {
               ))}
             </ul>
           </div>
-          <div data-reveal="" style={rv("0.1s")} className="relative rounded-[28px] border border-ink/[0.08] bg-white p-6 sm:p-10">
+          <div data-reveal="" style={rv("0.1s")} className="relative rounded-[24px] border border-ink/[0.08] bg-white p-6 sm:p-10">
+            <p className="gx-mono mb-6 flex items-center justify-between text-[#7fd0ff]"><span>New game</span><span>Player 1 ready</span></p>
             <StaffSeatForm formName="game-development" endpoint="/api/public/game-development" companyLabel="Studio / Company" needLabel="What brings you here today?" needOptions={NEEDS} needError="Choose what brings you here." briefLabel="Tell us about the title" extras={false} />
           </div>
+        </div>
         </div>
       </section>
     </main>

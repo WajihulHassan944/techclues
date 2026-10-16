@@ -57,6 +57,21 @@ test.describe("game development page", () => {
     }
   });
 
+  test("mode select, hotkeys and the arcade extras work", async ({ page }) => {
+    await open(page);
+    const modes = page.getByRole("radio");
+    await expect(modes).toHaveCount(2);
+    await expect(modes.first()).toHaveAttribute("aria-checked", "true");
+    await modes.nth(1).click();
+    await expect(modes.nth(1)).toHaveAttribute("aria-checked", "true");
+    await expect(modes.first()).toHaveAttribute("aria-checked", "false");
+    await page.locator('section[aria-label="Under the hood"]').scrollIntoViewIfNeeded();
+    await page.keyboard.press("3");
+    await expect(page.getByRole("tabpanel")).toContainText("AR, VR and XR Development");
+    await expect(page.locator('section[aria-label="Continue"]')).toContainText("Continue");
+    await expect(page.locator('section[aria-label="Industries"] article')).toHaveCount(6);
+  });
+
   test("FAQ shows one answer at a time", async ({ page }) => {
     await open(page);
     const faq = page.locator('section[aria-label="Questions"]');

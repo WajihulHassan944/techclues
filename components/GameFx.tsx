@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+const COINS: [number, number][] = [[1.2, 14], [97.5, 20], [1.4, 31], [97.4, 37], [1.2, 47], [97.6, 52], [1.4, 62], [97.5, 68], [1.2, 78], [97.4, 84], [50, 21], [49, 57]];
+
 /**
  * Page-wide game feel: an XP bar that fills as you scroll, 3D tilt on cards, count-up stats,
  * "level unlocked" steps in the process, and a coin burst on call-to-action clicks.
@@ -11,6 +13,8 @@ export default function GameFx() {
   const [xp, setXp] = useState(0);
   const [level, setLevel] = useState(1);
   const [toast, setToast] = useState("");
+  const [score, setScore] = useState(4200);
+  const [gone, setGone] = useState<number[]>([]);
 
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -22,7 +26,15 @@ export default function GameFx() {
       const p = max > 0 ? Math.min(1, scrollY / max) : 0;
       setXp(p);
       setLevel(1 + Math.floor(p * 10));
+      document.querySelectorAll<HTMLElement>("[data-quest]").forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const q = Math.max(0, Math.min(1, (innerHeight * 0.8 - r.top) / (r.height * 0.85)));
+        el.style.setProperty("--qp", q.toFixed(3));
+      });
     };
+    const onScore = (e: Event) => setScore((v) => v + ((e as CustomEvent<number>).detail || 0));
+    addEventListener("gx:score", onScore);
+    cleanups.push(() => removeEventListener("gx:score", onScore));
     onScroll();
     addEventListener("scroll", onScroll, { passive: true });
     cleanups.push(() => removeEventListener("scroll", onScroll));
@@ -107,7 +119,24 @@ export default function GameFx() {
     <>
       <div aria-hidden="true" className="gx-xp">
         <span className="gx-xp-fill" style={{ transform: `scaleX(${xp})` }} />
-        <b>LV {String(level).padStart(2, "0")}</b>
+        <b>LV {String(level).padStart(2, "0")} <u>◎ {String(score).padStart(6, "0")}</u></b>
+      </div>
+      <div className="gx-coins" aria-hidden="true">
+        {COINS.map(([x, y], i) =>
+          gone.includes(i) ? null : (
+            <button
+              key={i}
+              type="button"
+              tabIndex={-1}
+              className="gx-coin gh-coin"
+              style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${(i % 5) * -0.5}s` }}
+              onClick={() => {
+                setGone((g) => [...g, i]);
+                dispatchEvent(new CustomEvent("gx:score", { detail: 50 }));
+              }}
+            />
+          ),
+        )}
       </div>
       <div aria-hidden="true" className={`gx-toast ${toast ? "is-on" : ""}`}>{toast || " "}</div>
     </>

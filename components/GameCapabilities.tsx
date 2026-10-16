@@ -154,10 +154,25 @@ export default function GameCapabilities() {
     return () => clearTimeout(t);
   }, [i, seen, manual]);
 
+  useEffect(() => {
+    if (!seen) return;
+    const key = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea|select/i.test((e.target as HTMLElement)?.tagName)) return;
+      const n = parseInt(e.key, 10);
+      if (n >= 1 && n <= TABS.length) {
+        setManual(true);
+        setI(n - 1);
+      }
+    };
+    addEventListener("keydown", key);
+    return () => removeEventListener("keydown", key);
+  }, [seen]);
+
   const cur = TABS[i];
   return (
     <div ref={ref} className="staff-tabs-center">
-      <div role="tablist" aria-label="Disciplines" className="mt-8 flex flex-wrap gap-2 lg:mt-10">
+      <p className="gx-mono mt-8 text-center text-muted">Select your class · press 1–6</p>
+      <div role="tablist" aria-label="Disciplines" className="mt-4 flex flex-wrap gap-2">
         {TABS.map((t, n) => (
           <button
             key={t.key}
@@ -169,8 +184,9 @@ export default function GameCapabilities() {
               setManual(true);
               setI(n);
             }}
-            className={cn("rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors duration-300", n === i ? "bg-ink text-white" : "bg-white text-ink-soft ring-1 ring-ink/10 hover:text-ink hover:ring-ink/25")}
+            className={cn("inline-flex items-center gap-2.5 rounded-full py-2.5 pl-3 pr-5 text-[14px] font-medium transition-colors duration-300", n === i ? "bg-ink text-white" : "bg-white text-ink-soft ring-1 ring-ink/10 hover:text-ink hover:ring-ink/25")}
           >
+            <kbd aria-hidden="true" className="gx-key">{n + 1}</kbd>
             {t.tab}
           </button>
         ))}

@@ -20,6 +20,13 @@ async function open(page: Page, path: string) {
   return errors;
 }
 
+const PROJECTS = [
+  { slug: "zamulk", name: "Zamulk", sector: "Real estate", url: "https://zamulk.com", line: "A real estate portal for property listings, sales and rentals, built for the Pakistani market." },
+  { slug: "picktiles", name: "Picktiles", sector: "Retail & e-commerce", url: "https://picktiles.com", line: "An online store for tiles, ceramics, sanitary fittings, laminates and installation materials." },
+  { slug: "oradent", name: "Oradent Dental Clinic", sector: "Healthcare", url: "https://oradentdentalclinic.com", line: "A dental clinic website with its services, two locations and online appointment booking." },
+  { slug: "golfszone", name: "GolfsZone", sector: "Sports & fitness", url: "https://golfszone.com", line: "A golf academy website with coaching programmes, plans and online coaching sessions." },
+];
+
 const GRID = 'section[aria-label="All case studies"]';
 
 test.describe("case studies page", () => {
@@ -45,36 +52,46 @@ test.describe("case studies page", () => {
     }
   });
 
-  test("shows the two case studies, their tags and links", async ({ page }) => {
+  test("shows the four projects with their sectors and one-liners", async ({ page }) => {
     await open(page, "/case-studies");
-    await expect(page.locator(`${GRID} a[href^="/case-studies/"]`)).toHaveCount(2);
-    const irl = page.locator(`${GRID} a[href="/case-studies/infinite-running-league"]`);
-    await expect(irl).toContainText("Infinite Running League");
-    await expect(irl).toContainText("The first platform built for a relay running league");
-    await expect(irl).toContainText("Over 1,000 sign-ups before any code was written.");
-    for (const t of ["Sports & fitness", "Website", "Web app"]) await expect(irl).toContainText(t);
-    const odo = page.locator(`${GRID} a[href="/case-studies/odogwu"]`);
-    await expect(odo).toContainText("A bespoke online grocery shop for African and Afro-Caribbean food");
-    await expect(odo).toContainText("Made for UK shoppers, with clever delivery rules.");
-    await expect(page.locator(GRID)).toContainText("2 projects");
-    await expect(page.locator(GRID)).toContainText("Part of this work was done under an NDA");
+    await expect(page.locator(`${GRID} a[target="_blank"]`)).toHaveCount(4);
+    for (const p of PROJECTS) {
+      const card = page.locator(`${GRID} a[href="${p.url}"]`);
+      await expect(card).toHaveCount(1);
+      await expect(card).toContainText(p.name);
+      await expect(card).toContainText(p.sector);
+      await expect(card).toContainText(p.line);
+      await expect(card).toContainText("Visit site");
+    }
+    await expect(page.locator(GRID)).toContainText("4 projects");
+    await expect(page.locator(GRID)).toContainText("Every project here is live");
   });
 
-  test("sector filter narrows the list and Clear brings it back", async ({ page }) => {
+  test("cards link out to the live sites in a new tab", async ({ page }) => {
+    await open(page, "/case-studies");
+    for (const p of PROJECTS) {
+      const card = page.locator(`${GRID} a[href="${p.url}"]`);
+      await expect(card).toHaveAttribute("target", "_blank");
+      await expect(card).toHaveAttribute("rel", /noopener/);
+      await expect(card.locator("img")).toHaveAttribute("src", `/images/case-studies/${p.slug}.jpg`);
+    }
+  });
+
+  test("sector filter narrows the list and Reset brings it back", async ({ page }) => {
     await open(page, "/case-studies");
     const grid = page.locator(GRID);
     await grid.scrollIntoViewIfNeeded();
     await grid.getByRole("button", { name: "Sector" }).click();
     const list = grid.getByRole("listbox", { name: "Sector" });
-    await expect(list.getByRole("option")).toHaveText(["All sectors", "Sports & fitness", "Retail & e-commerce"]);
-    await list.getByRole("option", { name: "Retail & e-commerce" }).click();
-    await expect(grid.getByRole("button", { name: "Sector" })).toContainText("Retail & e-commerce");
-    await expect(grid.locator('a[href^="/case-studies/"]')).toHaveCount(1);
-    await expect(grid.locator('a[href="/case-studies/odogwu"]')).toHaveCount(1);
+    await expect(list.getByRole("option")).toHaveText(["All sectors", "Real estate", "Retail & e-commerce", "Healthcare", "Sports & fitness"]);
+    await list.getByRole("option", { name: "Healthcare" }).click();
+    await expect(grid.getByRole("button", { name: "Sector" })).toContainText("Healthcare");
+    await expect(grid.locator('a[target="_blank"]')).toHaveCount(1);
+    await expect(grid.locator('a[href="https://oradentdentalclinic.com"]')).toHaveCount(1);
     await expect(grid).toContainText("1 project");
     await expect(grid).not.toContainText("1 projects");
     await grid.getByRole("button", { name: "Reset" }).click();
-    await expect(grid.locator('a[href^="/case-studies/"]')).toHaveCount(2);
+    await expect(grid.locator('a[target="_blank"]')).toHaveCount(4);
     await expect(grid.getByRole("button", { name: "Reset" })).toHaveCount(0);
   });
 
@@ -84,14 +101,14 @@ test.describe("case studies page", () => {
     await grid.scrollIntoViewIfNeeded();
     await grid.getByRole("button", { name: "Service" }).click();
     const list = grid.getByRole("listbox", { name: "Service" });
-    await expect(list.getByRole("option")).toHaveText(["All services", "MVPs & Custom Platforms", "UI/UX & Prototyping", "E-commerce & Marketplaces", "Performance Marketing", "Strategy & Brand Identity"]);
-    await list.getByRole("option", { name: "Performance Marketing" }).click();
-    await expect(grid.locator('a[href^="/case-studies/"]')).toHaveCount(1);
-    await expect(grid.locator('a[href="/case-studies/infinite-running-league"]')).toHaveCount(1);
+    await expect(list.getByRole("option")).toHaveText(["All services", "MVPs & Custom Platforms", "Web & Mobile Apps", "UI/UX & Prototyping", "E-commerce & Marketplaces"]);
+    await list.getByRole("option", { name: "UI/UX & Prototyping" }).click();
+    await expect(grid.locator('a[target="_blank"]')).toHaveCount(1);
+    await expect(grid.locator('a[href="https://oradentdentalclinic.com"]')).toHaveCount(1);
     // both filters together
     await grid.getByRole("button", { name: "Sector" }).click();
     await grid.getByRole("listbox", { name: "Sector" }).getByRole("option", { name: "Retail & e-commerce" }).click();
-    await expect(grid.locator('a[href^="/case-studies/"]')).toHaveCount(0);
+    await expect(grid.locator('a[target="_blank"]')).toHaveCount(0);
     await expect(grid).toContainText("0 projects");
   });
 
@@ -112,137 +129,37 @@ test.describe("case studies page", () => {
   test("results strip and call to action are present", async ({ page }) => {
     await open(page, "/case-studies");
     const r = page.locator('section[aria-label="Results"]');
-    for (const t of ["200+", "1,000+", "60%", "4.3"]) await expect(r).toContainText(t);
+    for (const t of ["200+", "Live projects shown on this page", "4.3"]) await expect(r).toContainText(t);
     await expect(page.locator('section[aria-label="Start your project"]')).toHaveCount(1);
   });
 
-  test("a card opens the case study without reloading the site", async ({ page }) => {
+  test("images load and keep the card aspect ratio", async ({ page }) => {
     await open(page, "/case-studies");
-    await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 4));
-    await page.locator(`${GRID} a[href="/case-studies/odogwu"]`).click();
-    await expect(page).toHaveURL(/\/case-studies\/odogwu$/);
-    await expect(page.locator("h1")).toContainText("Tailor-made web grocery store");
-    expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(4);
+    for (let y = 0; y < (await page.evaluate(() => document.documentElement.scrollHeight)); y += 700) {
+      await page.evaluate((v) => window.scrollTo(0, v), y);
+      await page.waitForTimeout(100);
+    }
+    const broken = await page.evaluate(() => [...document.images].filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src));
+    expect(broken).toEqual([]);
+    for (const p of PROJECTS) {
+      const img = page.locator(`${GRID} a[href="${p.url}"] img`);
+      await expect(img).toHaveAttribute("alt", new RegExp(p.name));
+      const ratio = await img.evaluate((e) => e.parentElement!.getBoundingClientRect().width / e.parentElement!.getBoundingClientRect().height);
+      expect(Math.abs(ratio - 16 / 11)).toBeLessThan(0.05);
+    }
+  });
+
+  test("the removed detail pages no longer exist", async ({ page }) => {
+    for (const slug of ["infinite-running-league", "odogwu"]) {
+      const res = await page.goto(`/case-studies/${slug}`);
+      expect(res?.status()).toBe(404);
+    }
   });
 });
 
-type Study = { slug: string; title: string; heading: string; client: string; sector: string; website: string; sections: string[]; texts: string[]; next: [string, string] };
-const STUDIES: Study[] = [
-  {
-    slug: "infinite-running-league",
-    title: "Infinite Running League Case Study | TechClues",
-    heading: "Platform pioneering relay running leagues",
-    client: "Infinite Running League",
-    sector: "Fitness & sports",
-    website: "infiniterunningleague.com",
-    sections: ["Challenge and approach", "Results", "What we built", "Inside the product", "Client feedback", "Next project", "Start your project"],
-    texts: ["Relay running leagues lacked a dedicated platform.", "1,000+", "45%", "6 weeks", "Creating teams and managing rosters", "Figma", "PostgreSQL", "Jason Lynch"],
-    next: ["Odogwu Foods", "/case-studies/odogwu"],
-  },
-  {
-    slug: "odogwu",
-    title: "Odogwu Foods Case Study | TechClues",
-    heading: "Tailor-made web grocery store selling African and Afro-Caribbean food",
-    client: "Odogwu Foods",
-    sector: "E-commerce & retail",
-    website: "odogwufoods.co.uk",
-    sections: ["The project", "The challenges", "Our solution", "Inside the product", "Implementation", "Results", "Next project", "Start your project"],
-    texts: ["Business rules that were still evolving", "A catalogue in need of reshaping", "Bespoke e-commerce build", "Next.js", "Payload CMS", "314", "78", "73", "33"],
-    next: ["Infinite Running League", "/case-studies/infinite-running-league"],
-  },
-];
-
-for (const c of STUDIES) {
-  test.describe(`case study: ${c.slug}`, () => {
-    const url = `/case-studies/${c.slug}`;
-
-    test("renders with metadata, hero details and no errors", async ({ page }) => {
-      const errors = await open(page, url);
-      await expect(page).toHaveTitle(c.title);
-      await expect(page.locator("h1")).toContainText(c.heading);
-      const crumbs = page.getByRole("navigation", { name: "Breadcrumb" });
-      await expect(crumbs.getByRole("link", { name: "Case histories" })).toHaveAttribute("href", "/case-studies");
-      await expect(crumbs).toContainText(c.client);
-      const dl = page.locator("main dl").first();
-      for (const t of [c.client, c.sector, c.website]) await expect(dl).toContainText(t);
-      await expect(dl.getByRole("link", { name: c.website })).toHaveAttribute("target", "_blank");
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-      expect(errors).toEqual([]);
-    });
-
-    test("hero entrance animation settles into the visible state", async ({ page }) => {
-      await open(page, url);
-      await page.waitForTimeout(2200);
-      await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toHaveCSS("opacity", "1");
-      await expect(page.locator("main dl").first()).toHaveCSS("opacity", "1");
-      await expect(page.locator("[data-hero-img]")).toHaveCSS("opacity", "1");
-      const top = await page.locator("h1 .svc-rise").evaluate((el) => el.getBoundingClientRect().top - el.parentElement!.getBoundingClientRect().top);
-      expect(top).toBeLessThan(2);
-    });
-
-    test("has every section in order with its content", async ({ page }) => {
-      await open(page, url);
-      const labels = await page.locator("main section[aria-label]").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
-      expect(labels).toEqual(c.sections);
-      for (const t of c.texts) await expect(page.locator("main")).toContainText(t);
-    });
-
-    test("hero photo parallax follows the scroll", async ({ page }) => {
-      await open(page, url);
-      const frame = page.locator('main div[class*="-inset-y-["]').first();
-      await frame.scrollIntoViewIfNeeded();
-      const a = await frame.evaluate((e) => (e as HTMLElement).style.transform);
-      await page.evaluate(() => window.scrollBy(0, 300));
-      await page.waitForTimeout(400);
-      const b = await frame.evaluate((e) => (e as HTMLElement).style.transform);
-      expect(a).toMatch(/translateY/);
-      expect(b).not.toBe(a);
-    });
-
-    test("next project links onward without a reload", async ({ page }) => {
-      await open(page, url);
-      await page.evaluate(() => ((window as unknown as { __kept: number }).__kept = 8));
-      const next = page.locator('section[aria-label="Next project"] a');
-      await expect(next).toContainText(c.next[0]);
-      await expect(next).toHaveAttribute("href", c.next[1]);
-      await next.click();
-      await expect(page).toHaveURL(new RegExp(`${c.next[1]}$`));
-      expect(await page.evaluate(() => (window as unknown as { __kept?: number }).__kept)).toBe(8);
-    });
-
-    test("images load, including lazy ones", async ({ page }) => {
-      await open(page, url);
-      for (let y = 0; y < (await page.evaluate(() => document.documentElement.scrollHeight)); y += 700) {
-        await page.evaluate((v) => window.scrollTo(0, v), y);
-        await page.waitForTimeout(100);
-      }
-      const broken = await page.evaluate(() => [...document.images].filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src));
-      expect(broken).toEqual([]);
-    });
-
-    test("scroll reveal shows every visible section", async ({ page }) => {
-      await open(page, url);
-      for (let y = 0; y < (await page.evaluate(() => document.documentElement.scrollHeight)); y += 400) {
-        await page.evaluate((v) => window.scrollTo(0, v), y);
-        await page.waitForTimeout(80);
-      }
-      await page.waitForTimeout(500);
-      const stuck = await page.evaluate(() =>
-        [...document.querySelectorAll("[data-reveal]:not([data-shown])")]
-          .filter((el) => {
-            const r = el.getBoundingClientRect();
-            return r.width > 0 && r.height > 0;
-          })
-          .map((el) => el.className || el.outerHTML.slice(0, 80)),
-      );
-      expect(stuck).toEqual([]);
-    });
-  });
-}
-
 test.describe("case studies on mobile", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
-  for (const path of ["/case-studies", "/case-studies/odogwu", "/case-studies/infinite-running-league"]) {
+  for (const path of ["/case-studies"]) {
     test(`${path} fits the screen`, async ({ page }) => {
       await open(page, path);
       for (let y = 0; y < (await page.evaluate(() => document.documentElement.scrollHeight)); y += 900) {

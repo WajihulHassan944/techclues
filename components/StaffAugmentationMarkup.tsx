@@ -61,8 +61,8 @@ const INDUSTRIES = [
 ];
 
 const CASES = [
-  ["Sports & Fitness", "Infinite Running League: a running platform shipped by an embedded product team", "Application engineering", "/case-studies/infinite-running-league", "/images/case-studies/infinite-running-league.jpg"],
-  ["Food & Retail", "Odogwu Foods: an online store and operations tooling, built inside the client's workflow", "Web and e-commerce", "/case-studies/odogwu", "/images/case-studies/odogwu.jpg"],
+  ["Real estate", "Zamulk: a real estate portal", "Web and mobile apps", "https://zamulk.com", "/images/case-studies/zamulk.jpg"],
+  ["Retail & e-commerce", "Picktiles: an online store for tiles and building materials", "E-commerce", "https://picktiles.com", "/images/case-studies/picktiles.jpg"],
 ];
 
 export default async function StaffAugmentationMarkup() {
@@ -295,10 +295,10 @@ export default async function StaffAugmentationMarkup() {
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:mt-14">
             {CASES.map(([sector, title, tag, href, img], n) => (
               <div key={href} data-reveal="" style={rv(`${n * 0.08}s`)}>
-                <a href={href} className="group block h-full overflow-hidden rounded-[24px] border border-ink/[0.08] bg-white transition-shadow duration-500 hover:shadow-[0_30px_60px_-40px_rgba(14,15,49,0.4)]">
+                <a href={href} target="_blank" rel="noopener noreferrer" className="group block h-full overflow-hidden rounded-[24px] border border-ink/[0.08] bg-white transition-shadow duration-500 hover:shadow-[0_30px_60px_-40px_rgba(14,15,49,0.4)]">
                   <div className="aspect-[16/9] overflow-hidden bg-[#f1f0f6]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={img} alt="" loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img src={img} alt={`Screenshot of ${title.split(":")[0]}`} loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-6 sm:p-8">
                     <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-brand-ink">{sector}</p>
@@ -306,7 +306,7 @@ export default async function StaffAugmentationMarkup() {
                     <p className="mt-4 flex items-center justify-between text-[14px] text-muted">
                       {tag}
                       <span className="inline-flex items-center gap-1.5 text-ink">
-                        Read the full case study <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        Visit site <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
                       </span>
                     </p>
                   </div>

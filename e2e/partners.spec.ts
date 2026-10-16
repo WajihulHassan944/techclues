@@ -69,7 +69,7 @@ test.describe("partners page", () => {
     await expect(result(page)).toContainText("Capped at £5,000 a referral");
   });
 
-  test("monthly services count six months, and ZERO.ONE is a flat £50", async ({ page }) => {
+  test("monthly services count six months, and BUILD.ONE is a flat £50", async ({ page }) => {
     await open(page);
     await page.locator(EARN).scrollIntoViewIfNeeded();
     await page.locator(EARN).getByRole("button", { name: "Performance Marketing" }).click();
@@ -77,10 +77,10 @@ test.describe("partners page", () => {
     await expect(value(page)).toHaveText("£750", { timeout: 3000 }); // 10% of 6 x 1,250
     await expect(result(page)).toContainText("of 6 months' fees");
     await expect(result(page)).toContainText("and ad spend");
-    await page.locator(EARN).getByRole("button", { name: "ZERO.ONE" }).click();
+    await page.locator(EARN).getByRole("button", { name: "BUILD.ONE" }).click();
     await expect(value(page)).toHaveText("£50", { timeout: 3000 });
     await expect(page.locator(`${EARN} input[type=number]`)).toBeDisabled();
-    await expect(result(page)).toContainText("Flat fee for a ZERO.ONE");
+    await expect(result(page)).toContainText("Flat fee for a BUILD.ONE");
   });
 
   test("the AI service is not offered in the calculator or the table", async ({ page }) => {

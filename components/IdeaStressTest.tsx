@@ -146,7 +146,7 @@ function ReportView({ report, idea }: { report: Report; idea: string }) {
           <p className="text-[clamp(1.2rem,2vw,1.6rem)] tracking-[-0.02em]">Still want to build it?</p>
           <p className="mt-1.5 max-w-[420px] text-[15px] text-white/65">Bring it to a free 30-minute call and we&apos;ll plan what to validate first.</p>
           <a href="/zero-one" className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-white underline decoration-white/30 underline-offset-4 transition-colors hover:decoration-white">
-            Or build the core and test it with ZERO.ONE for £499
+            Or build the core and test it with BUILD.ONE for £499
             <ArrowRight cls="size-3.5" />
           </a>
         </div>

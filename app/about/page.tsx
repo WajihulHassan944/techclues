@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import AboutMarkup from "@/components/AboutMarkup";
 
 export const metadata: Metadata = {
-  title: "About TechClues | MVP Development Studio in Birmingham",
+  title: "About TechClues | MVP Development Studio in West Midlands",
   description:
-    "TechClues helps founders validate ideas before they build, then ship MVPs that grow into real products. Meet the Birmingham studio behind them.",
+    "TechClues helps founders validate ideas before they build, then ship MVPs that grow into real products. Meet the West Midlands studio behind them.",
   alternates: { canonical: "https://techclues.co.uk/about" },
 };
 

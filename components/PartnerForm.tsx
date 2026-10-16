@@ -4,12 +4,12 @@ import { useState, type ReactNode } from "react";
 import { api, ApiError } from "@/lib/api/client";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const KINDS = ["Design or marketing agency", "Freelancer", "Business adviser or accountant", "Startup community or accelerator", "Past client", "Something else"];
+const KINDS = ["Design or marketing agency", "GoHighLevel agency or consultant", "Freelancer", "Business adviser or accountant", "Startup community or accelerator", "Past client", "Something else"];
 const REACH = ["Mostly UK", "Mostly outside the UK", "Both"];
 const VOLUME = ["1–2 a year", "3–5 a year", "6–10 a year", "More than 10 a year", "Not sure yet"];
 const BUDGET = ["Under £5k", "£5k–£10k", "£10k–£25k", "£25k–£50k", "Over £50k", "Not sure"];
 const PROJECTS = [
-  "ZERO.ONE", "MVPs & Custom Platforms", "Prototype to Production", "Web & Mobile Apps", "UI/UX & Prototyping", "Low-Code / No-Code",
+  "BUILD.ONE", "MVPs & Custom Platforms", "Prototype to Production", "Web & Mobile Apps", "UI/UX & Prototyping", "Low-Code / No-Code",
   "E-commerce & Marketplaces", "Performance Marketing", "Strategy & Brand Identity", "Ongoing partnership", "Grant application support",
 ];
 

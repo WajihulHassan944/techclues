@@ -296,7 +296,7 @@ export default async function GameDevelopmentMarkup() {
         </div>
       </section>
 
-      <section aria-label="Tools and technologies" className={SEC}>
+      <section aria-label="Tools and technologies" className={`${SEC} gd-tools`}>
         <div className={WRAP}>
           <div data-reveal="" style={rv()}>
             <Eyebrow>Tools &amp; technologies</Eyebrow>
@@ -305,11 +305,11 @@ export default async function GameDevelopmentMarkup() {
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:mt-14">
             {TOOLS.map(([g, items], n) => (
               <div key={g} data-reveal="" style={rv(`${(n % 2) * 0.07}s`)}>
-                <div className="h-full rounded-[24px] border border-ink/[0.08] bg-white p-7 sm:p-8">
-                  <p className="text-[13px] font-medium uppercase tracking-[0.12em] text-brand">{g}</p>
+                <div data-tilt="" className="gd-tilt gd-toolcard h-full rounded-[24px] border border-ink/[0.08] bg-white p-7 sm:p-8">
+                  <p className="gd-toolhead text-[13px] font-medium uppercase tracking-[0.12em] text-brand">{g}</p>
                   <ul className="mt-5 flex flex-wrap gap-2.5">
-                    {items.map((t) => (
-                      <li key={t} className="rounded-full bg-[#f1f0f6] px-4 py-2 text-[15px] text-ink">
+                    {items.map((t, k) => (
+                      <li key={t} style={{ "--i": k } as React.CSSProperties} className="gd-toolchip rounded-full bg-[#f1f0f6] px-4 py-2 text-[15px] text-ink">
                         {t}
                       </li>
                     ))}
@@ -321,7 +321,7 @@ export default async function GameDevelopmentMarkup() {
         </div>
       </section>
 
-      <section aria-label="Questions" className={SEC}>
+      <section aria-label="Questions" className={`${SEC} gd-faq-sec`}>
         <div className={`${WRAP} grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-20`}>
           <div data-reveal="" style={rv()}>
             <Eyebrow>FAQs</Eyebrow>
@@ -331,7 +331,7 @@ export default async function GameDevelopmentMarkup() {
               Let&apos;s talk
             </a>
           </div>
-          <div data-reveal="" style={rv("0.1s")}>
+          <div data-reveal="" style={rv("0.1s")} className="gd-faq">
             <Accordion items={faqs} />
           </div>
         </div>
@@ -339,7 +339,7 @@ export default async function GameDevelopmentMarkup() {
 
       <section id="get-started" aria-label="Get started" className="scroll-mt-24 pb-[clamp(72px,10vw,160px)] pt-[clamp(32px,4vw,64px)]">
         <div className={WRAP}>
-          <div data-scrub="" className="gd-scrub gd-dark gd-form relative isolate grid gap-12 overflow-hidden rounded-[28px] p-7 sm:rounded-[36px] sm:p-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:p-16">
+          <div data-scrub="" className="gd-scrub gd-dark gd-form gd-aurora relative isolate grid gap-12 overflow-hidden rounded-[28px] p-7 sm:rounded-[36px] sm:p-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:p-16">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <GameCube size={110} tint="#9b6bff" className="gd-cube-bl" />
             <img src="/images/game/coding.jpg" alt="" loading="lazy" className="absolute inset-0 -z-20 size-full object-cover" />
@@ -360,11 +360,10 @@ export default async function GameDevelopmentMarkup() {
                 ))}
               </ul>
             </div>
-            <div data-reveal="" style={rv("0.1s")} className="gd-formcard relative rounded-[24px] p-6 sm:p-10">
+            <div data-reveal="" style={rv("0.1s")} className="gd-formcard gd-glowborder relative rounded-[24px] p-6 sm:p-10">
               <StaffSeatForm formName="game-development" endpoint="/api/public/game-development" companyLabel="Studio / Company" needLabel="What brings you here today?" needOptions={NEEDS} needError="Choose what brings you here." briefLabel="Tell us about the title" extras={false} />
             </div>
           </div>
-          <p className="mt-6 text-center text-[12px] text-muted">Photography from Unsplash.</p>
         </div>
       </section>
     </main>

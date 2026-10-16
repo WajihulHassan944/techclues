@@ -6,7 +6,7 @@ export const FAQ_GROUPS: FaqGroupDef[] = [
   { key: "calculator", label: "MVP cost calculator", section: "Pages" },
   { key: "partners", label: "Partners", section: "Pages" },
   { key: "grant-funding", label: "Grant funding", section: "Pages" },
-  { key: "zero-one", label: "ZERO.ONE", section: "Pages" },
+  { key: "zero-one", label: "BUILD.ONE", section: "Pages" },
   { key: "faq-getting-started", label: "Getting started", section: "FAQ page" },
   { key: "faq-pricing", label: "Pricing & payments", section: "FAQ page" },
   { key: "faq-process", label: "Timelines & process", section: "FAQ page" },

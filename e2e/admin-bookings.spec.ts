@@ -34,7 +34,7 @@ test.describe("admin bookings: list", () => {
     await expect(row(page, "James Carter")).toContainText("Shipment tracking portal");
     await expect(row(page, "James Carter")).toContainText("Northern Freight");
     await expect(row(page, "James Carter")).toContainText("Confirmed");
-    await expect(row(page, "Hannah Lee")).toContainText("ZERO.ONE brief");
+    await expect(row(page, "Hannah Lee")).toContainText("BUILD.ONE brief");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 

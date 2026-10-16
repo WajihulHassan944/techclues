@@ -8,6 +8,7 @@ import ChatBackdrop from "./generated/ChatBackdrop";
 import ChatDialog from "./generated/ChatDialog";
 import CookieBanner from "./generated/CookieBanner";
 import CookieManage from "./generated/CookieManage";
+import IdeaInvite from "./IdeaInvite";
 
 type Cookie = "banner" | "manage" | "closed";
 
@@ -56,6 +57,7 @@ export default function FloatingUi() {
     // so the banner doesn't come back on the next page or reload.
     try {
       localStorage.setItem(CONSENT_KEY, label === "Reject all" ? "rejected" : "accepted");
+      window.dispatchEvent(new Event("tc-consent"));
     } catch {
       // Private browsing / blocked storage — the choice just won't stick across reloads.
     }
@@ -75,6 +77,7 @@ export default function FloatingUi() {
   return (
     <>
       <ContactDock />
+      <IdeaInvite />
       <div onClick={onChatClick} onSubmit={(e) => e.preventDefault()}>
         {chatOpen ? (
           <>

@@ -501,7 +501,7 @@ export default async function AiEnablementMarkup() {
                                             <div className="border-t border-ink/10 pt-5">
                                                 <dd className="whitespace-nowrap text-[clamp(1.8rem,2.8vw,2.6rem)] leading-none tracking-[-0.04em] text-ink">{"2–4"}<span className="ml-1.5 text-[0.5em] tracking-[-0.02em] text-ink-soft">weeks</span></dd><dt className="mt-2 text-[14px] text-muted">Idea to validated MVP</dt></div>
                                             <div className="border-t border-ink/10 pt-5">
-                                                <dd className="whitespace-nowrap text-[clamp(1.8rem,2.8vw,2.6rem)] leading-none tracking-[-0.04em] text-ink">2<span className="ml-1.5 text-[0.5em] tracking-[-0.02em] text-ink-soft">locations</span></dd><dt className="mt-2 text-[14px] text-muted">{"Birmingham, UK & Rawalpindi, PK"}</dt></div>
+                                                <dd className="whitespace-nowrap text-[clamp(1.8rem,2.8vw,2.6rem)] leading-none tracking-[-0.04em] text-ink">2<span className="ml-1.5 text-[0.5em] tracking-[-0.02em] text-ink-soft">locations</span></dd><dt className="mt-2 text-[14px] text-muted">{"West Midlands, UK & Islamabad, PK"}</dt></div>
                                         </dl>
                                 </div>
                         </div>

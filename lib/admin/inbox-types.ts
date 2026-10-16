@@ -9,7 +9,7 @@ export const SOURCES: Record<SourceKey, { label: string; page: string }> = {
   grant: { label: "Grant support", page: "/grant-funding" },
   "partner-refer": { label: "Partner: referral", page: "/partners" },
   "partner-join": { label: "Partner: application", page: "/partners" },
-  "zero-one": { label: "ZERO.ONE brief", page: "/zero-one" },
+  "zero-one": { label: "BUILD.ONE brief", page: "/zero-one" },
   careers: { label: "Careers", page: "/careers" },
   chat: { label: "Chat widget", page: "/" },
   "staff-augmentation": { label: "Staff augmentation", page: "/services/staff-augmentation" },

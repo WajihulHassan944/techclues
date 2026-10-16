@@ -84,7 +84,7 @@ function Notifications() {
         <section className="adm-panel" aria-labelledby="st-n2">
           <h3 id="st-n2">What they&apos;re told about</h3>
           <ul className="adm-switchlist">
-            <Switch label="A new enquiry arrives" hint="Contact, calculator, grants, partners, ZERO.ONE and careers forms." checked={draft.events.enquiry} onChange={(v) => ev("enquiry", v)} />
+            <Switch label="A new enquiry arrives" hint="Contact, calculator, grants, partners, BUILD.ONE and careers forms." checked={draft.events.enquiry} onChange={(v) => ev("enquiry", v)} />
             <Switch label="A call is booked" checked={draft.events.booking} onChange={(v) => ev("booking", v)} />
             <Switch label="A visitor cancels or moves a call" checked={draft.events.cancelled} onChange={(v) => ev("cancelled", v)} />
             <Switch label="Someone subscribes to the newsletter" hint="Sent as one weekly email, not one per person." checked={draft.events.subscriber} onChange={(v) => ev("subscriber", v)} />

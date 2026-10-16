@@ -100,7 +100,7 @@ export default function ZeroOneCompare() {
             </span>
           </div>
         </Row>
-        <Row label="Test it with ZERO.ONE first" time={done ? "7 days" : `Day ${Math.max(1, Math.ceil((w / PRICE) * 7))}`} amount={gbp(w)} note="Real users, a clear answer, and £499 off your build if you go ahead." highlight>
+        <Row label="Test it with BUILD.ONE first" time={done ? "7 days" : `Day ${Math.max(1, Math.ceil((w / PRICE) * 7))}`} amount={gbp(w)} note="Real users, a clear answer, and £499 off your build if you go ahead." highlight>
           <div className="relative">
             <div className="h-3 overflow-hidden rounded-full bg-ink/[0.06]">
               <span className="block h-full rounded-full bg-brand" style={{ width: w === 0 ? "0%" : `max(10px, ${(w / FULL) * 100}%)` }}></span>

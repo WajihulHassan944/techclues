@@ -33,8 +33,8 @@ test.describe("contact page", () => {
     const main = page.locator("main");
     await expect(main.getByRole("link", { name: "techcluesltd@gmail.com" })).toHaveAttribute("href", "mailto:techcluesltd@gmail.com");
     await expect(main.locator('a[href="tel:+447472411699"]')).toHaveCount(1);
-    await expect(main.locator('a[href="https://wa.me/447472411699"]')).toHaveCount(1);
-    await expect(main).toContainText("125 Hazelville Road, Birmingham, England, United Kingdom");
+    await expect(main.locator('a[href="https://wa.me/447778883953"]')).toHaveCount(1);
+    await expect(main).toContainText("125 Hazelville Road, West Midlands, United Kingdom");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -92,19 +92,19 @@ test.describe("contact page", () => {
     await expect(page.getByText("We reply within a few hours.")).toBeVisible();
   });
 
-  test("map starts on Birmingham and hovering Rawalpindi moves the highlight", async ({ page }) => {
+  test("map starts on West Midlands and hovering Islamabad moves the highlight", async ({ page }) => {
     await open(page);
     const map = page.locator(MAP);
     await map.scrollIntoViewIfNeeded();
     const cards = map.locator(".sm\\:grid-cols-2 > div");
     await expect(cards.nth(0)).toHaveClass(/border-brand/);
     await expect(cards.nth(1)).not.toHaveClass(/border-brand/);
-    const karachi = map.getByRole("button", { name: "Rawalpindi, PK, Production studio" });
+    const karachi = map.getByRole("button", { name: "Islamabad, PK, Production studio" });
     await karachi.hover();
     await expect(cards.nth(1)).toHaveClass(/border-brand/);
     await expect(cards.nth(0)).not.toHaveClass(/border-brand/);
     await expect(karachi.locator("> span > span").first()).toHaveClass(/bg-white /);
-    await map.getByRole("button", { name: "Birmingham, UK, Headquarters" }).focus();
+    await map.getByRole("button", { name: "West Midlands, UK, Headquarters" }).focus();
     await expect(cards.nth(0)).toHaveClass(/border-brand/);
     await cards.nth(1).hover();
     await expect(cards.nth(1)).toHaveClass(/border-brand/);
@@ -115,7 +115,7 @@ test.describe("contact page", () => {
     await open(page);
     const times = page.locator(`${MAP} p.tabular-nums`);
     await expect(times).toHaveCount(2);
-    // Birmingham is on BST (UTC+1) in July, Rawalpindi is UTC+5.
+    // West Midlands is on BST (UTC+1) in July, Islamabad is UTC+5.
     await expect(times.nth(0)).toHaveText("13:30");
     await expect(times.nth(1)).toHaveText("17:30");
     await page.clock.fastForward(31 * 60_000);

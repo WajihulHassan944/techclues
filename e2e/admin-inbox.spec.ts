@@ -40,7 +40,7 @@ test.describe("admin inbox: list", () => {
 
   test("every website form appears as a source", async ({ page }) => {
     const chips = page.getByRole("group", { name: "Filter by source" });
-    for (const s of ["Contact form", "Cost calculator", "Kill my idea", "Grant support", "Partner: referral", "Partner: application", "ZERO.ONE brief", "Careers"]) await expect(chips).toContainText(s);
+    for (const s of ["Contact form", "Cost calculator", "Kill my idea", "Grant support", "Partner: referral", "Partner: application", "BUILD.ONE brief", "Careers"]) await expect(chips).toContainText(s);
   });
 
   test("search narrows the list and the empty state offers to clear filters", async ({ page }) => {

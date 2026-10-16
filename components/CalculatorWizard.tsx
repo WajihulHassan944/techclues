@@ -423,7 +423,7 @@ export default function CalculatorWizard() {
           </a>
           <p className="mt-4 text-center text-[12px] text-white/45">An estimate to plan with, not a quote.</p>
           <a href="/zero-one" className="group mt-5 block border-t border-white/10 pt-5 text-center text-[13.5px] leading-relaxed text-white/70 transition-colors hover:text-white">
-            Not ready for a full MVP? Test your core feature with <span className="font-medium text-white">ZERO.ONE</span> for £499
+            Not ready for a full MVP? Test your core feature with <span className="font-medium text-white">BUILD.ONE</span> for £499
             <Arrow cls="ml-1 inline size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
           </a>
         </div>

@@ -56,7 +56,7 @@ export default function ZeroOneBriefForm() {
         { name: v("name"), email: v("email"), company: v("company"), phone: v("phone"), idea: v("idea"), consent: d.get("consent") === "on", website: v("website") },
         { auth: false },
       );
-      setCallHref(`/book-a-call?${new URLSearchParams({ name: v("name"), email: v("email"), company: v("company"), notes: `ZERO.ONE: ${v("idea")}`.slice(0, 500) })}`);
+      setCallHref(`/book-a-call?${new URLSearchParams({ name: v("name"), email: v("email"), company: v("company"), notes: `BUILD.ONE: ${v("idea")}`.slice(0, 500) })}`);
       form.reset();
       setState("sent");
     } catch {

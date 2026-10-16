@@ -53,7 +53,7 @@ async function dismissCookies(page: Page) {
 test.describe("homepage", () => {
   test("renders the page with correct metadata, no console errors and no overflow", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle(/Custom Software Development Company in Birmingham/);
+    await expect(page).toHaveTitle(/Custom Software Development Company in West Midlands/);
     await expect(page.locator("h1")).toContainText("Launch-ready MVPs.");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
@@ -202,21 +202,21 @@ test.describe("homepage", () => {
     await page.locator(STACK).scrollIntoViewIfNeeded();
     const tabs = page.locator(`${STACK} ol button`);
     const root = page.locator(`${STACK} [style*="perspective"] > div`);
-    await expect(root).not.toHaveAttribute("style", /scale\(0\.78\)/);
+    await expect(root).not.toHaveAttribute("style", /scale\(0\.8\d*\)/);
     await tabs.nth(3).hover(); // 04 Data
-    await expect(root).toHaveAttribute("style", /scale\(0\.78\)/);
-    // Previewed, not lifted: the layers spread evenly and nothing is dimmed
+    await expect(root).toHaveAttribute("style", /scale\(0\.80\d*\)/);
+    // Previewed, not lifted: the layers peek apart (about half the lifted spread) and nothing is dimmed
     const g = await stackGeometry(page);
-    expect(g.zs.map(Math.round)).toEqual([-214, -129, -43, 43, 129, 214]);
+    expect(g.zs.map(Math.round)).toEqual([-113, -68, -23, 23, 68, 113]);
     await expect(page.locator(`${STACK} .opacity-55`)).toHaveCount(0);
     await expect(page.locator(`${STACK} .border-brand\\/60`)).toHaveCount(1);
     await expect(tabs.nth(3).locator("span span").first()).toHaveClass(/text-ink(?!\/)/);
     await expect(page.locator(`${STACK} [role='dialog']`)).toHaveCount(0);
     await expect(page.locator("button.stack-overlay")).toHaveCount(0);
-    const shifted = await page.evaluate((sel) => [...document.querySelectorAll(sel + " [style*='translateX(-56px)']")].length, STACK);
+    const shifted = await page.evaluate((sel) => [...document.querySelectorAll(sel + " [style*='translateX(-22px)']")].length, STACK);
     expect(shifted).toBe(1);
     await page.mouse.move(700, 100);
-    await expect(root).not.toHaveAttribute("style", /scale\(0\.78\)/);
+    await expect(root).not.toHaveAttribute("style", /scale\(0\.80\d*\)/);
     await expect(page.locator(`${STACK} .border-brand\\/60`)).toHaveCount(0);
   });
 
@@ -340,16 +340,15 @@ test.describe("homepage", () => {
     await expect(page.locator(".chat-launcher")).toContainText("Ask TechClues");
   });
 
-  test("contact dock expands on hover and uses placeholder links", async ({ page }) => {
+  test("contact dock expands on hover to show the numbers", async ({ page }) => {
     await open(page);
     const wa = page.locator("a.dock-link").first();
     const label = wa.locator(".dock-label");
     await expect(label).toHaveCSS("opacity", "0");
     await wa.hover();
     await expect(label).toHaveCSS("opacity", "1");
-    for (const href of await page.locator("a.dock-link").evaluateAll((els) => els.map((e) => e.getAttribute("href")))) {
-      expect(href).toBe("#");
-    }
+    await expect(label).toHaveText("+44 7778 883953");
+    expect(await page.locator("a.dock-link").evaluateAll((els) => els.map((e) => e.getAttribute("href")))).toEqual(["https://wa.me/447778883953", "tel:+447472411699"]);
   });
 
   test("scroll reveal shows every visible section as you scroll", async ({ page }) => {

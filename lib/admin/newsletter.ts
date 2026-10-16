@@ -1,9 +1,9 @@
 export type SubStatus = "subscribed" | "unsubscribed" | "bounced";
-export type SubSource = "footer" | "blog" | "manual" | "import";
+export type SubSource = "footer" | "blog" | "manual" | "import" | "contact" | "booking";
 
 export type Subscriber = { id: string; email: string; name?: string; source: SubSource; at: string; status: SubStatus; endedAt?: string };
 
-export const SUB_SOURCES: Record<SubSource, string> = { footer: "Site footer", blog: "Blog page", manual: "Added by hand", import: "Imported" };
+export const SUB_SOURCES: Record<SubSource, string> = { footer: "Site footer", blog: "Blog page", manual: "Added by hand", import: "Imported", contact: "Contacted us", booking: "Booked a call" };
 export const SUB_STATUS: Record<SubStatus, string> = { subscribed: "Subscribed", unsubscribed: "Unsubscribed", bounced: "Bounced" };
 
 export const EMAIL_RE = /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/;

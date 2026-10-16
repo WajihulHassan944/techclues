@@ -20,11 +20,11 @@ async function open(page: Page, path = "/zero-one") {
   return errors;
 }
 
-test.describe("ZERO.ONE page", () => {
+test.describe("BUILD.ONE page", () => {
   test("renders the hero with metadata and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("ZERO.ONE | Build & Test Your Core Feature in a Week | TechClues");
-    await expect(page.locator("h1")).toContainText("ZERO.ONE");
+    await expect(page).toHaveTitle("BUILD.ONE | Build & Test Your Core Feature in a Week | TechClues");
+    await expect(page.locator("h1")).toContainText("BUILD.ONE");
     await expect(page.locator("h1")).toContainText("From idea to something real.");
     const main = page.locator("main");
     for (const t of ["From TechClues", "£499", "1 week", "Build → Test → Learn", "4 projects a month · £499 off any build booked within 30 days", "Who it's for", "Two ways to find out", "Why now", "Good ideas don't stay open for long."]) await expect(main).toContainText(t);
@@ -85,7 +85,7 @@ test.describe("ZERO.ONE page", () => {
     await expect(form.getByText("Thanks, your brief is with our team.")).toBeVisible({ timeout: 5000 });
     await expect(form.getByRole("button", { name: /Brief sent/ })).toBeVisible();
     const link = form.locator('[data-cta="zero-one-book-call"]');
-    await expect(link).toHaveAttribute("href", /^\/book-a-call\?name=Sam\+Taylor&email=sam%40example\.com&company=Acme&notes=ZERO\.ONE/);
+    await expect(link).toHaveAttribute("href", /^\/book-a-call\?name=Sam\+Taylor&email=sam%40example\.com&company=Acme&notes=BUILD\.ONE/);
     expect(posts.some((u) => u.includes("/api/public/zero-one"))).toBe(true);
     await link.click();
     await expect(page).toHaveURL(/\/book-a-call\?/);
@@ -114,7 +114,7 @@ test.describe("ZERO.ONE page", () => {
     await qs.nth(2).click();
     await expect(qs.nth(2)).toHaveAttribute("aria-expanded", "true");
     await expect(qs.first()).toHaveAttribute("aria-expanded", "false");
-    await expect(faq).toContainText("Is ZERO.ONE a discount?");
+    await expect(faq).toContainText("Is BUILD.ONE a discount?");
   });
 
   test("links only go to pages that exist", async ({ page }) => {
@@ -135,7 +135,7 @@ test.describe("ZERO.ONE page", () => {
   });
 });
 
-test.describe("ZERO.ONE on mobile", () => {
+test.describe("BUILD.ONE on mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
   test("fits the screen", async ({ page }) => {
     await open(page);

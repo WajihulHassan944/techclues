@@ -7,7 +7,7 @@ type Type = { key: string; name: string; group: string; packages: Pkg[] };
 
 const GROUPS = ["Build", "Design & brand", "Monthly services", "Quick starts"];
 const TYPES: Type[] = [
-  { key: "zero-one", name: "ZERO.ONE", group: "Quick starts", packages: [{ name: "Core feature, built and tested in a week", price: 499, from: false, kind: "flat" }] },
+  { key: "zero-one", name: "BUILD.ONE", group: "Quick starts", packages: [{ name: "Core feature, built and tested in a week", price: 499, from: false, kind: "flat" }] },
   { key: "mvp-development", name: "MVPs & Custom Platforms", group: "Build", packages: [
     { name: "Validation MVP", price: 2500, from: true, kind: "project" },
     { name: "Lean MVP", price: 5000, from: true, kind: "project" },
@@ -64,7 +64,7 @@ const cn = (...a: (string | false | undefined)[]) => a.filter(Boolean).join(" ")
 
 /** 10% (Pro: 12.5%) of fees up to £20,000 and 5% above, monthly services count 6 months, capped at £5,000. */
 function commission(value: number, kind: Pkg["kind"], tier: "partner" | "pro") {
-  if (kind === "flat") return { total: 50, capped: false, lines: [{ label: "Flat fee for a ZERO.ONE", amount: 50 }] };
+  if (kind === "flat") return { total: 50, capped: false, lines: [{ label: "Flat fee for a BUILD.ONE", amount: 50 }] };
   const base = kind === "monthly" ? 6 * value : value;
   const rate = tier === "pro" ? 0.125 : 0.1;
   const low = Math.min(base, 20000);
@@ -196,7 +196,7 @@ export default function PartnersCalculator() {
                 className="h-12 w-full rounded-2xl border border-ink/12 bg-white pl-8 pr-4 text-[15px] tabular-nums text-ink transition-[border-color,box-shadow] duration-200 hover:border-ink/25 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10 disabled:bg-[#f6f7fb] disabled:text-muted"
               />
             </span>
-            <span className="mt-1.5 block text-[12.5px] text-muted">{editable ? (pkg.from || pkg.price === null ? "Prices start here; change it to the quoted value." : "Excluding VAT.") : "ZERO.ONE has a single price."}</span>
+            <span className="mt-1.5 block text-[12.5px] text-muted">{editable ? (pkg.from || pkg.price === null ? "Prices start here; change it to the quoted value." : "Excluding VAT.") : "BUILD.ONE has a single price."}</span>
           </label>
           <div>
             <span className="mb-1.5 block text-[14px] font-medium text-ink">You are</span>

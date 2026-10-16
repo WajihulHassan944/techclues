@@ -117,7 +117,7 @@ test.describe("kill my idea page", () => {
     await expect(page.getByText("Weak point", { exact: true })).toHaveCount(0);
     await expect(page.getByRole("heading", { name: "Questions to answer before you build" })).toBeVisible();
     await expect(page.getByRole("link", { name: /Let's talk/ })).toHaveAttribute("href", "/book-a-call");
-    await expect(page.getByRole("link", { name: /ZERO.ONE for £499/ })).toHaveAttribute("href", "/zero-one");
+    await expect(page.getByRole("link", { name: /BUILD.ONE for £499/ })).toHaveAttribute("href", "/zero-one");
     await expect(page.getByText("For reference, the scope you picked")).toHaveCount(0); // no features picked
   });
 

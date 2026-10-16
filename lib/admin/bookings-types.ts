@@ -11,7 +11,7 @@ export type Booking = {
   start: string;
   minutes: number;
   topic: string;
-  via: "Book a call" | "ZERO.ONE brief";
+  via: "Book a call" | "BUILD.ONE brief";
   status: BookingStatus;
   createdAt: string;
   meetingLink?: string;

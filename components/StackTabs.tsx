@@ -63,6 +63,7 @@ export default function StackTabs() {
     const names = buttons.map((b) => (b.children[1].children[0] as HTMLElement).textContent ?? "");
     const layerForTab = (i: number) => wrappers.length - 1 - i;
 
+    const cleanups0: Array<() => void> = [];
     let active: number | null = null;
     let hovered: number | null = null;
     const HOVER_CARD_OFF = ["border-white/70", "bg-white/75", "shadow-[0_20px_40px_-24px_rgba(14,15,49,0.35)]"];
@@ -77,11 +78,12 @@ export default function StackTabs() {
       // Hovering a tab (pointer devices, wide layout, nothing lifted) previews its layer.
       const hov = !on && wide && hovered !== null ? hovered : null;
       const spreadMode = (on && wide) || hov !== null;
+      const peek = hov !== null && !on ? 0.526 : 1;
 
       zTargets.forEach((el) => el?.classList.toggle("z-[95]", on));
       persp.setAttribute("aria-hidden", on ? "false" : "true");
       const scaled = wide ? on || hov !== null : true;
-      root.style.transform = `translateX(-50%) translateY(-50%)${scaled ? ` scale(${g.rootScale})` : ""} rotateX(58deg) rotateZ(-42deg)`;
+      root.style.transform = `translateX(-50%) translateY(-50%)${scaled ? ` scale(${hov !== null && !on ? g.rootScale + 0.027 : g.rootScale})` : ""} rotateX(58deg) rotateZ(-42deg)`;
 
       wrappers.forEach((w, d) => {
         const inner = w.firstElementChild as HTMLElement;
@@ -96,7 +98,7 @@ export default function StackTabs() {
         if (isTarget)
           inner.style.transform = `translateX(${g.lift.x}px) translateY(${g.lift.y}px) translateZ(${g.lift.z}px) scale(${g.lift.scale}) rotate(42deg) rotateX(-58deg)`;
         else if (spreadMode)
-          inner.style.transform = `${hov !== null && d === layerForTab(hov) ? "translateX(-56px) " : ""}translateZ(${(d - 2.5) * g.spread}px)`;
+          inner.style.transform = `${hov !== null && d === layerForTab(hov) ? "translateX(-22px) " : ""}translateZ(${(d - 2.5) * g.spread * peek}px)`;
         else inner.style.transform = `translateZ(${(d - 2.5) * g.idleStep}px)`;
 
         const highlighted = hov !== null && d === layerForTab(hov);
@@ -128,9 +130,34 @@ export default function StackTabs() {
 
     resetRef.current = () => apply(null);
     apply(null);
+    // Entrance: the layers start stacked flat and fan out to their resting spacing, one after another.
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const idleFor = (d: number) => `translateZ(${(d - 2.5) * geometry(window.matchMedia("(min-width: 640px)").matches, persp).idleStep}px)`;
+      wrappers.forEach((w) => {
+        const inner = w.firstElementChild as HTMLElement;
+        inner.style.transition = "none";
+        inner.style.transform = "translateZ(0px)";
+        w.style.opacity = "0";
+      });
+      const io = new IntersectionObserver(([en]) => {
+        if (!en.isIntersecting) return;
+        io.disconnect();
+        wrappers.forEach((w, d) => {
+          const inner = w.firstElementChild as HTMLElement;
+          w.style.transition = `opacity 700ms ease ${d * 90}ms`;
+          inner.style.transition = `transform 1100ms cubic-bezier(0.16, 1, 0.3, 1) ${d * 90}ms`;
+          requestAnimationFrame(() => {
+            w.style.opacity = "1";
+            if (active === null) inner.style.transform = idleFor(d);
+          });
+        });
+      }, { threshold: 0.35 });
+      io.observe(persp);
+      cleanups0.push(() => io.disconnect());
+    }
     const onResize = () => apply(active);
     window.addEventListener("resize", onResize);
-    const cleanups: Array<() => void> = [() => window.removeEventListener("resize", onResize)];
+    const cleanups: Array<() => void> = [() => window.removeEventListener("resize", onResize), ...cleanups0];
     buttons.forEach((b, i) => {
       const h = () => apply(active === i ? null : i);
       b.addEventListener("click", h);

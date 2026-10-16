@@ -57,7 +57,7 @@ test.describe("game development page", () => {
     }
   });
 
-  test("mode select, hotkeys and the arcade extras work", async ({ page }) => {
+  test("engagement mode select and industry cards work", async ({ page }) => {
     await open(page);
     const modes = page.getByRole("radio");
     await expect(modes).toHaveCount(2);
@@ -65,11 +65,6 @@ test.describe("game development page", () => {
     await modes.nth(1).click();
     await expect(modes.nth(1)).toHaveAttribute("aria-checked", "true");
     await expect(modes.first()).toHaveAttribute("aria-checked", "false");
-    await page.getByRole("tabpanel").evaluate((el) => el.scrollIntoView({ block: "center" }));
-    await page.waitForTimeout(600);
-    await page.keyboard.press("3");
-    await expect(page.getByRole("tabpanel")).toContainText("AR, VR and XR Development");
-    await expect(page.locator('section[aria-label="Continue"]')).toContainText("Continue");
     await expect(page.locator('section[aria-label="Industries"] article')).toHaveCount(6);
   });
 

@@ -171,6 +171,12 @@ export default function IdeaStressTest() {
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
 
+  // Arriving from the homepage invitation: prefill the idea typed there (?idea=...).
+  useEffect(() => {
+    const idea = new URLSearchParams(window.location.search).get("idea")?.slice(0, 300);
+    if (idea) setA((o) => (o.idea ? o : { ...o, idea }));
+  }, []);
+
   const set = <K extends keyof Answers>(k: K, v: Answers[K]) => setA((o) => ({ ...o, [k]: v }));
   const report = phase === "done" ? buildReport(a) : null;
   const canNext = step !== 0 || a.idea.trim().length > 15;

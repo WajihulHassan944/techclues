@@ -8696,3 +8696,5 @@ html.lenis body {
 @media (prefers-reduced-motion: reduce) { .gd-toolhead::before, .gd-faq-sec::before, .gd-aurora::before, .gd-glowborder::before, .gd-form button[type="submit"]::after { animation: none !important; } .js-reveal .gd-tools [data-shown] .gd-toolchip { animation: none; } }
 
 @media (min-width:640px){.sm\:h-\[30px\]{height:30px}}
+.gd-hero-shade { z-index: 2; }
+.gd-hero-bg.gd-gl-on .gd-hero-img { opacity: 0; }

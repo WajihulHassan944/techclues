@@ -2,18 +2,79 @@
 
 import { useEffect, useRef } from "react";
 
+const VERT = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
+
 /**
- * WebGL layer over the hero photo: glowing wireframe solids that drift and follow the pointer,
- * plus a slowly turning point-cloud galaxy. three.js is loaded on demand, only on this page.
+ * Animates the hero photograph itself: a WebGL shader flows and shimmers the glowing
+ * constellation behind the person (the red dress and headset stay steady), twinkles the bright
+ * nodes and drifts the whole backdrop with the pointer. three.js is loaded on demand.
  */
+const FRAG = `
+precision highp float;
+varying vec2 vUv;
+uniform sampler2D uTex;
+uniform float uTime;
+uniform vec2 uPtr;
+uniform vec2 uRes;
+uniform vec2 uImg;
+uniform vec2 uPos;
+
+float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float n(vec2 p){
+  vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(h(i), h(i + vec2(1, 0)), f.x), mix(h(i + vec2(0, 1)), h(i + vec2(1, 1)), f.x), f.y);
+}
+
+void main(){
+  // object-fit: cover with object-position, a little over-scaled so edges never show
+  float sc = max(uRes.x / uImg.x, uRes.y / uImg.y) * 1.08;
+  vec2 size = uImg * sc;
+  vec2 off = (uRes - size) * uPos;
+  vec2 px = vec2(vUv.x, 1.0 - vUv.y) * uRes;
+  vec2 uv = (px - off) / size;
+  uv += vec2(sin(uTime * 0.07), cos(uTime * 0.05)) * 0.006;
+
+  // background mask: bright/blue constellation = 1, the person (red, dark) = 0
+  vec3 base = texture2D(uTex, uv).rgb;
+  float lum = dot(base, vec3(0.299, 0.587, 0.114));
+  float blueish = clamp((base.b - base.r * 0.9) * 3.0 + 0.25, 0.0, 1.0);
+  float bg = smoothstep(0.02, 0.2, lum) * blueish;
+
+  // slow flowing warp of the constellation, plus a breathing zoom from its bright core
+  vec2 c = vec2(0.58, 0.46);
+  vec2 d = uv - c;
+  float flow = n(uv * 3.0 + vec2(uTime * 0.08, -uTime * 0.06));
+  float flow2 = n(uv * 5.0 - vec2(uTime * 0.05, uTime * 0.07));
+  vec2 warp = (vec2(flow - 0.5, flow2 - 0.5)) * 0.0045 + d * sin(uTime * 0.45) * 0.006;
+  warp += uPtr * -0.006;
+  vec3 col = texture2D(uTex, uv + warp * bg).rgb;
+  // chromatic split that pulses gently
+  float ca = 0.0006 * (1.0 + sin(uTime * 0.6)) * bg;
+  col.r = mix(col.r, texture2D(uTex, uv + warp * bg + vec2(ca, 0.0)).r, bg);
+  col.b = mix(col.b, texture2D(uTex, uv + warp * bg - vec2(ca, 0.0)).b, bg);
+
+  // twinkle: bright nodes pulse at their own rhythm, plus a soft light sweep across the field
+  float l2 = dot(col, vec3(0.299, 0.587, 0.114));
+  float cell = n(floor(uv * 260.0) * 0.37 + 11.0);
+  float tw = 0.5 + 0.5 * sin(uTime * (1.2 + cell * 2.4) + cell * 40.0);
+  float nodes = smoothstep(0.35, 0.9, l2);
+  col += col * nodes * tw * 0.55 * bg;
+  float sweep = smoothstep(0.0, 0.5, 0.5 - abs(fract(uv.x * 0.8 - uTime * 0.045) - 0.5));
+  col += vec3(0.18, 0.22, 0.6) * l2 * sweep * 0.55 * bg;
+  // the core glow breathes
+  col += vec3(0.5, 0.35, 0.9) * smoothstep(0.55, 0.0, length(d * vec2(1.4, 1.0))) * l2 * (0.18 + 0.14 * sin(uTime * 0.8)) * bg;
+
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
 export default function HeroScene() {
   const host = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = host.current;
-    const sec = el?.parentElement?.parentElement;
-    if (!el || !sec) return;
-    const secEl: HTMLElement = sec;
+    const root = el?.parentElement;
+    const sec = root?.parentElement;
+    if (!el || !root || !sec) return;
     let disposed = false;
     let cleanup = () => {};
 
@@ -24,130 +85,82 @@ export default function HeroScene() {
       const small = innerWidth < 760;
       let renderer: InstanceType<typeof THREE.WebGLRenderer>;
       try {
-        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !small, powerPreference: "high-performance" });
+        renderer = new THREE.WebGLRenderer({ alpha: false, antialias: false, powerPreference: "high-performance" });
       } catch {
         return; // no WebGL: the photo alone still looks fine
       }
-      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, small ? 1.25 : 1.75));
-      renderer.setClearColor(0x000000, 0);
+      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, small ? 1.25 : 1.6));
       el.appendChild(renderer.domElement);
       renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%";
 
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-      camera.position.set(0, 0, 9);
-
-      const rig = new THREE.Group();
-      scene.add(rig);
-
-      // glowing wireframe solids
-      const palette = [0x5cc0ff, 0x9b6bff, 0x2fa8ff, 0xff6fb5, 0x7fe3ff];
-      const defs: [InstanceType<typeof THREE.BufferGeometry<import("three").NormalBufferAttributes>>, number, number, number, number, number][] = [
-        [new THREE.IcosahedronGeometry(1.5, 1), 3.5, 0.5, -0.5, 0, 1],
-        [new THREE.TorusKnotGeometry(0.62, 0.2, 120, 16), 5.7, 2.0, 0.6, 1, 0.9],
-        [new THREE.OctahedronGeometry(0.85), 5.4, -1.6, 1.2, 2, 1],
-        [new THREE.DodecahedronGeometry(0.7), 2.7, 2.5, -1.5, 3, 1],
-        [new THREE.TetrahedronGeometry(0.75), 2.0, -2.6, 0.2, 4, 1],
-        [new THREE.BoxGeometry(0.9, 0.9, 0.9), 0.9, -2.9, -0.6, 1, 0.8],
-      ];
-      const solids = defs.slice(0, small ? 3 : defs.length).map(([geo, x, y, z, ci, s], i) => {
-        const g = new THREE.Group();
-        const col = palette[ci % palette.length];
-        const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending }));
-        const fill = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false }));
-        g.add(fill, edges);
-        g.position.set(small ? x * 0.55 : x, y, z);
-        g.scale.setScalar(s * (small ? 0.8 : 1));
-        g.userData = { base: g.position.clone(), sp: 0.15 + i * 0.05, ph: i * 1.3 };
-        rig.add(g);
-        return g;
-      });
-
-      // point-cloud galaxy
-      const N = small ? 700 : 1800;
-      const pos = new Float32Array(N * 3);
-      const col = new Float32Array(N * 3);
-      const c1 = new THREE.Color(0x5cc0ff), c2 = new THREE.Color(0x9b6bff), c3 = new THREE.Color(0xff6fb5), tmp = new THREE.Color();
-      for (let i = 0; i < N; i++) {
-        const arm = i % 3;
-        const r = Math.pow(Math.random(), 0.7) * 7.5;
-        const a = r * 0.9 + (arm * Math.PI * 2) / 3 + (Math.random() - 0.5) * 0.7;
-        pos[i * 3] = Math.cos(a) * r + (Math.random() - 0.5) * 0.5;
-        pos[i * 3 + 1] = (Math.random() - 0.5) * 0.6 * (1 + r * 0.12);
-        pos[i * 3 + 2] = Math.sin(a) * r + (Math.random() - 0.5) * 0.5;
-        tmp.copy(c1).lerp(c2, Math.min(1, r / 6));
-        if (Math.random() < 0.12) tmp.copy(c3);
-        col.set([tmp.r, tmp.g, tmp.b], i * 3);
+      const tex = await new Promise<InstanceType<typeof THREE.Texture> | null>((res) =>
+        new THREE.TextureLoader().load("/images/game/hero.webp", res, undefined, () => res(null)),
+      );
+      if (disposed || !tex) {
+        renderer.dispose();
+        return;
       }
-      const pg = new THREE.BufferGeometry();
-      pg.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-      pg.setAttribute("color", new THREE.BufferAttribute(col, 3));
-      const galaxy = new THREE.Points(pg, new THREE.PointsMaterial({ size: small ? 0.045 : 0.035, vertexColors: true, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true }));
-      galaxy.position.set(small ? 0 : 2.2, -0.2, -3);
-      galaxy.rotation.x = 0.9;
-      scene.add(galaxy);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.minFilter = THREE.LinearFilter;
+      const img = tex.image as { width: number; height: number };
+
+      const uniforms = {
+        uTex: { value: tex },
+        uTime: { value: 0 },
+        uPtr: { value: new THREE.Vector2() },
+        uRes: { value: new THREE.Vector2(1, 1) },
+        uImg: { value: new THREE.Vector2(img.width, img.height) },
+        uPos: { value: new THREE.Vector2(0.6, 0.38) },
+      };
+      const scene = new THREE.Scene();
+      const camera = new THREE.Camera();
+      const mat = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms });
+      scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat));
 
       const size = () => {
-        const w = secEl.clientWidth, h = secEl.clientHeight;
-        renderer.setSize(w, h, false);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
+        const w = el.clientWidth || 1, hh = el.clientHeight || 1;
+        renderer.setSize(w, hh, false);
+        uniforms.uRes.value.set(w, hh);
+        uniforms.uPos.value.set(innerWidth < 640 ? 0.62 : 0.6, 0.38);
       };
       size();
       const ro = new ResizeObserver(size);
-      ro.observe(secEl);
+      ro.observe(el);
 
-      let mx = 0, my = 0, cx = 0, cy = 0, visible = true, raf = 0;
+      let tx = 0, ty = 0, visible = true, raf = 0;
       const move = (e: PointerEvent) => {
-        const r = secEl.getBoundingClientRect();
-        mx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-        my = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        const r = sec.getBoundingClientRect();
+        tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+        ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
       };
-      secEl.addEventListener("pointermove", move);
-      const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !raf && !reduce) raf = requestAnimationFrame(frame); });
-      io.observe(secEl);
+      if (!reduce) sec.addEventListener("pointermove", move);
+      const io = new IntersectionObserver(([en]) => { visible = en.isIntersecting; }, { threshold: 0 });
+      io.observe(sec);
 
-      const clock = new THREE.Clock();
-      function frame() {
-        raf = 0;
-        if (!visible || disposed) return;
-        const t = clock.getElapsedTime();
-        cx += (mx - cx) * 0.05;
-        cy += (my - cy) * 0.05;
-        const sy = Math.min(1, Math.max(0, scrollY / Math.max(1, secEl.clientHeight)));
-        rig.rotation.y = cx * 0.28;
-        rig.rotation.x = cy * 0.16 + sy * 0.35;
-        rig.position.y = sy * 1.6;
-        camera.position.x = cx * 0.6;
-        camera.position.y = -cy * 0.4;
-        camera.lookAt(0, 0, 0);
-        galaxy.rotation.y = t * 0.05;
-        solids.forEach((g, i) => {
-          const u = g.userData as { base: InstanceType<typeof THREE.Vector3>; sp: number; ph: number };
-          g.rotation.x = t * u.sp * (i % 2 ? 1 : -1) + u.ph;
-          g.rotation.y = t * u.sp * 1.4 + u.ph;
-          g.position.y = u.base.y + Math.sin(t * 0.6 + u.ph) * 0.22;
-        });
+      const t0 = performance.now();
+      const frame = () => {
+        raf = requestAnimationFrame(frame);
+        if (!visible || document.hidden) return;
+        const p = uniforms.uPtr.value;
+        p.x += (tx - p.x) * 0.05;
+        p.y += (ty - p.y) * 0.05;
+        uniforms.uTime.value = reduce ? 4 : (performance.now() - t0) / 1000;
         renderer.render(scene, camera);
-        if (!reduce) raf = requestAnimationFrame(frame);
-      }
+      };
       frame();
+      root.classList.add("gd-gl-on");
 
       cleanup = () => {
         cancelAnimationFrame(raf);
-        io.disconnect();
         ro.disconnect();
-        secEl.removeEventListener("pointermove", move);
-        scene.traverse((o) => {
-          const m = o as unknown as { geometry?: { dispose(): void }; material?: { dispose(): void } | { dispose(): void }[] };
-          m.geometry?.dispose();
-          if (Array.isArray(m.material)) m.material.forEach((x) => x.dispose());
-          else m.material?.dispose();
-        });
+        io.disconnect();
+        sec.removeEventListener("pointermove", move);
+        root.classList.remove("gd-gl-on");
+        mat.dispose();
+        tex.dispose();
         renderer.dispose();
         renderer.domElement.remove();
       };
-      if (disposed) cleanup();
     })();
 
     return () => {
@@ -156,5 +169,5 @@ export default function HeroScene() {
     };
   }, []);
 
-  return <div ref={host} aria-hidden="true" className="gd-hero-gl" />;
+  return <div ref={host} className="gd-hero-gl" />;
 }

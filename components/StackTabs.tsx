@@ -66,6 +66,7 @@ export default function StackTabs() {
     const cleanups0: Array<() => void> = [];
     let active: number | null = null;
     let hovered: number | null = null;
+    let hoverFromLayer = false;
     const HOVER_CARD_OFF = ["border-white/70", "bg-white/75", "shadow-[0_20px_40px_-24px_rgba(14,15,49,0.35)]"];
     const HOVER_CARD_ON = ["border-brand/60", "bg-white", "shadow-[0_0_0_1px_rgba(0,100,255,0.25),0_30px_60px_-20px_rgba(0,100,255,0.45)]"];
 
@@ -78,12 +79,12 @@ export default function StackTabs() {
       // Hovering a tab (pointer devices, wide layout, nothing lifted) previews its layer.
       const hov = !on && wide && hovered !== null ? hovered : null;
       const spreadMode = (on && wide) || hov !== null;
-      const peek = hov !== null && !on ? 0.526 : 1;
+      const peek = hov !== null && !on && !hoverFromLayer ? 0.526 : 1;
 
       zTargets.forEach((el) => el?.classList.toggle("z-[95]", on));
       persp.setAttribute("aria-hidden", on ? "false" : "true");
       const scaled = wide ? on || hov !== null : true;
-      root.style.transform = `translateX(-50%) translateY(-50%)${scaled ? ` scale(${hov !== null && !on ? g.rootScale + 0.027 : g.rootScale})` : ""} rotateX(58deg) rotateZ(-42deg)`;
+      root.style.transform = `translateX(-50%) translateY(-50%)${scaled ? ` scale(${hov !== null && !on && !hoverFromLayer ? g.rootScale + 0.027 : g.rootScale})` : ""} rotateX(58deg) rotateZ(-42deg)`;
 
       wrappers.forEach((w, d) => {
         const inner = w.firstElementChild as HTMLElement;
@@ -98,7 +99,7 @@ export default function StackTabs() {
         if (isTarget)
           inner.style.transform = `translateX(${g.lift.x}px) translateY(${g.lift.y}px) translateZ(${g.lift.z}px) scale(${g.lift.scale}) rotate(42deg) rotateX(-58deg)`;
         else if (spreadMode)
-          inner.style.transform = `${hov !== null && d === layerForTab(hov) ? "translateX(-22px) " : ""}translateZ(${(d - 2.5) * g.spread * peek}px)`;
+          inner.style.transform = `${hov !== null && d === layerForTab(hov) ? (hoverFromLayer ? "translateX(-55px) " : "translateX(-22px) ") : ""}translateZ(${(d - 2.5) * g.spread * peek}px)`;
         else inner.style.transform = `translateZ(${(d - 2.5) * g.idleStep}px)`;
 
         const highlighted = hov !== null && d === layerForTab(hov);
@@ -164,6 +165,7 @@ export default function StackTabs() {
       const enter = () => {
         if (!window.matchMedia("(hover: hover)").matches) return;
         hovered = i;
+        hoverFromLayer = false;
         apply(active);
       };
       const leave = () => {
@@ -183,7 +185,31 @@ export default function StackTabs() {
         if (active === null) apply(wrappers.length - 1 - d);
       };
       w.addEventListener("click", h);
-      cleanups.push(() => w.removeEventListener("click", h));
+      // Hovering a layer directly spreads the stack and pulls that layer out, like hovering its tab.
+      let leaveTimer: ReturnType<typeof setTimeout> | undefined;
+      const enterLayer = () => {
+        clearTimeout(leaveTimer);
+        if (active !== null || !window.matchMedia("(hover: hover)").matches || !window.matchMedia("(min-width: 640px)").matches) return;
+        hovered = wrappers.length - 1 - d;
+        hoverFromLayer = true;
+        apply(active);
+      };
+      const leaveLayer = () => {
+        if (!hoverFromLayer) return;
+        clearTimeout(leaveTimer);
+        leaveTimer = setTimeout(() => {
+          hovered = null;
+          hoverFromLayer = false;
+          apply(active);
+        }, 90);
+      };
+      w.addEventListener("pointerenter", enterLayer);
+      w.addEventListener("pointerleave", leaveLayer);
+      cleanups.push(() => {
+        w.removeEventListener("click", h);
+        w.removeEventListener("pointerenter", enterLayer);
+        w.removeEventListener("pointerleave", leaveLayer);
+      });
       const close = w.querySelector('button[aria-label="Close"]');
       if (close) {
         const c = (e: Event) => {

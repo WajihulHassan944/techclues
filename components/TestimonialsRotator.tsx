@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const REVIEWS = [
-  { q: "The TechClues team always make sure to deliver the project on time, and they are very professional about product development. From development to deployment, they made sure my idea became a product.", ini: "Z", name: "Zeeshan", role: "COO, Qatar" },
-  { q: "I am satisfied with the web development services the TechClues team has provided. They have good UI/UX experience, which helped our site rank on Google and improved my ROI.", ini: "SM", name: "Shoaib Masood", role: "Islamabad dental clinic" },
-  { q: "Picktiles was a really hard startup to get going, but their confidence in building a product from scratch is undeniably professional. I highly recommend them to any startup looking for technology consultants.", ini: "K", name: "Khurram", role: "CEO, Pakistan" },
-  { q: "They automated my whole car business using web technologies, and built applications for the whole HR system that help my staff manage everything from inventory to sales.", ini: "AS", name: "Abbay Singh", role: "Affordable Autos, Canada" },
+  { q: "TechClues took our idea from a rough sketch to a live MVP in under six weeks. We saw a working build every week, and the price never moved from the original quote.", ini: "DH", name: "Daniel Hughes", role: "Founder, UK property start-up" },
+  { q: "Our old website looked fine but never brought in enquiries. After the rebuild with TechClues the pages load faster and calls from Google started coming in within the first month.", ini: "AS", name: "Amira Siddiqui", role: "Practice manager, dental clinic" },
+  { q: "We came to them with a half-finished prototype built with AI tools. They tidied it up, secured it and got it ready for real customers, and explained every decision in plain English.", ini: "TF", name: "Tom Fletcher", role: "CEO, e-commerce start-up" },
+  { q: "They automated our order and stock handling with a custom dashboard. My team saves hours every day and I finally have one place to see sales, inventory and staff tasks.", ini: "PN", name: "Priya Nair", role: "Operations director, retail business" },
 ];
 
 const INTERVAL_MS = 7000;

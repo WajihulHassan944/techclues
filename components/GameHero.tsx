@@ -38,8 +38,8 @@ export default function GameHero() {
     <div ref={root} aria-hidden="true" className="gd-hero-bg">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/images/game/hero.webp" alt="" className="gd-hero-img" fetchPriority="high" />
-      <span className="gd-hero-shade" />
       <HeroScene />
+      <span className="gd-hero-shade" />
     </div>
   );
 }

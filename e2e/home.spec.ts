@@ -265,17 +265,17 @@ test.describe("homepage", () => {
     const section = page.locator('section[aria-label="Testimonials"]');
     const quote = section.locator("blockquote");
     await section.scrollIntoViewIfNeeded();
-    await expect(quote).toContainText("deliver the project on time");
+    await expect(quote).toContainText("rough sketch to a live MVP");
     await expect(section.getByRole("button", { name: /^Show review/ })).toHaveCount(4);
     await section.getByRole("button", { name: "Show review 3" }).click();
-    await expect(quote).toContainText("Picktiles was a really hard startup");
+    await expect(quote).toContainText("half-finished prototype built with AI tools");
     await section.getByRole("button", { name: "Next review" }).click();
-    await expect(quote).toContainText("automated my whole car business");
+    await expect(quote).toContainText("custom dashboard");
     await section.getByRole("button", { name: "Previous review" }).click();
-    await expect(quote).toContainText("Picktiles was a really hard startup");
+    await expect(quote).toContainText("half-finished prototype built with AI tools");
     await section.getByRole("button", { name: "Show review 4" }).click();
     await section.getByRole("button", { name: "Next review" }).click();
-    await expect(quote).toContainText("deliver the project on time"); // wraps around
+    await expect(quote).toContainText("rough sketch to a live MVP"); // wraps around
     // Hovering the card pauses the progress bar
     await section.locator('[class*="rounded-[28px]"]').first().hover();
     await expect(section.locator(".testimonial-bar")).toHaveCSS("animation-play-state", "paused");
@@ -290,9 +290,9 @@ test.describe("homepage", () => {
     await section.scrollIntoViewIfNeeded();
     await page.mouse.move(5, 5);
     await section.getByRole("button", { name: "Show review 1", exact: true }).click();
-    await expect(section.locator("blockquote")).toContainText("deliver the project on time");
+    await expect(section.locator("blockquote")).toContainText("rough sketch to a live MVP");
     await page.mouse.move(5, 5); // the click left the pointer over the card, which pauses rotation
-    await expect(section.locator("blockquote")).toContainText("I am satisfied with the web development services", { timeout: 12_000 });
+    await expect(section.locator("blockquote")).toContainText("Our old website looked fine", { timeout: 12_000 });
   });
 
   test("FAQ accordion opens one answer at a time", async ({ page }) => {

@@ -186,3 +186,8 @@ test.describe("kill my idea on mobile", () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 });
+
+test("an idea passed in the URL is prefilled", async ({ page }) => {
+  await page.goto("/kill-my-idea?idea=website%20for%20a%20bakery");
+  await expect(page.locator("textarea").first()).toHaveValue("website for a bakery");
+});

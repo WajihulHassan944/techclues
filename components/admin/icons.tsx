@@ -139,3 +139,8 @@ export const IconHelp = (p: P) => (
     <path d="M12 17h.01" />
   </Svg>
 );
+export const IconCheck = (p: P) => (
+  <Svg {...p} className={p.className ?? "adm-ic"}>
+    <path d="M20 6 9 17l-5-5" />
+  </Svg>
+);

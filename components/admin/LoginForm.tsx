@@ -7,6 +7,7 @@ import { login, restoreSession } from "@/lib/api/auth";
 import { ApiError } from "@/lib/api/client";
 import { ADMIN_EMAIL } from "./nav";
 import { IconArrowLeft, IconArrowRight, IconEye, IconEyeOff } from "./icons";
+import LoadingWorkspace from "./LoadingWorkspace";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function LoginForm() {
   const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({});
   const [busy, setBusy] = useState(false);
   const [forgot, setForgot] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
 
   // Already signed in (valid refresh cookie): go straight to the panel.
   useEffect(() => {
@@ -37,12 +39,14 @@ export default function LoginForm() {
     setBusy(true);
     try {
       await login(email.trim(), password);
-      router.replace("/admin");
+      setSignedIn(true);
     } catch (err) {
       setErrors({ form: err instanceof ApiError ? err.message : "Something went wrong. Please try again." });
       setBusy(false);
     }
   }
+
+  if (signedIn) return <LoadingWorkspace onDone={() => router.replace("/admin")} />;
 
   return (
     <div className="adm-login">

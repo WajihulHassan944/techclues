@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const REVIEWS = [
   { q: "TechClues turned our rough sketch into a live MVP in less than six weeks. A working build landed in front of us weekly, and the cost stayed exactly as first quoted.", ini: "DH", name: "Daniel Hughes", role: "Founder, UK property start-up" },
-  { q: "The old site looked decent but never generated enquiries. Since TechClues rebuilt it, pages load quicker and phone calls from Google began arriving in the first month.", ini: "AS", name: "Amira Siddiqui", role: "Practice manager, dental clinic" },
+  { q: "The old site looked decent but never generated enquiries. Since TechClues rebuilt it, pages load quicker and phone calls from Google began arriving in the first month.", ini: "SM", name: "Sarah Mitchell", role: "Practice manager, dental clinic" },
   { q: "We arrived with a part-built prototype made using AI tools. They cleaned it up, locked it down and made it fit for actual customers, explaining each choice in everyday English.", ini: "TF", name: "Tom Fletcher", role: "CEO, e-commerce start-up" },
-  { q: "A custom dashboard from them now handles our orders and stock automatically. My team gets hours back each day, and at last I can see sales, inventory and staff tasks in one place.", ini: "PN", name: "Priya Nair", role: "Operations director, retail business" },
+  { q: "A custom dashboard from them now handles our orders and stock automatically. My team gets hours back each day, and at last I can see sales, inventory and staff tasks in one place.", ini: "JW", name: "Jennifer Walsh", role: "Operations director, retail business" },
 ];
 
 const INTERVAL_MS = 7000;

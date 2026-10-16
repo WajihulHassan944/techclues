@@ -729,6 +729,194 @@
   height: 16px;
 }
 
+/* ---------- post-login loading screen ---------- */
+.adm-load-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  border-radius: 32px;
+  background: #fff;
+  border: 1px solid rgb(14 15 49 / 0.08);
+  box-shadow: 0 40px 90px -50px rgb(14 15 49 / 0.45);
+  text-align: center;
+}
+.adm-load-card img {
+  display: block;
+  height: 34px;
+  width: auto;
+  margin: 0 auto 28px;
+}
+.adm-load-ring {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
+}
+.adm-load-ring-outer,
+.adm-load-ring-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 5px solid transparent;
+}
+.adm-load-ring-outer {
+  border-top-color: var(--color-brand);
+  border-right-color: var(--color-brand);
+  animation: adm-spin 1.1s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+.adm-load-ring-inner {
+  inset: 14px;
+  border-color: rgb(14 15 49 / 0.1);
+  border-top-color: var(--color-ink);
+  animation: adm-spin 1.6s linear infinite reverse;
+}
+.adm-load-dot {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-brand);
+  box-shadow: 0 0 0 5px rgb(0 100 255 / 0.12);
+  animation: adm-load-dot-pulse 1.8s ease-in-out infinite;
+}
+.adm-load-dot-l {
+  left: -14px;
+  transform: translateY(-50%);
+}
+.adm-load-dot-r {
+  right: -14px;
+  transform: translateY(-50%);
+  animation-delay: 0.6s;
+}
+@keyframes adm-load-dot-pulse {
+  0%, 100% { opacity: 0.4; transform: translateY(-50%) scale(0.85); }
+  50% { opacity: 1; transform: translateY(-50%) scale(1.15); }
+}
+.adm-load-card h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+}
+.adm-load-sub {
+  margin: 8px 0 0;
+  font-size: 15px;
+  color: var(--color-ink-soft);
+}
+.adm-load-bar {
+  margin-top: 26px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgb(14 15 49 / 0.08);
+  overflow: hidden;
+}
+.adm-load-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-brand), #4d8dff);
+  transition: width 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.adm-load-kicker {
+  margin: 18px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.adm-load-kicker-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-brand);
+}
+.adm-load-steps {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid rgb(14 15 49 / 0.08);
+  text-align: left;
+}
+.adm-load-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgb(14 15 49 / 0.06);
+  font-size: 15px;
+  color: var(--color-ink-soft);
+}
+.adm-load-step:last-child {
+  border-bottom: 0;
+}
+.adm-load-step-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1.5px solid rgb(14 15 49 / 0.15);
+  color: transparent;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+.adm-load-step-icon .adm-ic {
+  width: 14px;
+  height: 14px;
+}
+.adm-load-step-icon .adm-spin {
+  width: 14px;
+  height: 14px;
+  border-color: rgb(0 100 255 / 0.25);
+  border-top-color: var(--color-brand);
+}
+.adm-load-step-done {
+  color: var(--color-ink);
+}
+.adm-load-step-done .adm-load-step-icon {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #fff;
+}
+.adm-load-step-active {
+  color: var(--color-ink);
+  font-weight: 500;
+}
+.adm-load-note {
+  margin: 22px 0 0;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+.adm-load-back {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.adm-load-back:hover {
+  color: var(--color-brand);
+}
+.adm-load-back .adm-ic {
+  width: 16px;
+  height: 16px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .adm-load-ring-outer,
+  .adm-load-ring-inner,
+  .adm-load-dot {
+    animation: none;
+  }
+}
+
 /* ---------- mobile ---------- */
 .adm-scrim {
   display: none;

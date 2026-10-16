@@ -127,7 +127,7 @@ test.describe("about page", () => {
   test("promises, community and call-to-action content is there", async ({ page }) => {
     await open(page);
     const promises = page.locator('section[aria-label="Our promises"]');
-    for (const t of ["You'll never be left guessing", "We'll say what you shouldn't build", "A usable first version, quickly", "We stay on until it genuinely works", "Daniel Hughes", "Amira Siddiqui", "Tom Fletcher", "Priya Nair"])
+    for (const t of ["You'll never be left guessing", "We'll say what you shouldn't build", "A usable first version, quickly", "We stay on until it genuinely works", "Daniel Hughes", "Sarah Mitchell", "Tom Fletcher", "Jennifer Walsh"])
       await expect(promises).toContainText(t);
     await expect(promises.getByRole("link", { name: /Browse all reviews/ })).toHaveAttribute("href", "https://uk.trustpilot.com/review/techclues.co.uk");
     const community = page.locator('section[aria-label="Our global presence"]');

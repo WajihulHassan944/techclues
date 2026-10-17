@@ -151,8 +151,8 @@ const PAGES: Svc[] = [
   },
   {
     slug: "web-mobile-apps",
-    title: "West Midlands & UK App Development Company | TechClues",
-    kicker: "App development across the West Midlands and the whole UK",
+    title: "Birmingham & UK App Development Company | TechClues",
+    kicker: "App development across Birmingham and the whole UK",
     headline: "Apps for web and mobile that load fast and run everywhere.",
     serviceCard: "Web & Mobile Apps",
     sections: sections("Native, cross-platform or web app?", "How your app is built"),
@@ -197,7 +197,7 @@ const PAGES: Svc[] = [
   },
   {
     slug: "ui-ux-design",
-    title: "West Midlands UI/UX Design & Prototyping Agency | TechClues",
+    title: "Birmingham UI/UX Design & Prototyping Agency | TechClues",
     kicker: "Prototyping and UI/UX design",
     headline: "Design people grasp within seconds.",
     serviceCard: "UI/UX & Prototyping",
@@ -220,7 +220,7 @@ const PAGES: Svc[] = [
   },
   {
     slug: "brand-strategy",
-    title: "West Midlands Branding Agency for Startups | TechClues",
+    title: "Birmingham Branding Agency for Startups | TechClues",
     kicker: "Identity and brand strategy built for startups",
     headline: "A brand that earns people's trust from their very first click.",
     serviceCard: "Strategy & Brand Identity",

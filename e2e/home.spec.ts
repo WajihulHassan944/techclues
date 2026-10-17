@@ -54,7 +54,7 @@ async function dismissCookies(page: Page) {
 test.describe("homepage", () => {
   test("renders the page with correct metadata, no console errors and no overflow", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle(/West Midlands Custom Software Development Company/);
+    await expect(page).toHaveTitle(/Birmingham Custom Software Development Company/);
     await expect(page.locator("h1")).toContainText("Ready-to-launch MVPs.");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);

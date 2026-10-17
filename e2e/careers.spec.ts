@@ -25,10 +25,10 @@ const SKILLS = ["UI/UX design", "Front-end engineering", "Full-stack engineering
 test.describe("careers page", () => {
   test("renders with metadata, hero and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("Careers at TechClues | West Midlands & Islamabad Product Studio");
+    await expect(page).toHaveTitle("Careers at TechClues | Birmingham & Islamabad Product Studio");
     await expect(page.locator("h1")).toContainText("Create products");
     await expect(page.locator("h1")).toContainText("that people really use.");
-    await expect(page.getByText("TechClues is a West Midlands product studio, plus a studio for production in Islamabad, PK.")).toBeVisible();
+    await expect(page.getByText("TechClues is a Birmingham product studio, plus a studio for production in Islamabad, PK.")).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });

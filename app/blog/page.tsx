@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/blog-render";
 export const metadata: Metadata = {
   title: "TechClues Blog | Startup & MVP Insights",
   description:
-    "Hands-on guidance for founders on testing ideas, shaping product strategy and building MVPs that succeed, written by a West Midlands product studio.",
+    "Hands-on guidance for founders on testing ideas, shaping product strategy and building MVPs that succeed, written by a Birmingham product studio.",
   alternates: { canonical: "https://techclues.co.uk/blog" },
 };
 

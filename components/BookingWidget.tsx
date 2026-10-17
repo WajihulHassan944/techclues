@@ -5,7 +5,7 @@ import { api, ApiError } from "@/lib/api/client";
 
 const TITLE = "Free MVP strategy call";
 const DURATION = 30;
-const EMAIL = "techcluesltd@gmail.com";
+const EMAIL = "info@techclues.co.uk";
 const PRIVACY = "/privacy-policy";
 const WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const cn = (...a: (string | false | undefined | null)[]) => a.filter(Boolean).join(" ");

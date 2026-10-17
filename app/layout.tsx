@@ -11,7 +11,7 @@ import SiteChrome from "@/components/site/SiteChrome";
 import ClientNav from "@/components/ClientNav";
 
 export const metadata: Metadata = {
-  title: "West Midlands Custom Software Development Company | TechClues",
+  title: "Birmingham Custom Software Development Company | TechClues",
   description:
     "An MVP development studio that helps founders validate, build and launch their digital products.",
   manifest: "/manifest.webmanifest",

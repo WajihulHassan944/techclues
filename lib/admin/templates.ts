@@ -1,6 +1,6 @@
 import type { Enquiry, SourceKey } from "./inbox-types";
 
-export const SIGNATURE = "Best wishes,\nTechClues team\ntechcluesltd@gmail.com\n+44 7472 411699";
+export const SIGNATURE = "Best wishes,\nTechClues team\ninfo@techclues.co.uk\n+44 7472 411699";
 
 export type Template = { id: string; label: string; body: string; sources?: SourceKey[] };
 

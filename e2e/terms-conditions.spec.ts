@@ -81,7 +81,7 @@ test.describe("terms and conditions page", () => {
 
   test("contact details and cross-links are right", async ({ page }) => {
     await open(page);
-    await expect(page.locator("main").getByRole("link", { name: "techcluesltd@gmail.com" }).first()).toHaveAttribute("href", "mailto:techcluesltd@gmail.com");
+    await expect(page.locator("main").getByRole("link", { name: "info@techclues.co.uk" }).first()).toHaveAttribute("href", "mailto:info@techclues.co.uk");
     await expect(page.locator('main a[href="/privacy-policy"]').first()).toBeVisible();
     await expect(page.locator('main a[href="/contact"]').first()).toBeVisible();
   });

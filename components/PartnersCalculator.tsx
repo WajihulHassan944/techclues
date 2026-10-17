@@ -188,11 +188,11 @@ export default function PartnersCalculator() {
               <input
                 type="number"
                 inputMode="numeric"
-                min={0}
+                min={pkg.price ?? 0}
                 step={pkg.kind === "monthly" ? 50 : 250}
                 value={editable ? value : (pkg.price ?? 0)}
                 disabled={!editable}
-                onChange={(e) => setValue(Math.max(0, Math.min(1e6, Number(e.target.value) || 0)))}
+                onChange={(e) => setValue(Math.max(pkg.price ?? 0, Math.min(1e6, Number(e.target.value) || 0)))}
                 className="h-12 w-full rounded-2xl border border-ink/12 bg-white pl-8 pr-4 text-[15px] tabular-nums text-ink transition-[border-color,box-shadow] duration-200 hover:border-ink/25 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10 disabled:bg-[#f6f7fb] disabled:text-muted"
               />
             </span>

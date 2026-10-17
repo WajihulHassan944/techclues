@@ -33,12 +33,12 @@ const scrollTo = (page: Page, sel: string, viewportFraction: number) =>
 test.describe("about page", () => {
   test("renders with metadata, hero, stats and no errors", async ({ page }) => {
     const errors = await open(page);
-    await expect(page).toHaveTitle("About TechClues | West Midlands MVP Development Studio");
+    await expect(page).toHaveTitle("About TechClues | Birmingham MVP Development Studio");
     await expect(page.locator("h1")).toContainText("Ideas begin with us.");
-    await expect(page.getByText("An MVP studio in West Midlands. Founders come to us to try ideas on real users, then we build the survivors.")).toBeVisible();
+    await expect(page.getByText("An MVP studio in Birmingham. Founders come to us to try ideas on real users, then we build the survivors.")).toBeVisible();
     await expect(page.getByText("Make less. Learn quicker. Ship what people want.")).toBeVisible();
     const glance = page.locator('section[aria-label="TechClues at a glance"]');
-    for (const t of ["200+", "Products shipped", "4.3", "Trustpilot score", "2–4 weeks", "West Midlands"]) await expect(glance).toContainText(t);
+    for (const t of ["200+", "Products shipped", "4.3", "Trustpilot score", "2–4 weeks", "Birmingham"]) await expect(glance).toContainText(t);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -131,7 +131,7 @@ test.describe("about page", () => {
       await expect(promises).toContainText(t);
     await expect(promises.getByRole("link", { name: /Browse all reviews/ })).toHaveAttribute("href", "https://uk.trustpilot.com/review/techclues.co.uk");
     const community = page.locator('section[aria-label="Our global presence"]');
-    for (const t of ["Rooted in the UK, serving the world.", "West Midlands, UK", "Islamabad, PK"]) await expect(community).toContainText(t);
+    for (const t of ["Rooted in the UK, serving the world.", "Birmingham, UK", "Islamabad, PK"]) await expect(community).toContainText(t);
     await expect(page.locator('section[aria-label="Start your project"]')).toHaveCount(1);
   });
 

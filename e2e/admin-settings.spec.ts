@@ -22,14 +22,14 @@ test.describe("admin settings: notifications", () => {
     await signIn(page);
   });
 
-  test("starts with techcluesltd@gmail.com and sensible alerts", async ({ page }) => {
+  test("starts with info@techclues.co.uk and sensible alerts", async ({ page }) => {
     await expect(page).toHaveTitle("Settings | TechClues admin");
     const list = page.getByRole("list", { name: "Notification recipients" });
-    await expect(list).toContainText("techcluesltd@gmail.com");
-    await expect(list.getByRole("button", { name: "Remove techcluesltd@gmail.com" })).toBeDisabled();
+    await expect(list).toContainText("info@techclues.co.uk");
+    await expect(list.getByRole("button", { name: "Remove info@techclues.co.uk" })).toBeDisabled();
     await expect(page.getByRole("switch", { name: "A new enquiry arrives" })).toBeChecked();
     await expect(page.getByRole("switch", { name: "Someone subscribes to the newsletter" })).not.toBeChecked();
-    await expect(page.getByLabel("From address")).toHaveValue("techcluesltd@gmail.com");
+    await expect(page.getByLabel("From address")).toHaveValue("info@techclues.co.uk");
     await expect(page.getByRole("region", { name: "Save changes" })).toContainText("All changes saved.");
   });
 
@@ -37,7 +37,7 @@ test.describe("admin settings: notifications", () => {
     await page.getByLabel("Add an email address").fill("nope");
     await page.getByRole("button", { name: "Add", exact: true }).click();
     await expect(page.getByText("Check the email address.")).toBeVisible();
-    await page.getByLabel("Add an email address").fill("techcluesltd@gmail.com");
+    await page.getByLabel("Add an email address").fill("info@techclues.co.uk");
     await page.getByRole("button", { name: "Add", exact: true }).click();
     await expect(page.getByText("That address is already on the list.")).toBeVisible();
     await page.getByLabel("Add an email address").fill("sales@techclues.co.uk");
@@ -60,7 +60,7 @@ test.describe("admin settings: notifications", () => {
     await expect(page.getByLabel("Send the summary at")).toHaveCount(0);
     await page.getByRole("button", { name: "Discard" }).click();
     await page.getByRole("button", { name: "Send a test email" }).click();
-    await expect(toast(page, "Test email sent to techcluesltd@gmail.com")).toBeVisible();
+    await expect(toast(page, "Test email sent to info@techclues.co.uk")).toBeVisible();
   });
 });
 

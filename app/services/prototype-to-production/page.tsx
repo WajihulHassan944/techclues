@@ -4,7 +4,7 @@ import PrototypeToProductionMarkup from "@/components/PrototypeToProductionMarku
 export const metadata: Metadata = {
   title: "Turn Your AI-Built App Into a Production-Ready Product | TechClues",
   description:
-    "Used Lovable, Bolt, Replit or Cursor to build your app? We review it, sort out security, payments and hosting, and prepare it for launch. Audit £750, from West Midlands.",
+    "Used Lovable, Bolt, Replit or Cursor to build your app? We review it, sort out security, payments and hosting, and prepare it for launch. Audit £750, from Birmingham.",
   alternates: { canonical: "https://techclues.co.uk/services/prototype-to-production" },
 };
 

@@ -24,7 +24,9 @@ const PROJECTS = [
   { slug: "zamulk", name: "Zamulk", sector: "Real estate", url: "https://zamulk.com", line: "A real estate portal for property listings, sales and rentals, built for the Pakistani market." },
   { slug: "picktiles", name: "Picktiles", sector: "Retail & e-commerce", url: "https://picktiles.com", line: "An online store for tiles, ceramics, sanitary fittings, laminates and installation materials." },
   { slug: "oradent", name: "Oradent Dental Clinic", sector: "Healthcare", url: "https://oradentdentalclinic.com", line: "A dental clinic website with its services, two locations and online appointment booking." },
-  { slug: "golfszone", name: "GolfsZone", sector: "Sports & fitness", url: "https://golfszone.com", line: "A golf academy website with coaching programmes, plans and online coaching sessions." },
+  { slug: "latache", name: "Latache", sector: "Home services", url: "https://xn--latche-yta.com", line: "A home services marketplace connecting homeowners with vetted local professionals for cleaning, repairs and moving help." },
+  { slug: "rytr", name: "Rytr", sector: "AI & SaaS", url: "https://rytr.me", line: "A cloud-based AI writing platform with 40+ content templates, autocomplete and team collaboration tools." },
+  { slug: "copy-ai", name: "Copy.ai", sector: "AI & SaaS", url: "https://copy.ai", line: "An AI-powered copywriting and content generation platform with branded AI agents and automated workflows." },
 ];
 
 const GRID = 'section[aria-label="All case studies"]';
@@ -52,9 +54,9 @@ test.describe("case studies page", () => {
     }
   });
 
-  test("shows the four projects with their sectors and one-liners", async ({ page }) => {
+  test("shows the six projects with their sectors and one-liners", async ({ page }) => {
     await open(page, "/case-studies");
-    await expect(page.locator(`${GRID} a[target="_blank"]`)).toHaveCount(4);
+    await expect(page.locator(`${GRID} a[target="_blank"]`)).toHaveCount(6);
     for (const p of PROJECTS) {
       const card = page.locator(`${GRID} a[href="${p.url}"]`);
       await expect(card).toHaveCount(1);
@@ -63,7 +65,7 @@ test.describe("case studies page", () => {
       await expect(card).toContainText(p.line);
       await expect(card).toContainText("Visit site");
     }
-    await expect(page.locator(GRID)).toContainText("4 projects");
+    await expect(page.locator(GRID)).toContainText("6 projects");
     await expect(page.locator(GRID)).toContainText("Every project here is live");
   });
 
@@ -83,7 +85,7 @@ test.describe("case studies page", () => {
     await grid.scrollIntoViewIfNeeded();
     await grid.getByRole("button", { name: "Sector" }).click();
     const list = grid.getByRole("listbox", { name: "Sector" });
-    await expect(list.getByRole("option")).toHaveText(["All sectors", "Real estate", "Retail & e-commerce", "Healthcare", "Sports & fitness"]);
+    await expect(list.getByRole("option")).toHaveText(["All sectors", "Real estate", "Retail & e-commerce", "Healthcare", "Home services", "AI & SaaS"]);
     await list.getByRole("option", { name: "Healthcare" }).click();
     await expect(grid.getByRole("button", { name: "Sector" })).toContainText("Healthcare");
     await expect(grid.locator('a[target="_blank"]')).toHaveCount(1);
@@ -91,7 +93,7 @@ test.describe("case studies page", () => {
     await expect(grid).toContainText("1 project");
     await expect(grid).not.toContainText("1 projects");
     await grid.getByRole("button", { name: "Reset" }).click();
-    await expect(grid.locator('a[target="_blank"]')).toHaveCount(4);
+    await expect(grid.locator('a[target="_blank"]')).toHaveCount(6);
     await expect(grid.getByRole("button", { name: "Reset" })).toHaveCount(0);
   });
 
@@ -101,7 +103,7 @@ test.describe("case studies page", () => {
     await grid.scrollIntoViewIfNeeded();
     await grid.getByRole("button", { name: "Service" }).click();
     const list = grid.getByRole("listbox", { name: "Service" });
-    await expect(list.getByRole("option")).toHaveText(["All services", "MVPs & Custom Platforms", "Web & Mobile Apps", "UI/UX & Prototyping", "E-commerce & Marketplaces"]);
+    await expect(list.getByRole("option")).toHaveText(["All services", "MVPs & Custom Platforms", "AI Integration & Automation", "Web & Mobile Apps", "UI/UX & Prototyping", "E-commerce & Marketplaces"]);
     await list.getByRole("option", { name: "UI/UX & Prototyping" }).click();
     await expect(grid.locator('a[target="_blank"]')).toHaveCount(1);
     await expect(grid.locator('a[href="https://oradentdentalclinic.com"]')).toHaveCount(1);

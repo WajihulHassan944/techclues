@@ -111,9 +111,11 @@ function Column({ heading, items }: { heading: string; items: Item[] }) {
 export default function CompanyPanel() {
   return (
     <div data-nav-panel="true" className="hidden absolute right-0 top-full origin-top-right pt-4">
-      <div className="grid w-[min(900px,calc(100vw-48px))] grid-cols-[1fr_1fr_280px] gap-2 rounded-[30px] border border-ink/[0.1] bg-white p-3 shadow-[0_30px_60px_-30px_rgba(14,15,49,0.3)]">
-        <Column heading="Company" items={COMPANY} />
-        <Column heading="Resources" items={RESOURCES} />
+      <div className="grid w-[min(940px,calc(100vw-48px))] grid-cols-[1fr_300px] gap-2 rounded-[30px] border border-ink/[0.1] bg-white p-3 shadow-[0_30px_60px_-30px_rgba(14,15,49,0.3)]">
+        <div className="grid grid-cols-2 gap-x-2">
+          <Column heading="Company" items={COMPANY} />
+          <Column heading="Resources" items={RESOURCES} />
+        </div>
         <div className="flex flex-col justify-between rounded-[22px] bg-[linear-gradient(135deg,#eef4ff_0%,#dbe8ff_50%,#e2f4ff_100%)] p-6">
           <div>
             <p className="text-[14px] font-medium text-brand">7 days · £499</p>

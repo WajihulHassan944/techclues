@@ -85,7 +85,7 @@ test.describe("case studies page", () => {
     await grid.scrollIntoViewIfNeeded();
     await grid.getByRole("button", { name: "Sector" }).click();
     const list = grid.getByRole("listbox", { name: "Sector" });
-    await expect(list.getByRole("option")).toHaveText(["All sectors", "Real estate", "Retail & e-commerce", "Healthcare", "Home services", "AI & SaaS"]);
+    await expect(list.getByRole("option")).toHaveText(["All sectors", "Real estate", "Retail & e-commerce", "Healthcare", "AI & SaaS", "Home services"]);
     await list.getByRole("option", { name: "Healthcare" }).click();
     await expect(grid.getByRole("button", { name: "Sector" })).toContainText("Healthcare");
     await expect(grid.locator('a[target="_blank"]')).toHaveCount(1);

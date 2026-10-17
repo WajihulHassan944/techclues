@@ -224,13 +224,9 @@ test.describe("homepage", () => {
     await dismissCookies(page);
     await page.locator(STACK).scrollIntoViewIfNeeded();
     const root = page.locator(`${STACK} [style*="perspective"] > div`);
-    await page.evaluate((sel) => {
-      const r = document.querySelector(sel + ' [style*="perspective"]')!.getBoundingClientRect();
-      window.scrollTo(0, window.scrollY + r.top + r.height / 2 - window.innerHeight / 2);
-    }, STACK);
-    await page.waitForTimeout(1500);
-    const box = (await page.locator(`${STACK} [style*="perspective"]`).boundingBox())!;
-    await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5, { steps: 6 });
+    const persp = page.locator(`${STACK} [style*="perspective"]`);
+    await persp.hover({ position: { x: 320, y: 250 } }); // Playwright scrolls it into view first
+    const box = (await persp.boundingBox())!;
     await expect(root).toHaveAttribute("style", /scale\(0\.78\d*\)/);
     await expect(page.locator(`${STACK} .border-brand\\/60`)).toHaveCount(1);
     await page.mouse.move(box.x + box.width * 0.9, box.y + box.height * 0.5, { steps: 6 });

@@ -8,6 +8,7 @@ const GROUPS: { key: FooterGroup; label: string; hint: string }[] = [
   { key: "services", label: "Services", hint: "The Services column in the footer." },
   { key: "company", label: "Company", hint: "The Company column in the footer." },
   { key: "sectors", label: "Sectors", hint: "The Sectors column in the footer." },
+  { key: "social", label: "Social", hint: "The “Follow” icons. Use a platform name as the link text (LinkedIn, Instagram, Facebook, Google, Twitter/X, YouTube, TikTok) to get the matching icon — anything else shows a generic link icon." },
   { key: "legal", label: "Legal", hint: "The bottom strip, next to “Cookie settings”." },
 ];
 

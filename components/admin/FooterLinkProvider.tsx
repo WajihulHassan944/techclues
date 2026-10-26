@@ -6,7 +6,7 @@ import { api } from "@/lib/api/client";
 import { preload } from "@/lib/admin/prefetch";
 import { useInbox } from "./InboxProvider";
 
-export type FooterGroup = "services" | "company" | "sectors" | "legal";
+export type FooterGroup = "services" | "company" | "sectors" | "social" | "legal";
 export type FooterLink = { id: string; group: FooterGroup; label: string; href: string; order: number; newTab: boolean; published: boolean };
 
 type Ctx = {

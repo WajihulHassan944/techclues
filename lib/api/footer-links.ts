@@ -5,10 +5,11 @@ export type FooterLinkGroups = {
   services: FooterLinkItem[];
   company: FooterLinkItem[];
   sectors: FooterLinkItem[];
+  social: FooterLinkItem[];
   legal: FooterLinkItem[];
 };
 
-const EMPTY: FooterLinkGroups = { services: [], company: [], sectors: [], legal: [] };
+const EMPTY: FooterLinkGroups = { services: [], company: [], sectors: [], social: [], legal: [] };
 
 /** Server-side fetch for the public footer — no auth needed, revalidated periodically so admin edits show up. */
 export async function getPublicFooterLinks(): Promise<FooterLinkGroups> {

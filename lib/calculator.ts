@@ -1,7 +1,17 @@
-/** Options and pricing model for the MVP cost calculator (taken from the reference page's own logic). */
+/** Options and pricing model for the MVP cost calculator (taken from the reference page's own logic).
+ *  The values below are the fallback defaults — the live page fetches the admin-editable version
+ *  from /api/public/pricing (see lib/api/pricing.ts) and falls back to these if that call fails. */
 
 export type Option = { id: string; name: string; text: string; multiplier: number };
 export type Feature = { id: string; name: string; baseCost: number; weeks: number };
+export type CalculatorPricing = {
+  goals: Option[];
+  platforms: Option[];
+  features: Feature[];
+  paces: Option[];
+  setupFee: number;
+  floors: { mvp: number; full: number; update: number };
+};
 
 export const goals: Option[] = [
   { id: "mvp", name: "Start with an MVP", text: "Try the idea out on real users first.", multiplier: 1 },
@@ -42,19 +52,28 @@ export const paces: Option[] = [
   { id: "fast", name: "Fast track", text: "2–4 weeks", multiplier: 0.9 },
 ];
 
+export const DEFAULT_CALCULATOR_PRICING: CalculatorPricing = {
+  goals,
+  platforms,
+  features,
+  paces,
+  setupFee: 2500,
+  floors: { mvp: 5000, full: 10000, update: 0 },
+};
+
 export type Answers = { goal: string; platform: string; features: string[]; pace: string };
 
 const byId = <T extends { id: string }>(list: T[], id: string) => list.find((x) => x.id === id)!;
-const FLOOR: Record<string, number> = { mvp: 5000, full: 10000, update: 0 };
 
-export function estimate(a: Answers) {
-  const base = a.features.reduce((sum, id) => sum + byId(features, id).baseCost, 0);
-  const weeks = a.features.reduce((sum, id) => sum + byId(features, id).weeks, 0);
-  const paceMultiplier = byId(paces, a.pace).multiplier;
-  const setup = 2500 * Number(a.goal !== "update");
-  const build = Math.round(base * (byId(platforms, a.platform).multiplier * byId(goals, a.goal).multiplier * paceMultiplier));
+export function estimate(a: Answers, pricing: CalculatorPricing = DEFAULT_CALCULATOR_PRICING) {
+  const base = a.features.reduce((sum, id) => sum + byId(pricing.features, id).baseCost, 0);
+  const weeks = a.features.reduce((sum, id) => sum + byId(pricing.features, id).weeks, 0);
+  const paceMultiplier = byId(pricing.paces, a.pace).multiplier;
+  const setup = pricing.setupFee * Number(a.goal !== "update");
+  const build = Math.round(base * (byId(pricing.platforms, a.platform).multiplier * byId(pricing.goals, a.goal).multiplier * paceMultiplier));
   const minBuild = setup + Math.round(0.85 * build);
-  const topUp = a.features.length > 0 ? Math.max(0, FLOOR[a.goal] - minBuild) : 0;
+  const floor = pricing.floors[a.goal as keyof typeof pricing.floors] ?? 0;
+  const topUp = a.features.length > 0 ? Math.max(0, floor - minBuild) : 0;
   const w = Math.round((weeks * (a.platform === "both" ? 1 : 0.5)) / paceMultiplier);
   const minWeeks = Math.max(4, Math.round(0.8 * w));
   return {
@@ -67,9 +86,13 @@ export function estimate(a: Answers) {
 }
 
 export const gbp = (n: number) => `£${n.toLocaleString("en-GB")}`;
-export const labelOf = {
-  goal: (id: string) => byId(goals, id).name,
-  platform: (id: string) => byId(platforms, id).name,
-  pace: (id: string) => byId(paces, id).name,
-  feature: (id: string) => byId(features, id).name,
-};
+
+export function labelOfPricing(pricing: CalculatorPricing) {
+  return {
+    goal: (id: string) => byId(pricing.goals, id).name,
+    platform: (id: string) => byId(pricing.platforms, id).name,
+    pace: (id: string) => byId(pricing.paces, id).name,
+    feature: (id: string) => byId(pricing.features, id).name,
+  };
+}
+export const labelOf = labelOfPricing(DEFAULT_CALCULATOR_PRICING);

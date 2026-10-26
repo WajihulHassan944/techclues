@@ -1,4 +1,7 @@
 /* Expanded to match the reference's two-column Company/Resources layout plus a BUILD.ONE promo card. */
+import { getPublicPricing } from "@/lib/api/pricing";
+import { gbp } from "@/lib/calculator";
+
 type Item = { href: string; title: string; desc: string; icon: React.ReactNode };
 
 const COMPANY: Item[] = [
@@ -108,7 +111,8 @@ function Column({ heading, items }: { heading: string; items: Item[] }) {
   );
 }
 
-export default function CompanyPanel() {
+export default async function CompanyPanel() {
+  const { buildOne } = await getPublicPricing();
   return (
     <div data-nav-panel="true" className="hidden absolute right-0 top-full origin-top-right pt-4">
       <div className="grid w-[min(940px,calc(100vw-48px))] grid-cols-[1fr_300px] gap-2 rounded-[30px] border border-ink/[0.1] bg-white p-3 shadow-[0_30px_60px_-30px_rgba(14,15,49,0.3)]">
@@ -118,7 +122,7 @@ export default function CompanyPanel() {
         </div>
         <div className="flex flex-col justify-between rounded-[22px] bg-[linear-gradient(135deg,#eef4ff_0%,#dbe8ff_50%,#e2f4ff_100%)] p-6">
           <div>
-            <p className="text-[14px] font-medium text-brand">7 days · £499</p>
+            <p className="text-[14px] font-medium text-brand">{buildOne.durationLabel} · {gbp(buildOne.amount)}</p>
             <p className="mt-2 text-[21px] font-semibold tracking-[-0.02em] text-ink">BUILD.ONE</p>
             <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">Build and test your core feature in a week, before you invest in the full MVP.</p>
           </div>

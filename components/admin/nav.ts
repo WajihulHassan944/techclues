@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { IconBan, IconBlog, IconCalendar, IconDashboard, IconHelp, IconInbox, IconMail, IconSettings } from "./icons";
+import { IconBan, IconBlog, IconCalendar, IconCaseStudy, IconDashboard, IconHelp, IconInbox, IconLink2, IconMail, IconSettings } from "./icons";
 
 export type NavItem = { href: string; label: string; icon: ComponentType<{ className?: string }>; badge?: string; title?: string };
 export type NavGroup = { label: string; items: NavItem[] };
@@ -19,7 +19,9 @@ export const NAV: NavGroup[] = [
     label: "Content",
     items: [
       { href: "/admin/blog", label: "Blog", icon: IconBlog },
+      { href: "/admin/case-studies", label: "Case studies", icon: IconCaseStudy },
       { href: "/admin/faqs", label: "FAQs", icon: IconHelp },
+      { href: "/admin/footer-links", label: "Footer links", icon: IconLink2 },
       { href: "/admin/newsletter", label: "Newsletter", icon: IconMail },
     ],
   },

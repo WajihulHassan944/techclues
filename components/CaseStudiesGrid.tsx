@@ -1,65 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-type Study = { key: string; sector: string; services: string[]; card: React.ReactNode };
-
-const STUDIES: Study[] = [
-  {
-    key: "zamulk",
-    sector: "Real estate",
-    services: ["Web & Mobile Apps", "MVPs & Custom Platforms"],
-    card: (
-      <a href="https://zamulk.com" target="_blank" rel="noopener noreferrer" className="group block"><div className="relative aspect-[16/11] overflow-hidden rounded-[28px] sm:rounded-[32px]" style={{background: "linear-gradient(135deg, #0064ff 0%, #2f8cff 50%, #5cc2ff 100%)"}}><img alt="Screenshot of the Zamulk website" width={2000} height={1375} loading="lazy" className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]" style={{position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent"}} src="/images/case-studies/zamulk.jpg" /><span className="absolute inset-0 bg-[linear-gradient(to_top,rgba(14,15,49,0.75)_0%,rgba(14,15,49,0.1)_50%,rgba(14,15,49,0.2)_100%)]"></span><div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8"><div className="flex flex-wrap gap-2"><span className="rounded-full border border-white/25 bg-ink/40 px-3 py-1 text-[12px] font-medium text-white backdrop-blur-md">{"Real estate"}</span></div><div className="flex items-end justify-between gap-4"><p className="text-[clamp(1.7rem,3vw,2.8rem)] leading-none tracking-[-0.045em] text-white">Zamulk</p></div></div></div><div className="mt-5 flex items-start justify-between gap-6"><div><h2 className="text-[clamp(1.3rem,1.9vw,1.65rem)] leading-snug tracking-[-0.03em] text-ink">Zamulk</h2><p className="mt-1.5 text-[15px] text-ink-soft">A real estate portal for property listings, sales and rentals, built for the Pakistani market.</p><p className="mt-3 text-[13px] text-muted">Web & Mobile Apps · MVPs & Custom Platforms</p><span className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-ink transition-colors group-hover:text-brand">Visit site</span></div><span className="mt-1 grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-all duration-500 group-hover:rotate-45 group-hover:border-ink group-hover:bg-ink group-hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up-right size-5" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></span></div></a>
-    ),
-  },
-  {
-    key: "picktiles",
-    sector: "Retail & e-commerce",
-    services: ["E-commerce & Marketplaces", "Web & Mobile Apps"],
-    card: (
-      <a href="https://picktiles.com" target="_blank" rel="noopener noreferrer" className="group block"><div className="relative aspect-[16/11] overflow-hidden rounded-[28px] sm:rounded-[32px]" style={{background: "linear-gradient(135deg, #1f6b3a 0%, #35a05a 55%, #9fd9a8 100%)"}}><img alt="Screenshot of the Picktiles website" width={2000} height={1375} loading="lazy" className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]" style={{position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent"}} src="/images/case-studies/picktiles.jpg" /><span className="absolute inset-0 bg-[linear-gradient(to_top,rgba(14,15,49,0.75)_0%,rgba(14,15,49,0.1)_50%,rgba(14,15,49,0.2)_100%)]"></span><div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8"><div className="flex flex-wrap gap-2"><span className="rounded-full border border-white/25 bg-ink/40 px-3 py-1 text-[12px] font-medium text-white backdrop-blur-md">{"Retail & e-commerce"}</span></div><div className="flex items-end justify-between gap-4"><p className="text-[clamp(1.7rem,3vw,2.8rem)] leading-none tracking-[-0.045em] text-white">Picktiles</p></div></div></div><div className="mt-5 flex items-start justify-between gap-6"><div><h2 className="text-[clamp(1.3rem,1.9vw,1.65rem)] leading-snug tracking-[-0.03em] text-ink">Picktiles</h2><p className="mt-1.5 text-[15px] text-ink-soft">An online store for tiles, ceramics, sanitary fittings, laminates and installation materials.</p><p className="mt-3 text-[13px] text-muted">E-commerce & Marketplaces · Web & Mobile Apps</p><span className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-ink transition-colors group-hover:text-brand">Visit site</span></div><span className="mt-1 grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-all duration-500 group-hover:rotate-45 group-hover:border-ink group-hover:bg-ink group-hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up-right size-5" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></span></div></a>
-    ),
-  },
-  {
-    key: "oradent",
-    sector: "Healthcare",
-    services: ["Web & Mobile Apps", "UI/UX & Prototyping"],
-    card: (
-      <a href="https://oradentdentalclinic.com" target="_blank" rel="noopener noreferrer" className="group block"><div className="relative aspect-[16/11] overflow-hidden rounded-[28px] sm:rounded-[32px]" style={{background: "linear-gradient(135deg, #0064ff 0%, #2f8cff 50%, #5cc2ff 100%)"}}><img alt="Screenshot of the Oradent Dental Clinic website" width={2000} height={1375} loading="lazy" className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]" style={{position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent"}} src="/images/case-studies/oradent.jpg" /><span className="absolute inset-0 bg-[linear-gradient(to_top,rgba(14,15,49,0.75)_0%,rgba(14,15,49,0.1)_50%,rgba(14,15,49,0.2)_100%)]"></span><div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8"><div className="flex flex-wrap gap-2"><span className="rounded-full border border-white/25 bg-ink/40 px-3 py-1 text-[12px] font-medium text-white backdrop-blur-md">{"Healthcare"}</span></div><div className="flex items-end justify-between gap-4"><p className="text-[clamp(1.7rem,3vw,2.8rem)] leading-none tracking-[-0.045em] text-white">Oradent Dental Clinic</p></div></div></div><div className="mt-5 flex items-start justify-between gap-6"><div><h2 className="text-[clamp(1.3rem,1.9vw,1.65rem)] leading-snug tracking-[-0.03em] text-ink">Oradent Dental Clinic</h2><p className="mt-1.5 text-[15px] text-ink-soft">A dental clinic website with its services, two locations and online appointment booking.</p><p className="mt-3 text-[13px] text-muted">Web & Mobile Apps · UI/UX & Prototyping</p><span className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-ink transition-colors group-hover:text-brand">Visit site</span></div><span className="mt-1 grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-all duration-500 group-hover:rotate-45 group-hover:border-ink group-hover:bg-ink group-hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up-right size-5" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></span></div></a>
-    ),
-  },
-  {
-    key: "rytr",
-    sector: "AI & SaaS",
-    services: ["MVPs & Custom Platforms", "AI Integration & Automation"],
-    card: (
-      <a href="https://rytr.me" target="_blank" rel="noopener noreferrer" className="group block"><div className="relative aspect-[16/11] overflow-hidden rounded-[28px] sm:rounded-[32px]" style={{background: "linear-gradient(135deg, #ff5c35 0%, #ff8a5c 55%, #ffc9a8 100%)"}}><img alt="Screenshot of the Rytr website" width={2000} height={1375} loading="lazy" className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]" style={{position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent"}} src="/images/case-studies/rytr.jpg" /><span className="absolute inset-0 bg-[linear-gradient(to_top,rgba(14,15,49,0.75)_0%,rgba(14,15,49,0.1)_50%,rgba(14,15,49,0.2)_100%)]"></span><div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8"><div className="flex flex-wrap gap-2"><span className="rounded-full border border-white/25 bg-ink/40 px-3 py-1 text-[12px] font-medium text-white backdrop-blur-md">{"AI & SaaS"}</span></div><div className="flex items-end justify-between gap-4"><p className="text-[clamp(1.7rem,3vw,2.8rem)] leading-none tracking-[-0.045em] text-white">Rytr</p></div></div></div><div className="mt-5 flex items-start justify-between gap-6"><div><h2 className="text-[clamp(1.3rem,1.9vw,1.65rem)] leading-snug tracking-[-0.03em] text-ink">Rytr</h2><p className="mt-1.5 text-[15px] text-ink-soft">A cloud-based AI writing platform with 40+ content templates, autocomplete and team collaboration tools.</p><p className="mt-3 text-[13px] text-muted">MVPs & Custom Platforms · AI Integration & Automation</p><span className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-ink transition-colors group-hover:text-brand">Visit site</span></div><span className="mt-1 grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-all duration-500 group-hover:rotate-45 group-hover:border-ink group-hover:bg-ink group-hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up-right size-5" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></span></div></a>
-    ),
-  },
-  {
-    key: "latache",
-    sector: "Home services",
-    services: ["Web & Mobile Apps", "MVPs & Custom Platforms"],
-    card: (
-      <a href="https://xn--latche-yta.com" target="_blank" rel="noopener noreferrer" className="group block"><div className="relative aspect-[16/11] overflow-hidden rounded-[28px] sm:rounded-[32px]" style={{background: "linear-gradient(135deg, #6b3f26 0%, #a8653a 55%, #e3b07f 100%)"}}><img alt="Screenshot of the Latache website" width={2000} height={1375} loading="lazy" className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]" style={{position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent"}} src="/images/case-studies/latache.jpg" /><span className="absolute inset-0 bg-[linear-gradient(to_top,rgba(14,15,49,0.75)_0%,rgba(14,15,49,0.1)_50%,rgba(14,15,49,0.2)_100%)]"></span><div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8"><div className="flex flex-wrap gap-2"><span className="rounded-full border border-white/25 bg-ink/40 px-3 py-1 text-[12px] font-medium text-white backdrop-blur-md">{"Home services"}</span></div><div className="flex items-end justify-between gap-4"><p className="text-[clamp(1.7rem,3vw,2.8rem)] leading-none tracking-[-0.045em] text-white">Latache</p></div></div></div><div className="mt-5 flex items-start justify-between gap-6"><div><h2 className="text-[clamp(1.3rem,1.9vw,1.65rem)] leading-snug tracking-[-0.03em] text-ink">Latache</h2><p className="mt-1.5 text-[15px] text-ink-soft">A home services marketplace connecting homeowners with vetted local professionals for cleaning, repairs and moving help.</p><p className="mt-3 text-[13px] text-muted">Web & Mobile Apps · MVPs & Custom Platforms</p><span className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-ink transition-colors group-hover:text-brand">Visit site</span></div><span className="mt-1 grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-all duration-500 group-hover:rotate-45 group-hover:border-ink group-hover:bg-ink group-hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up-right size-5" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></span></div></a>
-    ),
-  },
-  {
-    key: "copy-ai",
-    sector: "AI & SaaS",
-    services: ["MVPs & Custom Platforms", "AI Integration & Automation"],
-    card: (
-      <a href="https://copy.ai" target="_blank" rel="noopener noreferrer" className="group block"><div className="relative aspect-[16/11] overflow-hidden rounded-[28px] sm:rounded-[32px]" style={{background: "linear-gradient(135deg, #1a0b2e 0%, #4c2a85 55%, #8a63d2 100%)"}}><img alt="Screenshot of the Copy.ai website" width={2000} height={1375} loading="lazy" className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]" style={{position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent"}} src="/images/case-studies/copy-ai.jpg" /><span className="absolute inset-0 bg-[linear-gradient(to_top,rgba(14,15,49,0.75)_0%,rgba(14,15,49,0.1)_50%,rgba(14,15,49,0.2)_100%)]"></span><div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8"><div className="flex flex-wrap gap-2"><span className="rounded-full border border-white/25 bg-ink/40 px-3 py-1 text-[12px] font-medium text-white backdrop-blur-md">{"AI & SaaS"}</span></div><div className="flex items-end justify-between gap-4"><p className="text-[clamp(1.7rem,3vw,2.8rem)] leading-none tracking-[-0.045em] text-white">{"Copy.ai"}</p></div></div></div><div className="mt-5 flex items-start justify-between gap-6"><div><h2 className="text-[clamp(1.3rem,1.9vw,1.65rem)] leading-snug tracking-[-0.03em] text-ink">{"Copy.ai"}</h2><p className="mt-1.5 text-[15px] text-ink-soft">An AI-powered copywriting and content generation platform with branded AI agents and automated workflows.</p><p className="mt-3 text-[13px] text-muted">MVPs & Custom Platforms · AI Integration & Automation</p><span className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-ink transition-colors group-hover:text-brand">Visit site</span></div><span className="mt-1 grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-all duration-500 group-hover:rotate-45 group-hover:border-ink group-hover:bg-ink group-hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up-right size-5" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></span></div></a>
-    ),
-  },
-];
+import type { PublicCaseStudy } from "@/lib/api/case-studies";
+import { industryLabel, serviceLabel } from "@/lib/case-study-meta";
 
 const ALL_SECTORS = "All sectors";
 const ALL_SERVICES = "All services";
-const SECTORS = [ALL_SECTORS, ...Array.from(new Set(STUDIES.map((s) => s.sector)))];
-const SERVICE_ORDER = ["MVPs & Custom Platforms", "Prototype to Production", "AI Integration & Automation", "Web & Mobile Apps", "UI/UX & Prototyping", "Low-Code / No-Code", "E-commerce & Marketplaces", "Performance Marketing", "Strategy & Brand Identity"];
-const SERVICES = [ALL_SERVICES, ...SERVICE_ORDER.filter((t) => STUDIES.some((s) => s.services.includes(t)))];
 
 const cn = (...a: (string | false | undefined)[]) => a.filter(Boolean).join(" ");
 
@@ -93,7 +39,6 @@ function Dropdown({ label, value, options, onChange }: { label: string; value: s
     };
   }, [open]);
 
-  // Keep the list mounted briefly so it can fade out.
   useEffect(() => {
     if (open) {
       setShown(true);
@@ -148,19 +93,62 @@ function Dropdown({ label, value, options, onChange }: { label: string; value: s
   );
 }
 
-/** The case study grid with its Sector and Service filters. */
-export default function CaseStudiesGrid() {
+function Card({ study }: { study: PublicCaseStudy }) {
+  return (
+    <a href={`/case-studies/${study.slug}`} className="group block">
+      <div className="relative aspect-[16/11] overflow-hidden rounded-[28px] sm:rounded-[32px] bg-[linear-gradient(135deg,#0064ff_0%,#2f8cff_50%,#5cc2ff_100%)]">
+        <img alt={study.coverAlt || study.title} loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]" src={study.cover} />
+        <span className="absolute inset-0 bg-[linear-gradient(to_top,rgba(14,15,49,0.75)_0%,rgba(14,15,49,0.1)_50%,rgba(14,15,49,0.2)_100%)]"></span>
+        <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8">
+          <div className="flex flex-wrap gap-2">
+            {study.featured && <span className="rounded-full border border-white/25 bg-brand/80 px-3 py-1 text-[12px] font-medium text-white backdrop-blur-md">Featured</span>}
+            <span className="rounded-full border border-white/25 bg-ink/40 px-3 py-1 text-[12px] font-medium text-white backdrop-blur-md">{industryLabel(study.industry)}</span>
+          </div>
+          <div className="flex items-end justify-between gap-4">
+            <p className="text-[clamp(1.7rem,3vw,2.8rem)] leading-none tracking-[-0.045em] text-white">{study.client}</p>
+          </div>
+        </div>
+      </div>
+      <div className="mt-5 flex items-start justify-between gap-6">
+        <div>
+          <h2 className="text-[clamp(1.3rem,1.9vw,1.65rem)] leading-snug tracking-[-0.03em] text-ink">{study.title}</h2>
+          <p className="mt-1.5 text-[15px] text-ink-soft">{study.excerpt}</p>
+          <p className="mt-3 text-[13px] text-muted">{study.services.map(serviceLabel).join(" · ")}</p>
+          <span className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-ink transition-colors group-hover:text-brand">Read the case study</span>
+        </div>
+        <span className="mt-1 grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-all duration-500 group-hover:rotate-45 group-hover:border-ink group-hover:bg-ink group-hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up-right size-5" aria-hidden="true">
+            <path d="M7 7h10v10"></path>
+            <path d="M7 17 17 7"></path>
+          </svg>
+        </span>
+      </div>
+    </a>
+  );
+}
+
+/** The case study grid with its Sector and Service filters. `studies` comes from the public API
+ *  (see lib/api/case-studies.ts) — only published case studies are ever passed in. */
+export default function CaseStudiesGrid({ studies }: { studies: PublicCaseStudy[] }) {
   const [sector, setSector] = useState(ALL_SECTORS);
   const [service, setService] = useState(ALL_SERVICES);
-  const list = STUDIES.filter((s) => (sector === ALL_SECTORS || s.sector === sector) && (service === ALL_SERVICES || s.services.includes(service)));
+
+  const sectors = [ALL_SECTORS, ...Array.from(new Set(studies.map((s) => industryLabel(s.industry))))];
+  const serviceList = [ALL_SERVICES, ...Array.from(new Set(studies.flatMap((s) => s.services.map(serviceLabel))))];
+
+  const list = studies.filter((s) => (sector === ALL_SECTORS || industryLabel(s.industry) === sector) && (service === ALL_SERVICES || s.services.map(serviceLabel).includes(service)));
   const filtered = sector !== ALL_SECTORS || service !== ALL_SERVICES;
+
+  if (studies.length === 0) {
+    return <p className="text-[16px] text-ink-soft">New case studies are on the way — check back soon.</p>;
+  }
 
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-ink/10 pb-6">
         <div className="flex flex-wrap items-center gap-2.5">
-          <Dropdown label="Sector" value={sector} options={SECTORS} onChange={setSector} />
-          <Dropdown label="Service" value={service} options={SERVICES} onChange={setService} />
+          <Dropdown label="Sector" value={sector} options={sectors} onChange={setSector} />
+          <Dropdown label="Service" value={service} options={serviceList} onChange={setService} />
           {filtered && (
             <button
               type="button"
@@ -178,14 +166,10 @@ export default function CaseStudiesGrid() {
           {list.length} {list.length === 1 ? "project" : "projects"}
         </p>
       </div>
-      <p className="mt-5 flex items-start gap-2 text-[14px] leading-relaxed text-muted">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-lock mt-[3px] size-3.5 shrink-0 text-ink/40" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-        Every project here is live. Open a card to visit the real site and see the finished work for yourself.
-      </p>
       <div className="mt-10 grid gap-x-6 gap-y-14 md:grid-cols-2 lg:mt-12">
         {list.map((s) => (
-          <div key={s.key} className="cs-in">
-            {s.card}
+          <div key={s._id} className="cs-in">
+            <Card study={s} />
           </div>
         ))}
       </div>

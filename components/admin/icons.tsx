@@ -139,6 +139,19 @@ export const IconHelp = (p: P) => (
     <path d="M12 17h.01" />
   </Svg>
 );
+export const IconLink2 = (p: P) => (
+  <Svg {...p}>
+    <path d="M9 17H7A5 5 0 0 1 7 7h2" />
+    <path d="M15 7h2a5 5 0 1 1 0 10h-2" />
+    <line x1="8" x2="16" y1="12" y2="12" />
+  </Svg>
+);
+export const IconCaseStudy = (p: P) => (
+  <Svg {...p}>
+    <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+  </Svg>
+);
 export const IconCheck = (p: P) => (
   <Svg {...p} className={p.className ?? "adm-ic"}>
     <path d="M20 6 9 17l-5-5" />

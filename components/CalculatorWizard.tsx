@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { calculatorIcons } from "@/lib/calculator-icons";
-import { estimate, features, goals, gbp, labelOf, paces, platforms, type Answers, type Option } from "@/lib/calculator";
+import { estimate, gbp, labelOfPricing, DEFAULT_CALCULATOR_PRICING, type Answers, type CalculatorPricing, type Option } from "@/lib/calculator";
 import { api, ApiError } from "@/lib/api/client";
 
 const STEPS = ["Details", "Goal", "Platform", "Features", "Timeline", "Estimate"];
@@ -105,8 +105,20 @@ function OptionGrid({ kind, options, value, onPick }: { kind: string; options: O
   );
 }
 
-/** The six-step cost calculator: details, goal, platform, features, timeline and the estimate. */
-export default function CalculatorWizard() {
+/** The six-step cost calculator: details, goal, platform, features, timeline and the estimate.
+ *  `pricing` comes from the admin-editable model (see lib/api/pricing.ts); omit it to use the
+ *  frontend's own hardcoded defaults. */
+const DEFAULT_BUILD_ONE = { amount: 499, durationLabel: "7 days" };
+
+export default function CalculatorWizard({
+  pricing = DEFAULT_CALCULATOR_PRICING,
+  buildOne = DEFAULT_BUILD_ONE,
+}: {
+  pricing?: CalculatorPricing;
+  buildOne?: { amount: number; durationLabel: string };
+}) {
+  const { goals, platforms, features, paces } = pricing;
+  const labelOf = labelOfPricing(pricing);
   const [step, setStep] = useState(0);
   const [details, setDetails] = useState<Details>(EMPTY);
   const [unlocked, setUnlocked] = useState(false);
@@ -116,7 +128,7 @@ export default function CalculatorWizard() {
 
   const validDetails = details.name.trim().length > 0 && EMAIL.test(details.email.trim());
   const hasFeatures = a.features.length > 0;
-  const result = unlocked && hasFeatures ? estimate(a) : null;
+  const result = unlocked && hasFeatures ? estimate(a, pricing) : null;
   const enabled = (i: number) => i === 0 || (i <= 3 ? unlocked : unlocked && hasFeatures);
   const set = <K extends keyof Answers>(k: K, v: Answers[K]) => setA((p) => ({ ...p, [k]: v }));
   const toggleFeature = (id: string) => set("features", a.features.includes(id) ? a.features.filter((x) => x !== id) : [...a.features, id]);
@@ -423,7 +435,7 @@ export default function CalculatorWizard() {
           </a>
           <p className="mt-4 text-center text-[12px] text-white/45">A planning estimate, not a quote.</p>
           <a href="/zero-one" className="group mt-5 block border-t border-white/10 pt-5 text-center text-[13.5px] leading-relaxed text-white/70 transition-colors hover:text-white">
-            Not ready for a full MVP? Try out your core feature with <span className="font-medium text-white">BUILD.ONE</span> for £499
+            Not ready for a full MVP? Try out your core feature with <span className="font-medium text-white">BUILD.ONE</span> for {gbp(buildOne.amount)}
             <Arrow cls="ml-1 inline size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
           </a>
         </div>

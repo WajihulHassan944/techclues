@@ -10,7 +10,9 @@ import { NAV, itemFor } from "./nav";
 import InboxProvider, { preloadInbox, useInbox } from "./InboxProvider";
 import BookingsProvider, { preloadBookings, useBookings } from "./BookingsProvider";
 import BlogProvider, { preloadBlog } from "./BlogProvider";
+import CaseStudyProvider, { preloadCaseStudies } from "./CaseStudyProvider";
 import FaqProvider, { preloadFaqs } from "./FaqProvider";
+import FooterLinkProvider, { preloadFooterLinks } from "./FooterLinkProvider";
 import NewsletterProvider, { preloadNewsletter, useNewsletter } from "./NewsletterProvider";
 import SettingsProvider, { preloadSettings } from "./SettingsProvider";
 import { preloadDashboardStats } from "./Dashboard";
@@ -31,7 +33,9 @@ function prefetchAdminData() {
   preloadInbox();
   preloadBookings();
   preloadBlog();
+  preloadCaseStudies();
   preloadFaqs();
+  preloadFooterLinks();
   preloadNewsletter();
   preloadSettings();
   preloadNotifications();
@@ -146,7 +150,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     <InboxProvider>
     <BookingsProvider>
     <BlogProvider>
+    <CaseStudyProvider>
     <FaqProvider>
+    <FooterLinkProvider>
     <NewsletterProvider>
     <SettingsProvider>
     <RealtimeBridge />
@@ -232,7 +238,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     </div>
     </SettingsProvider>
     </NewsletterProvider>
+    </FooterLinkProvider>
     </FaqProvider>
+    </CaseStudyProvider>
     </BlogProvider>
     </BookingsProvider>
     </InboxProvider>

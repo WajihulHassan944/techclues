@@ -18,8 +18,8 @@ import { useNewsletter } from "./NewsletterProvider";
 import { useSettings } from "./SettingsProvider";
 import { IconPlus, IconShield } from "./icons";
 
-type Tab = "notifications" | "templates" | "security" | "privacy" | "activity";
-const TABS: [Tab, string][] = [["notifications", "Notifications"], ["templates", "Reply templates"], ["security", "Password & security"], ["privacy", "Privacy & data"], ["activity", "Activity log"]];
+type Tab = "notifications" | "templates" | "pricing" | "security" | "privacy" | "activity";
+const TABS: [Tab, string][] = [["notifications", "Notifications"], ["templates", "Reply templates"], ["pricing", "Pricing"], ["security", "Password & security"], ["privacy", "Privacy & data"], ["activity", "Activity log"]];
 
 function Switch({ label, hint, checked, onChange }: { label: string; hint?: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -682,6 +682,127 @@ function ActivityLog() {
   );
 }
 
+/* ---------------- pricing ---------------- */
+function Pricing() {
+  const { settings, update } = useSettings();
+  const [draft, setDraft] = useState(settings.calculatorPricing);
+  const [buildOne, setBuildOne] = useState(settings.buildOnePrice);
+  const dirty = JSON.stringify(draft) !== JSON.stringify(settings.calculatorPricing) || JSON.stringify(buildOne) !== JSON.stringify(settings.buildOnePrice);
+
+  const setFeature = (id: string, patch: Partial<{ baseCost: number; weeks: number }>) =>
+    setDraft((d) => ({ ...d, features: d.features.map((f) => (f.id === id ? { ...f, ...patch } : f)) }));
+  const setMultiplier = (list: "goals" | "platforms" | "paces", id: string, multiplier: number) =>
+    setDraft((d) => ({ ...d, [list]: d[list].map((o) => (o.id === id ? { ...o, multiplier } : o)) }));
+
+  const save = () => {
+    update({ calculatorPricing: draft, buildOnePrice: buildOne }, "Pricing saved");
+  };
+
+  return (
+    <div className="adm-avail">
+      <section className="adm-panel" aria-labelledby="pr-build1">
+        <h3 id="pr-build1">BUILD.ONE price</h3>
+        <p className="adm-muted">Shown in the nav, footer and on the /zero-one page.</p>
+        <div className="adm-fields">
+          <div className="adm-field">
+            <label htmlFor="pr-amount">Price (£)</label>
+            <input id="pr-amount" type="number" min={0} className="adm-input adm-input-sm" value={buildOne.amount} onChange={(e) => setBuildOne((b) => ({ ...b, amount: Number(e.target.value) }))} />
+          </div>
+          <div className="adm-field">
+            <label htmlFor="pr-duration">Duration label</label>
+            <input id="pr-duration" className="adm-input adm-input-sm" value={buildOne.durationLabel} onChange={(e) => setBuildOne((b) => ({ ...b, durationLabel: e.target.value }))} placeholder="7 days" />
+          </div>
+        </div>
+      </section>
+
+      <section className="adm-panel" aria-labelledby="pr-setup">
+        <h3 id="pr-setup">MVP cost calculator — base costs</h3>
+        <div className="adm-fields">
+          <div className="adm-field">
+            <label htmlFor="pr-setupfee">Setup fee (£)</label>
+            <input id="pr-setupfee" type="number" min={0} className="adm-input adm-input-sm" value={draft.setupFee} onChange={(e) => setDraft((d) => ({ ...d, setupFee: Number(e.target.value) }))} />
+          </div>
+          <div className="adm-field">
+            <label htmlFor="pr-floor-mvp">Minimum quote — MVP (£)</label>
+            <input id="pr-floor-mvp" type="number" min={0} className="adm-input adm-input-sm" value={draft.floors.mvp} onChange={(e) => setDraft((d) => ({ ...d, floors: { ...d.floors, mvp: Number(e.target.value) } }))} />
+          </div>
+          <div className="adm-field">
+            <label htmlFor="pr-floor-full">Minimum quote — full product (£)</label>
+            <input id="pr-floor-full" type="number" min={0} className="adm-input adm-input-sm" value={draft.floors.full} onChange={(e) => setDraft((d) => ({ ...d, floors: { ...d.floors, full: Number(e.target.value) } }))} />
+          </div>
+          <div className="adm-field">
+            <label htmlFor="pr-floor-update">Minimum quote — update (£)</label>
+            <input id="pr-floor-update" type="number" min={0} className="adm-input adm-input-sm" value={draft.floors.update} onChange={(e) => setDraft((d) => ({ ...d, floors: { ...d.floors, update: Number(e.target.value) } }))} />
+          </div>
+        </div>
+      </section>
+
+      <section className="adm-panel" aria-labelledby="pr-features">
+        <h3 id="pr-features">Feature costs</h3>
+        <p className="adm-muted">What each selectable feature adds to the estimate.</p>
+        <ul className="adm-rowlist adm-rowlist-tight">
+          {draft.features.map((f) => (
+            <li key={f.id}>
+              <span>
+                <strong>{f.name}</strong>
+              </span>
+              <span className="adm-dlg-foot-btns">
+                <label className="sr-only" htmlFor={`pr-f-${f.id}-cost`}>
+                  {f.name} cost
+                </label>
+                <input id={`pr-f-${f.id}-cost`} type="number" min={0} className="adm-input adm-input-sm" style={{ width: 100 }} value={f.baseCost} onChange={(e) => setFeature(f.id, { baseCost: Number(e.target.value) })} />
+                <label className="sr-only" htmlFor={`pr-f-${f.id}-weeks`}>
+                  {f.name} weeks
+                </label>
+                <input id={`pr-f-${f.id}-weeks`} type="number" min={0} className="adm-input adm-input-sm" style={{ width: 70 }} value={f.weeks} onChange={(e) => setFeature(f.id, { weeks: Number(e.target.value) })} />
+                <small className="adm-muted">wks</small>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="adm-panel" aria-labelledby="pr-mult">
+        <h3 id="pr-mult">Goal, platform & pace multipliers</h3>
+        <p className="adm-muted">Multiply the feature total — e.g. a full product or a faster pace costs more.</p>
+        {(["goals", "platforms", "paces"] as const).map((key) => (
+          <div key={key} className="adm-field" style={{ marginTop: 16 }}>
+            <label>{key === "goals" ? "Goal" : key === "platforms" ? "Platform" : "Pace"}</label>
+            <ul className="adm-rowlist adm-rowlist-tight">
+              {draft[key].map((o) => (
+                <li key={o.id}>
+                  <span>
+                    <strong>{o.name}</strong>
+                    <small>{o.text}</small>
+                  </span>
+                  <span className="adm-dlg-foot-btns">
+                    <label className="sr-only" htmlFor={`pr-m-${key}-${o.id}`}>
+                      {o.name} multiplier
+                    </label>
+                    <input id={`pr-m-${key}-${o.id}`} type="number" min={0} step={0.1} className="adm-input adm-input-sm" style={{ width: 80 }} value={o.multiplier} onChange={(e) => setMultiplier(key, o.id, Number(e.target.value))} />
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      <div className="adm-savebar" data-dirty={dirty} role="region" aria-label="Save changes">
+        <span>{dirty ? "You have unsaved changes." : "All changes saved."}</span>
+        <span className="adm-dlg-foot-btns">
+          <button type="button" className="adm-mini" disabled={!dirty} onClick={() => { setDraft(settings.calculatorPricing); setBuildOne(settings.buildOnePrice); }}>
+            Discard
+          </button>
+          <button type="button" className="adm-btn adm-btn-sm" disabled={!dirty} onClick={save}>
+            Save changes
+          </button>
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function SettingsView() {
   const [tab, setTab] = useState<Tab>("notifications");
   return (
@@ -695,6 +816,7 @@ export default function SettingsView() {
       </div>
       {tab === "notifications" && <Notifications />}
       {tab === "templates" && <Templates />}
+      {tab === "pricing" && <Pricing />}
       {tab === "security" && <Security />}
       {tab === "privacy" && <Privacy />}
       {tab === "activity" && <ActivityLog />}

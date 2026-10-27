@@ -167,7 +167,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <aside className="adm-side" data-open={drawer} aria-label="Admin navigation">
         <div className="adm-brand">
           <Link href="/admin" aria-label="TechClues admin home">
-            <img src="/images/techclues-logo.png" alt="TechClues" width={77} height={48} style={{ height: 48, width: "auto" }} />
+            <img src="/images/techclues-logo.png" alt="TechClues" width={111} height={70} style={{ height: 70, width: "auto" }} />
           </Link>
           <button type="button" className="adm-icon-btn adm-menu-btn" aria-label="Close menu" onClick={() => setDrawer(false)} style={{ width: 38, height: 38 }}>
             <IconClose />

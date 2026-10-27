@@ -68,7 +68,7 @@ export default function ResetPasswordForm() {
   return (
     <div className="adm-login">
       <div className="adm-login-card adm-fadein">
-        <img src="/images/techclues-logo.png" alt="TechClues" width={140} height={88} />
+        <img src="/images/techclues-logo.png" alt="TechClues" width={200} height={125} />
         <h1>Set a new password</h1>
         <p className="adm-note">for {email}</p>
         <form className="adm-form" onSubmit={submit} noValidate>

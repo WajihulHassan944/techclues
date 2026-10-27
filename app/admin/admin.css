@@ -60,7 +60,7 @@
   padding: 0 8px 20px;
 }
 .adm-brand img {
-  height: 48px;
+  height: 70px;
   width: auto;
   display: block;
 }
@@ -540,7 +540,7 @@
 }
 .adm-login-card img {
   display: block;
-  height: 88px;
+  height: 125px;
   width: auto;
   margin-bottom: 32px;
 }
@@ -742,7 +742,7 @@
 }
 .adm-load-card img {
   display: block;
-  height: 88px;
+  height: 125px;
   width: auto;
   margin: 0 auto 28px;
 }

@@ -165,6 +165,12 @@ export const IconUsers = (p: P) => (
     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
   </Svg>
 );
+export const IconHome = (p: P) => (
+  <Svg {...p}>
+    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    <path d="M9 22V12h6v10" />
+  </Svg>
+);
 export const IconServices = (p: P) => (
   <Svg {...p}>
     <rect width="7" height="7" x="3" y="3" rx="1" />

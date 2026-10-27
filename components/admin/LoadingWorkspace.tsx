@@ -52,7 +52,7 @@ export default function LoadingWorkspace({ run, onDone, onError }: Props) {
   return (
     <div className="adm-login" role="status" aria-live="polite">
       <div className="adm-load-card adm-fadein">
-        <img src="/images/techclues-logo.png" alt="TechClues" width={235} height={34} />
+        <img src="/images/techclues-logo.png" alt="TechClues" width={140} height={88} />
         <div className="adm-load-ring" aria-hidden="true">
           <span className="adm-load-dot adm-load-dot-l" />
           <span className="adm-load-ring-outer" />

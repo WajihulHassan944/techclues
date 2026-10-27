@@ -89,7 +89,7 @@ export default function LoginForm() {
     return (
       <div className="adm-login">
         <div className="adm-login-card adm-fadein">
-          <img src="/images/techclues-logo.png" alt="TechClues" width={200} height={125} />
+          <img src="/images/techclues-logo.png" alt="TechClues" width={302} height={125} />
           <h1>Two-factor verification</h1>
           <form className="adm-form" onSubmit={submitCode} noValidate>
             <div className="adm-field">
@@ -136,7 +136,7 @@ export default function LoginForm() {
   return (
     <div className="adm-login">
       <div className="adm-login-card adm-fadein">
-        <img src="/images/techclues-logo.png" alt="TechClues" width={200} height={125} />
+        <img src="/images/techclues-logo.png" alt="TechClues" width={302} height={125} />
         <h1>Admin sign in</h1>
         <form className="adm-form" onSubmit={submit} noValidate>
           <div className="adm-field">

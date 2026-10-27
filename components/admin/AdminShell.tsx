@@ -11,6 +11,7 @@ import InboxProvider, { preloadInbox, useInbox } from "./InboxProvider";
 import BookingsProvider, { preloadBookings, useBookings } from "./BookingsProvider";
 import BlogProvider, { preloadBlog } from "./BlogProvider";
 import CaseStudyProvider, { preloadCaseStudies } from "./CaseStudyProvider";
+import ServiceProvider, { preloadServices } from "./ServiceProvider";
 import FaqProvider, { preloadFaqs } from "./FaqProvider";
 import FooterLinkProvider, { preloadFooterLinks } from "./FooterLinkProvider";
 import TestimonialProvider, { preloadTestimonials } from "./TestimonialProvider";
@@ -35,6 +36,7 @@ function prefetchAdminData() {
   preloadBookings();
   preloadBlog();
   preloadCaseStudies();
+  preloadServices();
   preloadFaqs();
   preloadFooterLinks();
   preloadTestimonials();
@@ -153,6 +155,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     <BookingsProvider>
     <BlogProvider>
     <CaseStudyProvider>
+    <ServiceProvider>
     <FaqProvider>
     <FooterLinkProvider>
     <TestimonialProvider>
@@ -250,6 +253,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     </TestimonialProvider>
     </FooterLinkProvider>
     </FaqProvider>
+    </ServiceProvider>
     </CaseStudyProvider>
     </BlogProvider>
     </BookingsProvider>

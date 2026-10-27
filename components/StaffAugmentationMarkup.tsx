@@ -3,6 +3,7 @@ import Accordion from "./Accordion";
 import StaffCapabilities from "./StaffCapabilities";
 import StaffSeatForm from "./StaffSeatForm";
 import { getFaqs } from "@/lib/api/faqs";
+import { getPublicService } from "@/lib/api/services";
 import { fallbackFaqs } from "@/lib/faq-fallbacks/staff-augmentation";
 
 const SEC = "py-[clamp(56px,7vw,110px)]";
@@ -66,7 +67,7 @@ const CASES = [
 ];
 
 export default async function StaffAugmentationMarkup() {
-  const serviceFaqs = await getFaqs();
+  const [serviceFaqs, service] = await Promise.all([getFaqs(), getPublicService("staff-augmentation")]);
   const faqs = serviceFaqs["staff-augmentation"]?.length ? serviceFaqs["staff-augmentation"] : fallbackFaqs;
   return (
     <main>
@@ -82,17 +83,13 @@ export default async function StaffAugmentationMarkup() {
             <span className="text-ink">Staff Augmentation</span>
           </nav>
           <h1 className="mt-6 max-w-[1100px] text-ink">
-            <span className="block text-[15px] font-medium tracking-normal text-brand sm:text-[16px]">Staff augmentation</span>
+            <span className="block text-[15px] font-medium tracking-normal text-brand sm:text-[16px]">{service?.heroEyebrow ?? "Staff augmentation"}</span>
             <span className="mt-4 block overflow-hidden pb-[0.12em] text-[clamp(2.4rem,5.4vw,5.5rem)] font-normal leading-[1.03] tracking-[-0.05em]">
-              <span className="svc-rise block" style={{ "--d": "0.1s" } as React.CSSProperties}>
-                Our engineers and AI team, inside yours.
-              </span>
+              <span className="svc-rise block" style={{ "--d": "0.1s" } as React.CSSProperties}>{service?.heroHeadline ?? "\r\n                Our engineers and AI team, inside yours.\r\n              "}</span>
             </span>
           </h1>
           <div className="svc-in flex flex-col items-center" style={{ "--d": "0.3s", "--y": "16px" } as React.CSSProperties}>
-            <p className="mt-4 max-w-[620px] text-[18px] leading-relaxed text-ink-soft">
-              From the first day, vetted engineers and AI specialists sit within your team, so architectural choices and lessons from production stay in your organisation.
-            </p>
+            <p className="mt-4 max-w-[620px] text-[18px] leading-relaxed text-ink-soft">{service?.heroSubheading ?? "\r\n              From the first day, vetted engineers and AI specialists sit within your team, so architectural choices and lessons from production stay in your organisation.\r\n            "}</p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
               <a href="#get-started" data-cta="service-hero-scope-team" className="group inline-flex h-13 items-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand">
                 Define your team

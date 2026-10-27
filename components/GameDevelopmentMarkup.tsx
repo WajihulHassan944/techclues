@@ -9,6 +9,7 @@ import GameCollage from "./GameCollage";
 import StaffSeatForm from "./StaffSeatForm";
 import { Arrow, Eyebrow, H2, SEC, WRAP, rv } from "./ServiceParts";
 import { getFaqs } from "@/lib/api/faqs";
+import { getPublicService } from "@/lib/api/services";
 import { fallbackFaqs } from "@/lib/faq-fallbacks/game-development";
 
 const STATS: [string, string][] = [
@@ -73,7 +74,7 @@ const TOOLS: [string, string[]][] = [
 const NEEDS = ["Just a concept", "Prototype or vertical slice built", "In production, need capacity", "Live title, need live ops"];
 
 export default async function GameDevelopmentMarkup() {
-  const serviceFaqs = await getFaqs();
+  const [serviceFaqs, service] = await Promise.all([getFaqs(), getPublicService("game-development")]);
   const faqs = serviceFaqs["game-development"]?.length ? serviceFaqs["game-development"] : fallbackFaqs;
   return (
     <main className="gdp">
@@ -91,17 +92,13 @@ export default async function GameDevelopmentMarkup() {
             <span className="text-white">Game Creation</span>
           </nav>
           <h1 className="mt-7 max-w-[980px] text-white">
-            <span className="gd-kicker">Game creation</span>
+            <span className="gd-kicker">{service?.heroEyebrow ?? "Game creation"}</span>
             <span className="mt-5 block overflow-hidden pb-[0.12em] text-[clamp(2.7rem,6.2vw,6.4rem)] font-normal leading-[1.02] tracking-[-0.05em]">
-              <span className="svc-rise block" style={{ "--d": "0.1s" } as React.CSSProperties}>
-                Game builds that launch and scale well.
-              </span>
+              <span className="svc-rise block" style={{ "--d": "0.1s" } as React.CSSProperties}>{service?.heroHeadline ?? "\r\n                Game builds that launch and scale well.\r\n              "}</span>
             </span>
           </h1>
           <div className="svc-in" style={{ "--d": "0.3s", "--y": "16px" } as React.CSSProperties}>
-            <p className="mt-6 max-w-[620px] text-[18px] leading-relaxed text-white/75">
-              Tap limitless possibilities through professional-grade game production, whether in Unreal Engine, Unity, UEFN, VR and XR or the metaverse, covering everything from initial concept to release and live ops.
-            </p>
+            <p className="mt-6 max-w-[620px] text-[18px] leading-relaxed text-white/75">{service?.heroSubheading ?? "\r\n              Tap limitless possibilities through professional-grade game production, whether in Unreal Engine, Unity, UEFN, VR and XR or the metaverse, covering everything from initial concept to release and live ops.\r\n            "}</p>
             <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
               <a href="#get-started" data-cta="service-hero-game-project" className="group inline-flex h-13 items-center gap-2 rounded-full bg-white pl-6 pr-5 text-[15px] font-medium text-ink transition-colors duration-300 hover:bg-brand hover:text-white">
                 Talk through your game idea

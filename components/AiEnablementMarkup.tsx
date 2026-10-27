@@ -2,9 +2,10 @@
 import Accordion from "./Accordion";
 import AiAtWork from "./AiAtWork";
 import { getFaqs } from "@/lib/api/faqs";
+import { getPublicService } from "@/lib/api/services";
 
 export default async function AiEnablementMarkup() {
-  const serviceFaqs = await getFaqs();
+  const [serviceFaqs, service] = await Promise.all([getFaqs(), getPublicService("ai-enablement")]);
   return (
     <>
 <main>
@@ -12,10 +13,10 @@ export default async function AiEnablementMarkup() {
         <section className="pb-4 pt-[124px] sm:pt-[150px] lg:pt-[170px]">
             <div className="mx-auto w-full max-w-[1680px] px-5 sm:px-8 lg:px-[60px] flex flex-col items-center text-center">
                 <nav aria-label="Breadcrumb" className="svc-in flex items-center gap-1.5 text-[14px] text-muted" style={{"--d": "0s", "--y": "10px"} as React.CSSProperties}><a className="transition-colors hover:text-ink" href="/services">Services</a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right size-3.5" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg><span className="text-ink">{"Automation & AI Integration"}</span></nav>
-                <h1 className="mt-6 max-w-[1100px] text-ink"><span className="block text-[15px] font-medium tracking-normal text-brand sm:text-[16px]">Services for AI integration</span><span className="mt-4 block overflow-hidden pb-[0.12em] text-[clamp(2.4rem,5.4vw,5.5rem)] font-normal leading-[1.03] tracking-[-0.05em]"><span className="svc-rise block" style={{"--d": "0.1s"} as React.CSSProperties}>AI worth its place inside your product.</span></span>
+                <h1 className="mt-6 max-w-[1100px] text-ink"><span className="block text-[15px] font-medium tracking-normal text-brand sm:text-[16px]">{service?.heroEyebrow ?? "Services for AI integration"}</span><span className="mt-4 block overflow-hidden pb-[0.12em] text-[clamp(2.4rem,5.4vw,5.5rem)] font-normal leading-[1.03] tracking-[-0.05em]"><span className="svc-rise block" style={{"--d": "0.1s"} as React.CSSProperties}>{service?.heroHeadline ?? "AI worth its place inside your product."}</span></span>
                 </h1>
                 <div className="svc-in flex flex-col items-center" style={{"--d": "0.3s", "--y": "16px"} as React.CSSProperties}>
-                    <p className="mt-4 max-w-[620px] text-[18px] leading-relaxed text-ink-soft">We apply AI where it delivers returns: within the product you have today, or within a fresh one designed around it.</p>
+                    <p className="mt-4 max-w-[620px] text-[18px] leading-relaxed text-ink-soft">{service?.heroSubheading ?? "We apply AI where it delivers returns: within the product you have today, or within a fresh one designed around it."}</p>
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-4"><a href="/book-a-call" data-cta="service-hero-book-call" className="group inline-flex h-13 items-center gap-2 rounded-full bg-ink pl-6 pr-5 text-[15px] font-medium text-white transition-colors duration-300 hover:bg-brand">Arrange a free call<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
                         <a href="#pricing" className="group relative inline-flex items-center gap-1.5 text-[16px] font-medium text-ink">View pricing<span className="absolute -bottom-1 left-0 h-px w-full origin-right scale-x-100 transition-transform duration-500 group-hover:origin-left group-hover:scale-x-0 bg-ink/30"></span><span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-brand transition-transform delay-150 duration-500 group-hover:scale-x-100"></span></a>
                     </div>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { getAdminEmail, logout as apiLogout, restoreSession } from "@/lib/api/auth";
+import { getAdminEmail, getAdminRole, logout as apiLogout, restoreSession } from "@/lib/api/auth";
 import { getAccessToken } from "@/lib/api/client";
 import AdminSkeleton from "./AdminSkeleton";
 import { NAV, itemFor } from "./nav";
@@ -13,6 +13,7 @@ import BlogProvider, { preloadBlog } from "./BlogProvider";
 import CaseStudyProvider, { preloadCaseStudies } from "./CaseStudyProvider";
 import FaqProvider, { preloadFaqs } from "./FaqProvider";
 import FooterLinkProvider, { preloadFooterLinks } from "./FooterLinkProvider";
+import TestimonialProvider, { preloadTestimonials } from "./TestimonialProvider";
 import NewsletterProvider, { preloadNewsletter, useNewsletter } from "./NewsletterProvider";
 import SettingsProvider, { preloadSettings } from "./SettingsProvider";
 import { preloadDashboardStats } from "./Dashboard";
@@ -36,6 +37,7 @@ function prefetchAdminData() {
   preloadCaseStudies();
   preloadFaqs();
   preloadFooterLinks();
+  preloadTestimonials();
   preloadNewsletter();
   preloadSettings();
   preloadNotifications();
@@ -153,6 +155,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     <CaseStudyProvider>
     <FaqProvider>
     <FooterLinkProvider>
+    <TestimonialProvider>
     <NewsletterProvider>
     <SettingsProvider>
     <RealtimeBridge />
@@ -168,11 +171,15 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           </button>
         </div>
         <nav className="adm-nav" aria-label="Main">
-          {NAV.map((g) => (
+          {NAV.map((g) => {
+            const role = getAdminRole();
+            const items = g.items.filter((it) => !it.roles || (role && it.roles.includes(role as "super_admin" | "admin" | "editor" | "seo_manager" | "staff")));
+            if (items.length === 0) return null;
+            return (
             <div key={g.label}>
               <p className="adm-group-label">{g.label}</p>
               <ul className="adm-links">
-                {g.items.map((it) => {
+                {items.map((it) => {
                   const Icon = it.icon;
                   return (
                     <li key={it.href}>
@@ -186,7 +193,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 })}
               </ul>
             </div>
-          ))}
+            );
+          })}
         </nav>
       </aside>
 
@@ -216,6 +224,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 <p className="adm-pop-head">
                   Signed in as
                   <strong>{getAdminEmail() ?? "Admin"}</strong>
+                  {getAdminRole() && <span className="adm-muted" style={{ textTransform: "capitalize" }}>{getAdminRole()!.replace("_", " ")}</span>}
                 </p>
                 <Link href="/admin/settings" className="adm-pop-item" role="menuitem">
                   <IconSettings /> Settings
@@ -238,6 +247,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     </div>
     </SettingsProvider>
     </NewsletterProvider>
+    </TestimonialProvider>
     </FooterLinkProvider>
     </FaqProvider>
     </CaseStudyProvider>

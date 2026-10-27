@@ -4,12 +4,41 @@ import { disconnectRealtime } from "@/lib/pusher/client";
 /** In-memory only, same lifetime as the access token — re-derived via /auth/me after a refresh. */
 let adminEmail: string | null = null;
 export const getAdminEmail = () => adminEmail;
+let adminRole: string | null = null;
+export const getAdminRole = () => adminRole;
 
-export async function login(email: string, password: string) {
-  const res = await api.post<{ accessToken: string; email: string }>("/api/auth/login", { email, password }, { auth: false });
+export type LoginResult =
+  | { twoFactorRequired: true; tempToken: string }
+  | { twoFactorRequired?: false; accessToken: string; email: string; role: string };
+
+export async function login(email: string, password: string): Promise<LoginResult> {
+  const res = await api.post<LoginResult>("/api/auth/login", { email, password }, { auth: false });
+  if (!res.twoFactorRequired) {
+    setAccessToken(res.accessToken);
+    adminEmail = res.email;
+    adminRole = res.role;
+  }
+  return res;
+}
+
+export async function loginTwoFactor(tempToken: string, code: string) {
+  const res = await api.post<{ accessToken: string; email: string; role: string }>(
+    "/api/auth/login/2fa",
+    { tempToken, code },
+    { auth: false },
+  );
   setAccessToken(res.accessToken);
   adminEmail = res.email;
+  adminRole = res.role;
   return res;
+}
+
+export async function forgotPassword(email: string) {
+  await api.post("/api/auth/forgot-password", { email }, { auth: false });
+}
+
+export async function resetPassword(email: string, token: string, newPassword: string) {
+  await api.post("/api/auth/reset-password", { email, token, newPassword }, { auth: false });
 }
 
 // The API's serverless function allows up to 45s to finish (cold starts can take a while to
@@ -25,6 +54,7 @@ export async function logout() {
   } finally {
     setAccessToken(null);
     adminEmail = null;
+    adminRole = null;
     disconnectRealtime();
   }
 }
@@ -34,8 +64,9 @@ export async function restoreSession(): Promise<boolean> {
   try {
     const res = await api.post<{ accessToken: string }>("/api/auth/refresh", undefined, { auth: false, timeoutMs: SLOW_BACKEND_TIMEOUT_MS });
     setAccessToken(res.accessToken);
-    const me = await api.get<{ email: string }>("/api/auth/me", { timeoutMs: SLOW_BACKEND_TIMEOUT_MS });
+    const me = await api.get<{ email: string; role: string }>("/api/auth/me", { timeoutMs: SLOW_BACKEND_TIMEOUT_MS });
     adminEmail = me.email;
+    adminRole = me.role;
     return true;
   } catch {
     return false;

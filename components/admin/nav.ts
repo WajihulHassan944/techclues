@@ -1,7 +1,8 @@
 import type { ComponentType } from "react";
-import { IconBan, IconBlog, IconCalendar, IconCaseStudy, IconDashboard, IconHelp, IconInbox, IconLink2, IconMail, IconSettings } from "./icons";
+import { IconBan, IconBlog, IconCalendar, IconCaseStudy, IconDashboard, IconHelp, IconInbox, IconLink2, IconMail, IconQuote, IconSearch, IconSettings, IconUsers } from "./icons";
 
-export type NavItem = { href: string; label: string; icon: ComponentType<{ className?: string }>; badge?: string; title?: string };
+export type AdminRole = "super_admin" | "admin" | "editor" | "seo_manager" | "staff";
+export type NavItem = { href: string; label: string; icon: ComponentType<{ className?: string }>; badge?: string; title?: string; roles?: AdminRole[] };
 export type NavGroup = { label: string; items: NavItem[] };
 
 /** Badges are sample numbers until the panel is connected to real data. */
@@ -22,10 +23,21 @@ export const NAV: NavGroup[] = [
       { href: "/admin/case-studies", label: "Case studies", icon: IconCaseStudy },
       { href: "/admin/faqs", label: "FAQs", icon: IconHelp },
       { href: "/admin/footer-links", label: "Social links", icon: IconLink2 },
+      { href: "/admin/testimonials", label: "Testimonials", icon: IconQuote },
       { href: "/admin/newsletter", label: "Newsletter", icon: IconMail },
     ],
   },
-  { label: "Account", items: [{ href: "/admin/settings", label: "Settings", icon: IconSettings }] },
+  {
+    label: "Growth",
+    items: [{ href: "/admin/seo", label: "SEO", icon: IconSearch, roles: ["super_admin", "admin", "seo_manager"] }],
+  },
+  {
+    label: "Account",
+    items: [
+      { href: "/admin/settings", label: "Settings", icon: IconSettings },
+      { href: "/admin/users", label: "Users", icon: IconUsers, roles: ["super_admin"] },
+    ],
+  },
 ];
 
 export const ADMIN_EMAIL = "techcluesltd@gmail.com";

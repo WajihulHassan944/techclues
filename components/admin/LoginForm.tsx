@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { login, restoreSession } from "@/lib/api/auth";
+import { forgotPassword, login, loginTwoFactor, restoreSession } from "@/lib/api/auth";
 import { ADMIN_EMAIL } from "./nav";
 import { IconArrowLeft, IconArrowRight, IconEye, IconEyeOff } from "./icons";
 import LoadingWorkspace from "./LoadingWorkspace";
@@ -16,7 +16,13 @@ export default function LoginForm() {
   const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({});
   const [busy, setBusy] = useState(false);
   const [forgot, setForgot] = useState(false);
+  const [forgotSent, setForgotSent] = useState(false);
+  const [forgotBusy, setForgotBusy] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
+  const [tempToken, setTempToken] = useState<string | null>(null);
+  const [code, setCode] = useState("");
+  const [codeErr, setCodeErr] = useState<string | undefined>();
+  const [verifying, setVerifying] = useState(false);
 
   // Already signed in (valid refresh cookie): go straight to the panel.
   useEffect(() => {
@@ -36,13 +42,88 @@ export default function LoginForm() {
       return;
     }
     setBusy(true);
-    setSignedIn(true);
+    try {
+      const res = await login(email.trim(), password);
+      if (res.twoFactorRequired) {
+        setTempToken(res.tempToken);
+        setBusy(false);
+        return;
+      }
+      setSignedIn(true);
+    } catch (err) {
+      setBusy(false);
+      setErrors({ form: err instanceof Error ? err.message : "Sign in failed." });
+    }
   }
+
+  async function submitCode(e: React.FormEvent) {
+    e.preventDefault();
+    if (!tempToken) return;
+    setCodeErr(undefined);
+    setVerifying(true);
+    try {
+      await loginTwoFactor(tempToken, code.trim());
+      router.replace("/admin");
+    } catch (err) {
+      setVerifying(false);
+      setCodeErr(err instanceof Error ? err.message : "Incorrect code.");
+    }
+  }
+
+  async function submitForgot() {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setErrors({ email: "Enter your account email above first." });
+      document.getElementById("adm-email")?.focus();
+      return;
+    }
+    setForgotBusy(true);
+    try {
+      await forgotPassword(email.trim());
+      setForgotSent(true);
+    } finally {
+      setForgotBusy(false);
+    }
+  }
+
+  if (tempToken)
+    return (
+      <div className="adm-login">
+        <div className="adm-login-card adm-fadein">
+          <img src="/images/techclues-logo.png" alt="TechClues" width={235} height={34} />
+          <h1>Two-factor verification</h1>
+          <form className="adm-form" onSubmit={submitCode} noValidate>
+            <div className="adm-field">
+              <label htmlFor="adm-2fa-code">Enter the 6-digit code from your authenticator app</label>
+              <input
+                id="adm-2fa-code"
+                className="adm-input"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                autoFocus
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                aria-invalid={!!codeErr}
+              />
+              {codeErr && <p className="adm-err">{codeErr}</p>}
+              <p className="adm-note">You can also use one of your recovery codes.</p>
+            </div>
+            <button type="submit" className="adm-btn" disabled={verifying || code.trim().length < 6}>
+              {verifying ? "Verifying…" : "Verify"} <IconArrowRight />
+            </button>
+          </form>
+          <p className="adm-login-foot">
+            <button type="button" className="adm-text-btn" onClick={() => setTempToken(null)}>
+              <IconArrowLeft /> Back
+            </button>
+          </p>
+        </div>
+      </div>
+    );
 
   if (signedIn)
     return (
       <LoadingWorkspace
-        run={() => login(email.trim(), password).then(() => {})}
+        run={() => Promise.resolve()}
         onDone={() => router.replace("/admin")}
         onError={(message) => {
           setSignedIn(false);
@@ -85,13 +166,30 @@ export default function LoginForm() {
             <label className="adm-check">
               <input type="checkbox" defaultChecked /> Keep me signed in
             </label>
-            <button type="button" className="adm-text-btn" onClick={() => setForgot((f) => !f)} aria-expanded={forgot}>
+            <button
+              type="button"
+              className="adm-text-btn"
+              onClick={() => {
+                setForgot((f) => !f);
+                setForgotSent(false);
+              }}
+              aria-expanded={forgot}
+            >
               Forgot password?
             </button>
           </div>
           {forgot && (
             <p className="adm-note" role="status">
-              Password reset isn&apos;t wired up yet — ask whoever deployed the API to reset it directly.
+              {forgotSent ? (
+                "If that email matches an admin account, a reset link is on its way — it expires in an hour."
+              ) : (
+                <>
+                  We&apos;ll email a reset link to the address above.{" "}
+                  <button type="button" className="adm-text-btn" onClick={submitForgot} disabled={forgotBusy}>
+                    {forgotBusy ? "Sending…" : "Send reset link"}
+                  </button>
+                </>
+              )}
             </p>
           )}
           {errors.form && (

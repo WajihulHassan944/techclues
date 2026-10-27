@@ -3,6 +3,14 @@ import { DEFAULT_CALCULATOR_PRICING, type CalculatorPricing } from "@/lib/calcul
 
 export type NotifyEvents = { enquiry: boolean; booking: boolean; cancelled: boolean; subscriber: boolean; summary: boolean };
 export type BuildOnePrice = { amount: number; durationLabel: string };
+export type SeoGlobals = {
+  googleAnalyticsId: string;
+  googleSearchConsoleVerification: string;
+  metaPixelId: string;
+  defaultTitle: string;
+  defaultDescription: string;
+  defaultOgImage: string;
+};
 
 export type Settings = {
   recipients: string[];
@@ -14,6 +22,7 @@ export type Settings = {
   retention: { spamDays: number; enquiryMonths: number };
   calculatorPricing: CalculatorPricing;
   buildOnePrice: BuildOnePrice;
+  seo: SeoGlobals;
   passwordChangedAt?: string;
 };
 
@@ -27,4 +36,12 @@ export const DEFAULT_SETTINGS: Settings = {
   retention: { spamDays: 30, enquiryMonths: 0 },
   calculatorPricing: DEFAULT_CALCULATOR_PRICING,
   buildOnePrice: { amount: 499, durationLabel: "7 days" },
+  seo: {
+    googleAnalyticsId: "",
+    googleSearchConsoleVerification: "",
+    metaPixelId: "",
+    defaultTitle: "TechClues — ship a working MVP in days",
+    defaultDescription: "",
+    defaultOgImage: "",
+  },
 };

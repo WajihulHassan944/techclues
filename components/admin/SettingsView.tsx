@@ -292,6 +292,138 @@ const STRENGTH = ["Too short", "Weak", "Fair", "Good", "Strong", "Very strong"];
 
 type ApiSession = { id: string; device: string; ip?: string; createdAt: string; lastUsedAt: string; current: boolean };
 
+function TwoFactorPanel() {
+  const { toast } = useInbox();
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [step, setStep] = useState<"off" | "scan" | "codes">("off");
+  const [qr, setQr] = useState<string | null>(null);
+  const [secret, setSecret] = useState<string | null>(null);
+  const [code, setCode] = useState("");
+  const [recoveryCodes, setRecoveryCodes] = useState<string[]>([]);
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | undefined>();
+
+  useEffect(() => {
+    api.get<{ twoFactorEnabled: boolean }>("/api/auth/me").then((me) => setEnabled(me.twoFactorEnabled)).catch(() => setEnabled(false));
+  }, []);
+
+  const startSetup = async () => {
+    setErr(undefined);
+    setBusy(true);
+    try {
+      const res = await api.post<{ secret: string; qrDataUrl: string }>("/api/auth/2fa/setup");
+      setQr(res.qrDataUrl);
+      setSecret(res.secret);
+      setStep("scan");
+    } catch (e) {
+      setErr(e instanceof ApiError ? e.message : "Couldn't start setup.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const confirmEnable = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr(undefined);
+    setBusy(true);
+    try {
+      const res = await api.post<{ recoveryCodes: string[] }>("/api/auth/2fa/enable", { code: code.trim() });
+      setRecoveryCodes(res.recoveryCodes);
+      setStep("codes");
+      setEnabled(true);
+      toast("Two-step sign-in enabled");
+    } catch (e2) {
+      setErr(e2 instanceof ApiError ? e2.message : "Incorrect code.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const disable = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr(undefined);
+    setBusy(true);
+    try {
+      await api.post("/api/auth/2fa/disable", { password });
+      setEnabled(false);
+      setStep("off");
+      setPassword("");
+      toast("Two-step sign-in turned off");
+    } catch (e2) {
+      setErr(e2 instanceof ApiError ? e2.message : "Incorrect password.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section className="adm-panel" aria-labelledby="st-s3">
+      <h3 id="st-s3">Two-step sign-in</h3>
+      <p className="adm-muted">
+        <IconShield className="adm-ic adm-ic-xs" /> An authenticator-app code on top of your password.
+      </p>
+
+      {enabled === null ? null : step === "codes" ? (
+        <div>
+          <p className="adm-muted">Save these recovery codes somewhere safe — each one works once if you lose access to your authenticator app.</p>
+          <pre className="adm-note" style={{ whiteSpace: "pre-wrap", fontFamily: "monospace" }}>{recoveryCodes.join("\n")}</pre>
+          <button type="button" className="adm-mini" onClick={() => setStep("off")}>
+            Done
+          </button>
+        </div>
+      ) : enabled && step === "off" ? (
+        <form className="adm-form" onSubmit={disable}>
+          <label className="adm-switch">
+            <input type="checkbox" role="switch" checked readOnly aria-label="Two-step sign-in" />
+            <span aria-hidden="true" />
+            <b>On</b>
+          </label>
+          <div className="adm-field">
+            <label htmlFor="2fa-disable-pw">Enter your password to turn it off</label>
+            <input id="2fa-disable-pw" className="adm-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
+          {err && <small className="adm-err">{err}</small>}
+          <button type="submit" className="adm-mini adm-mini-danger" disabled={busy || !password}>
+            Turn off
+          </button>
+        </form>
+      ) : step === "scan" && qr ? (
+        <form className="adm-form" onSubmit={confirmEnable}>
+          <p className="adm-muted">Scan this with your authenticator app (Google Authenticator, Authy, 1Password…), then enter the 6-digit code it shows.</p>
+          <img src={qr} alt="2FA setup QR code" width={180} height={180} style={{ borderRadius: 12 }} />
+          {secret && <p className="adm-note">Can&apos;t scan? Enter this key manually: <code>{secret}</code></p>}
+          <div className="adm-field">
+            <label htmlFor="2fa-code">6-digit code</label>
+            <input id="2fa-code" className="adm-input" inputMode="numeric" autoFocus value={code} onChange={(e) => setCode(e.target.value)} />
+          </div>
+          {err && <small className="adm-err">{err}</small>}
+          <div className="adm-dlg-foot-btns">
+            <button type="submit" className="adm-mini" disabled={busy || code.trim().length < 6}>
+              Confirm &amp; enable
+            </button>
+            <button type="button" className="adm-mini adm-mini-ghost" onClick={() => setStep("off")}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      ) : (
+        <>
+          <label className="adm-switch">
+            <input type="checkbox" role="switch" checked={false} readOnly aria-label="Two-step sign-in" />
+            <span aria-hidden="true" />
+            <b>Off</b>
+          </label>
+          {err && <small className="adm-err">{err}</small>}
+          <button type="button" className="adm-mini" onClick={startSetup} disabled={busy}>
+            Set up two-step sign-in
+          </button>
+        </>
+      )}
+    </section>
+  );
+}
+
 function Security() {
   const { settings, refresh } = useSettings();
   const { toast } = useInbox();
@@ -430,17 +562,7 @@ function Security() {
               </button>
             </div>
           </section>
-          <section className="adm-panel" aria-labelledby="st-s3">
-            <h3 id="st-s3">Two-step sign-in</h3>
-            <p className="adm-muted">
-              <IconShield className="adm-ic adm-ic-xs" /> An authenticator-app code on top of your password. It becomes available once the panel is connected to a real sign-in.
-            </p>
-            <label className="adm-switch">
-              <input type="checkbox" role="switch" checked={false} disabled aria-label="Two-step sign-in" readOnly />
-              <span aria-hidden="true" />
-              <b>Off</b>
-            </label>
-          </section>
+          <TwoFactorPanel />
         </div>
       </div>
     </div>

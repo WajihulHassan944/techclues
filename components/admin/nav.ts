@@ -21,7 +21,7 @@ export const NAV: NavGroup[] = [
       { href: "/admin/blog", label: "Blog", icon: IconBlog },
       { href: "/admin/case-studies", label: "Case studies", icon: IconCaseStudy },
       { href: "/admin/faqs", label: "FAQs", icon: IconHelp },
-      { href: "/admin/footer-links", label: "Footer links", icon: IconLink2 },
+      { href: "/admin/footer-links", label: "Social links", icon: IconLink2 },
       { href: "/admin/newsletter", label: "Newsletter", icon: IconMail },
     ],
   },

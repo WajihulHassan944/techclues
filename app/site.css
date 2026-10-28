@@ -8698,3 +8698,8 @@ html.lenis body {
 @media (min-width:640px){.sm\:h-\[30px\]{height:30px}}
 .gd-hero-shade { z-index: 2; }
 .gd-hero-bg.gd-gl-on .gd-hero-img { opacity: 0; }
+
+/* ===== AI enablement page hero: canvas neural-network backdrop (no photo asset) ===== */
+.ai-hero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: inherit; pointer-events: none; background: radial-gradient(120% 140% at 80% 10%, #10184a 0%, #05071c 55%, #05071c 100%); }
+.ai-hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: auto; }
+.ai-hero-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5, 7, 28, 0.9) 0%, rgba(5, 7, 28, 0.55) 45%, rgba(5, 7, 28, 0.15) 80%), linear-gradient(180deg, rgba(5, 7, 28, 0.25) 0%, transparent 35%, rgba(5, 7, 28, 0.8) 100%); }

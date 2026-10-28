@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { IconBan, IconBlog, IconCalendar, IconCaseStudy, IconDashboard, IconHelp, IconHome, IconInbox, IconLink2, IconMail, IconQuote, IconSearch, IconServices, IconSettings, IconUsers } from "./icons";
+import { IconBan, IconBlog, IconCalendar, IconCaseStudy, IconDashboard, IconHelp, IconHome, IconInbox, IconLink2, IconMail, IconMedia, IconQuote, IconSearch, IconServices, IconSettings, IconUsers } from "./icons";
 
 export type AdminRole = "super_admin" | "admin" | "editor" | "seo_manager" | "staff";
 export type NavItem = { href: string; label: string; icon: ComponentType<{ className?: string }>; badge?: string; title?: string; roles?: AdminRole[] };
@@ -26,7 +26,9 @@ export const NAV: NavGroup[] = [
       { href: "/admin/faqs", label: "FAQs", icon: IconHelp },
       { href: "/admin/footer-links", label: "Social links", icon: IconLink2 },
       { href: "/admin/testimonials", label: "Testimonials", icon: IconQuote },
+      { href: "/admin/media", label: "Media library", icon: IconMedia },
       { href: "/admin/newsletter", label: "Newsletter", icon: IconMail },
+      { href: "/admin/email-templates", label: "Email campaigns", icon: IconMail },
     ],
   },
   {

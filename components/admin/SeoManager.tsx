@@ -7,8 +7,8 @@ import { useSettings } from "./SettingsProvider";
 import Dialog from "./Dialog";
 import { IconPlus } from "./icons";
 
-type SeoTab = "pages" | "redirects" | "404s" | "global";
-const TABS: [SeoTab, string][] = [["pages", "Pages"], ["redirects", "Redirects"], ["404s", "404s"], ["global", "Analytics & defaults"]];
+type SeoTab = "pages" | "redirects" | "404s" | "backlinks" | "global";
+const TABS: [SeoTab, string][] = [["pages", "Pages"], ["redirects", "Redirects"], ["404s", "404s"], ["backlinks", "Backlinks"], ["global", "Analytics & defaults"]];
 
 type PageRow = { path: string; label: string; hasEntry: boolean; title: string; description: string; noindex: boolean; schemaType: string; score: number };
 type PageEntry = {
@@ -47,6 +47,7 @@ export default function SeoManager() {
       {tab === "pages" && <PagesTab />}
       {tab === "redirects" && <RedirectsTab />}
       {tab === "404s" && <NotFoundTab />}
+      {tab === "backlinks" && <BacklinksTab />}
       {tab === "global" && <GlobalTab />}
     </section>
   );
@@ -300,6 +301,192 @@ function NotFoundTab() {
         </ul>
       )}
     </div>
+  );
+}
+
+type BacklinkRow = {
+  _id: string;
+  sourceUrl: string;
+  targetPath: string;
+  anchorText?: string;
+  type: string;
+  status: string;
+  domainRating?: number;
+  nofollow: boolean;
+  lastCheckedAt?: string;
+  notes?: string;
+};
+const BACKLINK_TYPES = ["guest-post", "directory", "press", "partner", "resource-page", "other"];
+const BACKLINK_STATUSES = ["prospecting", "requested", "live", "lost"];
+const statusColor = (s: string) => (s === "live" ? "#1a9d5c" : s === "lost" ? "#c0392b" : s === "requested" ? "#b8860b" : "#6b7280");
+
+function BacklinksTab() {
+  const { toast } = useInbox();
+  const [rows, setRows] = useState<BacklinkRow[] | null>(null);
+  const [stats, setStats] = useState<{ total: number; live: number; referringDomains: number } | null>(null);
+  const [adding, setAdding] = useState(false);
+  const [editing, setEditing] = useState<BacklinkRow | null>(null);
+
+  const load = () => {
+    api.get<BacklinkRow[]>("/api/admin/seo/backlinks").then(setRows).catch(() => setRows([]));
+    api.get<typeof stats>("/api/admin/seo/backlinks/stats").then(setStats).catch(() => {});
+  };
+  useEffect(() => {
+    load();
+  }, []);
+
+  if (!rows) return <div aria-busy="true" />;
+
+  const remove = (id: string) => {
+    if (!confirm("Delete this backlink?")) return;
+    api
+      .delete(`/api/admin/seo/backlinks/${id}`)
+      .then(() => setRows((l) => (l ? l.filter((r) => r._id !== id) : l)))
+      .catch(() => toast("Couldn't delete that"));
+  };
+
+  return (
+    <div>
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+        <p className="adm-muted" style={{ margin: 0 }}>
+          {stats ? `${stats.total} tracked · ${stats.live} live · ${stats.referringDomains} referring domains` : "Inbound links to the site, tracked for off-page SEO."}
+        </p>
+        <button type="button" className="adm-btn adm-btn-sm" onClick={() => setAdding(true)}>
+          <IconPlus /> Add backlink
+        </button>
+      </header>
+      {rows.length === 0 ? (
+        <div className="adm-empty adm-empty-tight adm-empty-page">
+          <h3>No backlinks tracked yet</h3>
+          <p>Add one above as you build or discover them.</p>
+        </div>
+      ) : (
+        <ul className="adm-list">
+          {rows.map((r) => (
+            <li key={r._id} className="adm-card" style={{ padding: 16 }}>
+              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <strong style={{ wordBreak: "break-all" }}>{r.sourceUrl}</strong>
+                  <div className="adm-muted" style={{ fontSize: 13, marginTop: 2 }}>
+                    → {r.targetPath} · {r.type.replace("-", " ")}
+                    {r.anchorText ? ` · "${r.anchorText}"` : ""}
+                    {r.domainRating !== undefined ? ` · DR ${r.domainRating}` : ""}
+                    {r.nofollow ? " · nofollow" : ""}
+                  </div>
+                </div>
+                <span style={{ fontWeight: 600, color: statusColor(r.status), textTransform: "capitalize", fontSize: 13 }}>{r.status}</span>
+                <button type="button" className="adm-mini" onClick={() => setEditing(r)}>
+                  Edit
+                </button>
+                <button type="button" className="adm-mini adm-mini-danger" onClick={() => remove(r._id)}>
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      {adding && <BacklinkDialog onClose={() => setAdding(false)} onSaved={load} />}
+      {editing && <BacklinkDialog link={editing} onClose={() => setEditing(null)} onSaved={load} />}
+    </div>
+  );
+}
+
+function BacklinkDialog({ link, onClose, onSaved }: { link?: BacklinkRow; onClose: () => void; onSaved: () => void }) {
+  const { toast } = useInbox();
+  const [sourceUrl, setSourceUrl] = useState(link?.sourceUrl ?? "");
+  const [targetPath, setTargetPath] = useState(link?.targetPath ?? "/");
+  const [anchorText, setAnchorText] = useState(link?.anchorText ?? "");
+  const [type, setType] = useState(link?.type ?? "other");
+  const [status, setStatus] = useState(link?.status ?? "prospecting");
+  const [domainRating, setDomainRating] = useState(link?.domainRating?.toString() ?? "");
+  const [nofollow, setNofollow] = useState(link?.nofollow ?? false);
+  const [notes, setNotes] = useState(link?.notes ?? "");
+  const [busy, setBusy] = useState(false);
+
+  const save = async () => {
+    setBusy(true);
+    const body = {
+      sourceUrl: sourceUrl.trim(),
+      targetPath: targetPath.trim() || "/",
+      anchorText: anchorText.trim() || undefined,
+      type,
+      status,
+      domainRating: domainRating ? Number(domainRating) : undefined,
+      nofollow,
+      notes: notes.trim() || undefined,
+    };
+    try {
+      if (link) await api.patch(`/api/admin/seo/backlinks/${link._id}`, body);
+      else await api.post("/api/admin/seo/backlinks", body);
+      toast(link ? "Backlink updated" : "Backlink added");
+      onSaved();
+      onClose();
+    } catch (e) {
+      toast(e instanceof ApiError ? e.message : "Couldn't save");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Dialog title={link ? "Edit backlink" : "Add backlink"} onClose={onClose}>
+      <form className="adm-form" id="backlink-form" onSubmit={(e) => { e.preventDefault(); save(); }}>
+        <div className="adm-field">
+          <label htmlFor="bl-source">Source URL (the page linking to us)</label>
+          <input id="bl-source" className="adm-input" value={sourceUrl} onChange={(e) => setSourceUrl(e.target.value)} placeholder="https://example.com/article" required />
+        </div>
+        <div className="adm-field">
+          <label htmlFor="bl-target">Target page (on our site)</label>
+          <input id="bl-target" className="adm-input" value={targetPath} onChange={(e) => setTargetPath(e.target.value)} placeholder="/" />
+        </div>
+        <div className="adm-field">
+          <label htmlFor="bl-anchor">Anchor text</label>
+          <input id="bl-anchor" className="adm-input" value={anchorText} onChange={(e) => setAnchorText(e.target.value)} />
+        </div>
+        <div className="adm-fields">
+          <div className="adm-field">
+            <label htmlFor="bl-type">Type</label>
+            <select id="bl-type" className="adm-input" value={type} onChange={(e) => setType(e.target.value)}>
+              {BACKLINK_TYPES.map((t) => (
+                <option key={t} value={t}>
+                  {t.replace("-", " ")}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="adm-field">
+            <label htmlFor="bl-status">Status</label>
+            <select id="bl-status" className="adm-input" value={status} onChange={(e) => setStatus(e.target.value)}>
+              {BACKLINK_STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="adm-field">
+            <label htmlFor="bl-dr">Domain rating (optional)</label>
+            <input id="bl-dr" type="number" min={0} max={100} className="adm-input" value={domainRating} onChange={(e) => setDomainRating(e.target.value)} />
+          </div>
+        </div>
+        <label className="adm-check">
+          <input type="checkbox" checked={nofollow} onChange={(e) => setNofollow(e.target.checked)} /> Nofollow
+        </label>
+        <div className="adm-field">
+          <label htmlFor="bl-notes">Notes</label>
+          <textarea id="bl-notes" className="adm-input" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
+        </div>
+      </form>
+      <div className="adm-dlg-foot-btns" style={{ marginTop: 16 }}>
+        <button type="submit" form="backlink-form" className="adm-btn adm-btn-sm" disabled={busy || !sourceUrl.trim()}>
+          {busy ? "Saving…" : "Save"}
+        </button>
+        <button type="button" className="adm-mini adm-mini-ghost" onClick={onClose}>
+          Cancel
+        </button>
+      </div>
+    </Dialog>
   );
 }
 

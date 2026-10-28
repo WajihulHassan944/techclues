@@ -7,6 +7,7 @@ import { EditorContent, useEditor, useEditorState, type Editor } from "@tiptap/r
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { api } from "@/lib/api/client";
+import MediaPickerDialog from "./MediaPickerDialog";
 
 const MAX_IMAGE_BYTES = 1_500_000;
 
@@ -44,6 +45,7 @@ function Toolbar({ editor }: { editor: Editor }) {
     }),
   });
   const [pop, setPop] = useState<null | "link" | "image">(null);
+  const [picking, setPicking] = useState(false);
   const [url, setUrl] = useState("");
   const [alt, setAlt] = useState("");
   const [err, setErr] = useState("");
@@ -157,6 +159,9 @@ function Toolbar({ editor }: { editor: Editor }) {
             <button type="button" className="adm-mini" onClick={() => fileRef.current?.click()}>
               Upload a file
             </button>
+            <button type="button" className="adm-mini" onClick={() => setPicking(true)}>
+              Choose from library
+            </button>
             <button type="button" className="adm-mini adm-mini-ghost" onClick={() => setPop(null)}>
               Cancel
             </button>
@@ -164,6 +169,18 @@ function Toolbar({ editor }: { editor: Editor }) {
           <input ref={fileRef} type="file" accept="image/*" className="sr-only" aria-label="Upload an image" onChange={(e) => { onFile(e.target.files?.[0]); e.target.value = ""; }} />
           {err && <small className="adm-err">{err}</small>}
         </div>
+      )}
+      {picking && (
+        <MediaPickerDialog
+          onClose={() => setPicking(false)}
+          onSelect={(src, altText) => {
+            editor.chain().focus().setImage({ src, alt: (alt || altText || "").trim() }).run();
+            setPop(null);
+            setUrl("");
+            setAlt("");
+            setErr("");
+          }}
+        />
       )}
     </div>
   );

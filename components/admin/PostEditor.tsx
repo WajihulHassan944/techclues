@@ -9,6 +9,7 @@ import { logActivity } from "@/lib/admin/activity";
 import { api } from "@/lib/api/client";
 import { useBlog } from "./BlogProvider";
 import Dialog from "./Dialog";
+import MediaPickerDialog from "./MediaPickerDialog";
 import { useInbox } from "./InboxProvider";
 import { IconArrowLeft, IconBlog } from "./icons";
 import RichEditor from "./RichEditor";
@@ -46,6 +47,7 @@ export default function PostEditor({ id }: { id: string }) {
   const [now] = useState(() => Date.now());
   const fileRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const [pickingCover, setPickingCover] = useState(false);
 
   // Let the title grow to fit instead of cutting off a long headline.
   useEffect(() => {
@@ -295,12 +297,24 @@ export default function PostEditor({ id }: { id: string }) {
               <button type="button" className="adm-mini" onClick={() => fileRef.current?.click()}>
                 Upload
               </button>
+              <button type="button" className="adm-mini" onClick={() => setPickingCover(true)}>
+                Choose from library
+              </button>
               {post.cover && (
                 <button type="button" className="adm-mini adm-mini-ghost" onClick={() => { set("cover", ""); set("coverAlt", ""); }}>
                   Remove
                 </button>
               )}
               <input ref={fileRef} type="file" accept="image/*" className="sr-only" aria-label="Upload a cover image" onChange={(e) => { onCover(e.target.files?.[0]); e.target.value = ""; }} />
+              {pickingCover && (
+                <MediaPickerDialog
+                  onClose={() => setPickingCover(false)}
+                  onSelect={(url, altText) => {
+                    set("cover", url);
+                    if (altText && !post.coverAlt) set("coverAlt", altText);
+                  }}
+                />
+              )}
             </div>
             <div className="adm-field">
               <label htmlFor="post-cover-url">Or an image address</label>

@@ -9,6 +9,7 @@ import { logActivity } from "@/lib/admin/activity";
 import { api } from "@/lib/api/client";
 import { useCaseStudies } from "./CaseStudyProvider";
 import Dialog from "./Dialog";
+import MediaPickerDialog from "./MediaPickerDialog";
 import { useInbox } from "./InboxProvider";
 import { IconArrowLeft, IconCaseStudy, IconPlus } from "./icons";
 import RichEditor from "./RichEditor";
@@ -30,6 +31,8 @@ export default function CaseStudyEditor({ id }: { id: string }) {
   const coverRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const [pickingCover, setPickingCover] = useState(false);
+  const [pickingGallery, setPickingGallery] = useState(false);
 
   useEffect(() => {
     const el = titleRef.current;
@@ -284,12 +287,24 @@ export default function CaseStudyEditor({ id }: { id: string }) {
               <button type="button" className="adm-mini" onClick={() => coverRef.current?.click()}>
                 Upload
               </button>
+              <button type="button" className="adm-mini" onClick={() => setPickingCover(true)}>
+                Choose from library
+              </button>
               {cs.cover && (
                 <button type="button" className="adm-mini adm-mini-ghost" onClick={() => { set("cover", ""); set("coverAlt", ""); }}>
                   Remove
                 </button>
               )}
               <input ref={coverRef} type="file" accept="image/*" className="sr-only" aria-label="Upload a cover image" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadTo(f, (url) => set("cover", url)); e.target.value = ""; }} />
+              {pickingCover && (
+                <MediaPickerDialog
+                  onClose={() => setPickingCover(false)}
+                  onSelect={(url, altText) => {
+                    set("cover", url);
+                    if (altText && !cs.coverAlt) set("coverAlt", altText);
+                  }}
+                />
+              )}
             </div>
             <div className="adm-field">
               <label htmlFor="cs-cover-url">Or an image address</label>
@@ -322,7 +337,13 @@ export default function CaseStudyEditor({ id }: { id: string }) {
               <button type="button" className="adm-mini" onClick={() => galleryRef.current?.click()}>
                 <IconPlus className="adm-ic adm-ic-xs" /> Add image
               </button>
+              <button type="button" className="adm-mini" onClick={() => setPickingGallery(true)}>
+                Choose from library
+              </button>
               <input ref={galleryRef} type="file" accept="image/*" className="sr-only" aria-label="Add a gallery image" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadTo(f, (url) => set("images", [...cs.images, url])); e.target.value = ""; }} />
+              {pickingGallery && (
+                <MediaPickerDialog onClose={() => setPickingGallery(false)} onSelect={(url) => set("images", [...cs.images, url])} />
+              )}
             </div>
           </section>
 

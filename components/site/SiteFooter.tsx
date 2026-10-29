@@ -30,6 +30,7 @@ const FALLBACK: { services: FooterLinkItem[]; company: FooterLinkItem[]; sectors
     { label: "BUILD.ONE", href: "/zero-one", newTab: false },
     { label: "Grant support", href: "/grant-funding", newTab: false },
     { label: "Partner programme", href: "/partners", newTab: false },
+    { label: "Locations", href: "/locations", newTab: false },
   ],
   sectors: [
     { label: "Healthcare & medical", href: "/industries/healthcare-medical", newTab: false },

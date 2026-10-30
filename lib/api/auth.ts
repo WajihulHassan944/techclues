@@ -1,5 +1,6 @@
 import { api, setAccessToken } from "./client";
 import { disconnectRealtime } from "@/lib/pusher/client";
+import { loadMyPermissions } from "./permissions";
 
 /** In-memory only, same lifetime as the access token — re-derived via /auth/me after a refresh. */
 let adminEmail: string | null = null;
@@ -17,6 +18,7 @@ export async function login(email: string, password: string): Promise<LoginResul
     setAccessToken(res.accessToken);
     adminEmail = res.email;
     adminRole = res.role;
+    await loadMyPermissions();
   }
   return res;
 }
@@ -30,6 +32,7 @@ export async function loginTwoFactor(tempToken: string, code: string) {
   setAccessToken(res.accessToken);
   adminEmail = res.email;
   adminRole = res.role;
+  await loadMyPermissions();
   return res;
 }
 
@@ -55,6 +58,7 @@ export async function logout() {
     setAccessToken(null);
     adminEmail = null;
     adminRole = null;
+    await loadMyPermissions();
     disconnectRealtime();
   }
 }
@@ -67,6 +71,7 @@ export async function restoreSession(): Promise<boolean> {
     const me = await api.get<{ email: string; role: string }>("/api/auth/me", { timeoutMs: SLOW_BACKEND_TIMEOUT_MS });
     adminEmail = me.email;
     adminRole = me.role;
+    await loadMyPermissions();
     return true;
   } catch {
     return false;

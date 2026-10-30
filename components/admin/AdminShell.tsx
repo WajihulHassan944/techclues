@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { getAdminEmail, getAdminRole, logout as apiLogout, restoreSession } from "@/lib/api/auth";
 import { getAccessToken } from "@/lib/api/client";
+import { canView } from "@/lib/api/permissions";
 import AdminSkeleton from "./AdminSkeleton";
 import { NAV, itemFor } from "./nav";
 import InboxProvider, { preloadInbox, useInbox } from "./InboxProvider";
@@ -116,7 +117,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const userRef = useRef<HTMLDivElement>(null);
   const current = itemFor(path);
   const role = getAdminRole();
-  const allowed = !current.roles || (!!role && current.roles.includes(role as "super_admin" | "admin" | "editor" | "seo_manager" | "staff"));
+  const allowed = current.module
+    ? canView(current.module)
+    : !current.roles || (!!role && current.roles.includes(role as "super_admin" | "admin" | "editor" | "seo_manager" | "staff"));
 
   // The panel opens only once a session is confirmed. Arriving here right after LoginForm's own
   // call to login() already set the in-memory access token in this same page load (client-side
@@ -182,7 +185,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </div>
         <nav className="adm-nav" aria-label="Main">
           {NAV.map((g) => {
-            const items = g.items.filter((it) => !it.roles || (role && it.roles.includes(role as "super_admin" | "admin" | "editor" | "seo_manager" | "staff")));
+            const items = g.items.filter((it) =>
+              it.module
+                ? canView(it.module)
+                : !it.roles || (role && it.roles.includes(role as "super_admin" | "admin" | "editor" | "seo_manager" | "staff")),
+            );
             if (items.length === 0) return null;
             return (
             <div key={g.label}>

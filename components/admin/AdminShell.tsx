@@ -32,18 +32,23 @@ import NotificationBell, { preloadNotifications } from "./NotificationBell";
  * awaits the already in-flight (or already resolved) request via the shared prefetch cache.
  */
 function prefetchAdminData() {
-  preloadInbox();
-  preloadBookings();
-  preloadBlog();
-  preloadCaseStudies();
-  preloadServices();
-  preloadFaqs();
-  preloadFooterLinks();
-  preloadTestimonials();
-  preloadNewsletter();
-  preloadSettings();
-  preloadNotifications();
-  preloadDashboardStats();
+  // Each provider awaits its own preload() call and handles the error there (see e.g.
+  // ServiceProvider's `load().catch(...)`). These bare calls just warm the shared cache ahead
+  // of that, so a rejection here — e.g. a 403 from an endpoint this role can't call, like
+  // /api/admin/services for seo_manager — must not become an unhandled rejection that crashes
+  // the whole admin shell before the relevant provider gets a chance to handle it gracefully.
+  preloadInbox().catch(() => {});
+  preloadBookings().catch(() => {});
+  preloadBlog().catch(() => {});
+  preloadCaseStudies().catch(() => {});
+  preloadServices().catch(() => {});
+  preloadFaqs().catch(() => {});
+  preloadFooterLinks().catch(() => {});
+  preloadTestimonials().catch(() => {});
+  preloadNewsletter().catch(() => {});
+  preloadSettings().catch(() => {});
+  preloadNotifications().catch(() => {});
+  preloadDashboardStats().catch(() => {});
 }
 
 function useOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => void, active: boolean) {

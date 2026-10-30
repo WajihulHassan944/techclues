@@ -115,6 +115,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const [menu, setMenu] = useState<"user" | null>(null);
   const userRef = useRef<HTMLDivElement>(null);
   const current = itemFor(path);
+  const role = getAdminRole();
+  const allowed = !current.roles || (!!role && current.roles.includes(role as "super_admin" | "admin" | "editor" | "seo_manager" | "staff"));
 
   // The panel opens only once a session is confirmed. Arriving here right after LoginForm's own
   // call to login() already set the in-memory access token in this same page load (client-side
@@ -180,7 +182,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </div>
         <nav className="adm-nav" aria-label="Main">
           {NAV.map((g) => {
-            const role = getAdminRole();
             const items = g.items.filter((it) => !it.roles || (role && it.roles.includes(role as "super_admin" | "admin" | "editor" | "seo_manager" | "staff")));
             if (items.length === 0) return null;
             return (
@@ -249,7 +250,14 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           </div>
         </header>
         <main className="adm-content adm-fadein" key={path}>
-          {children}
+          {allowed ? (
+            children
+          ) : (
+            <div className="adm-content-block" style={{ maxWidth: 480, margin: "48px auto", textAlign: "center" }}>
+              <h2 style={{ marginBottom: 8 }}>You don&rsquo;t have access to this</h2>
+              <p className="adm-muted">Your role doesn&rsquo;t include {current.label}. Ask a Super Admin or Admin if you need it.</p>
+            </div>
+          )}
         </main>
       </div>
     </div>

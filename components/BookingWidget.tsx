@@ -426,7 +426,10 @@ function Widget() {
         setStep("done");
       } catch (err) {
         if (err instanceof ApiError && err.statusCode === 400) {
-          setFormError(err.message || "That time has just been taken, so please choose another slot.");
+          // formError only renders on the "details" step, which we're about to leave — show
+          // this on the "pick" step's own notice banner instead, or the user sees their slot
+          // silently vanish with no explanation.
+          setNotice(err.message || "That time has just been taken, so please choose another slot.");
           setStep("pick");
           setRefresh((r) => r + 1);
         } else {

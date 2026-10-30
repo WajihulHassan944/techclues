@@ -60,7 +60,12 @@ const FALLBACK: { services: FooterLinkItem[]; company: FooterLinkItem[]; sectors
 export default async function SiteFooter() {
   const fetched = await getPublicFooterLinks();
   const services = fetched.services.length ? fetched.services : FALLBACK.services;
-  const company = fetched.company.length ? fetched.company : FALLBACK.company;
+  const companyBase = fetched.company.length ? fetched.company : FALLBACK.company;
+  // Always present, regardless of whether "company" came from the CMS or the fallback —
+  // the CMS-managed list doesn't know about this route, so it's appended here instead.
+  const company = companyBase.some((l) => l.href === "/locations")
+    ? companyBase
+    : [...companyBase, { label: "Locations", href: "/locations", newTab: false }];
   const sectors = fetched.sectors.length ? fetched.sectors : FALLBACK.sectors;
   const social = fetched.social.length ? fetched.social : FALLBACK.social;
   const legal = fetched.legal.length ? fetched.legal : FALLBACK.legal;

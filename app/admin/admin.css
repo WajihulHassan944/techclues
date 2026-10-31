@@ -1498,6 +1498,10 @@ button.adm-calcell:hover { border-color: rgb(0 100 255 / 0.4); }
 .adm-post-title strong { font-size: 15px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .adm-post-title small { font-size: 12.5px; color: var(--color-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .adm-post-author, .adm-post-read { font-size: 14px; color: var(--color-ink-soft); }
+.adm-post-cs { grid-template-columns: minmax(0, 2.2fr) 200px 110px 170px 44px; }
+.adm-post-cs .adm-post-cat { min-width: 0; overflow: hidden; }
+.adm-post-cs .adm-post-cat .adm-src { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.adm-post-cs .adm-post-author { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .adm-post-when { display: grid; gap: 4px; justify-items: start; }
 .adm-post-when small { font-size: 12.5px; color: var(--color-muted); }
 .adm-pstatus { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 500; white-space: nowrap; }

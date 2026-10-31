@@ -142,7 +142,7 @@ export default function CaseStudyManager() {
         ) : (
           <ul className="adm-posts">
             {rows.map((cs) => (
-              <li key={cs.id} className="adm-post">
+              <li key={cs.id} className="adm-post adm-post-cs">
                 <Link href={`/admin/case-studies/${cs.id}`} className="adm-post-main" aria-label={`Edit ${cs.title || "untitled case study"}`}>
                   {cs.cover ? <img src={cs.cover} alt="" className="adm-thumb" /> : <span className="adm-thumb adm-thumb-empty" aria-hidden="true" />}
                   <span className="adm-post-title">

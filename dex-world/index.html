@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dex World</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Layout: full-bleed cinematic bands stacked on near-black, copper hairlines, serif display over thin sans. Single dark look by design. */
+:root {
+  --bg: #0a0908;
+  --bg-2: #0f0d0c;
+  --panel: #14110f;
+  --fg: #ece7e1;
+  --muted: #9a928a;
+  --faint: #5f5953;
+  --line: #2a2522;
+  --copper: #b9814f;
+  --copper-soft: #7a5333;
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-body: "Jost", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+:root[data-theme="light"] { color-scheme: dark; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 1px solid var(--copper); outline-offset: 4px; }
+.wrap { width: 100%; max-width: 1180px; margin-inline: auto; }
+.eyebrow {
+  display: flex; align-items: center; gap: 16px;
+  font-size: 10px; letter-spacing: .32em; text-transform: uppercase; color: var(--fg); font-weight: 400;
+}
+.eyebrow::after { content: ""; width: 52px; height: 1px; background: var(--copper-soft); }
+.eyebrow.copper { color: var(--copper); }
+h1, h2 { font-family: var(--font-display); font-weight: 300; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.btn {
+  display: inline-flex; align-items: center; gap: 22px;
+  border: 1px solid var(--copper); color: var(--fg);
+  padding: 11px 20px; font-size: 12px; letter-spacing: .02em; background: transparent;
+  transition: background .25s, color .25s;
+}
+.btn:hover { background: var(--copper); color: #0a0908; }
+.btn svg { width: 14px; height: 10px; }
+
+/* Header */
+header {
+  position: absolute; z-index: 5; left: 0; right: 0; top: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: calc(28px + env(safe-area-inset-top, 0px));
+}
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.logo svg { width: 46px; height: 24px; display: block; }
+.nav ul { display: flex; gap: clamp(18px, 3.4vw, 46px); list-style: none; margin: 0; padding: 0; }
+.nav li a { font-size: 9.5px; letter-spacing: .3em; text-transform: uppercase; color: #cfc8c0; padding-bottom: 7px; display: inline-block; border-bottom: 1px solid transparent; }
+.nav li a.on { color: var(--copper); border-bottom-color: var(--copper); }
+.nav li a:hover { color: var(--copper); }
+.menu { width: 26px; height: 26px; border-radius: 50%; border: 1px solid #5b544e; background: transparent; display: grid; place-content: center; gap: 3px; padding: 0; cursor: pointer; }
+.menu i { display: block; width: 11px; height: 1px; background: var(--fg); }
+
+/* Hero */
+.hero { position: relative; min-height: 560px; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); overflow: hidden; display: flex; align-items: center; padding-block: 140px 110px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.portrait {
+  position: absolute; right: 0; top: 0; bottom: 0; width: min(58%, 720px);
+  background-image: var(--portrait-img, none);
+  background-size: cover; background-position: center;
+}
+.portrait.empty::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 36% 46% at 62% 34%, #8c8782 0%, #5d5955 40%, transparent 72%),
+    radial-gradient(ellipse 60% 70% at 70% 60%, #3a3735 0%, transparent 70%),
+    linear-gradient(180deg, #151413, #0a0908);
+  filter: blur(2px);
+}
+.portrait.empty::after {
+  content: "Drop your portrait here"; position: absolute; right: 10%; bottom: 14%;
+  font-size: 10px; letter-spacing: .28em; text-transform: uppercase; color: #6c655e;
+}
+.hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, var(--bg) 0%, var(--bg) 22%, rgba(10,9,8,.55) 48%, rgba(10,9,8,0) 72%), linear-gradient(180deg, rgba(10,9,8,.55) 0%, transparent 22%, transparent 76%, var(--bg) 100%);
+}
+.arc { position: absolute; z-index: 1; pointer-events: none; }
+.arc.a { width: 900px; height: 900px; border-radius: 50%; border: 1px solid rgba(185,129,79,.45); left: 28%; top: 38%; clip-path: inset(0 0 55% 0); opacity: .9; }
+.arc.b { width: 460px; height: 460px; border-radius: 50%; border: 1px solid rgba(255,255,255,.12); right: -230px; top: 30%; }
+.hero-in { position: relative; z-index: 2; width: 100%; }
+.hero-copy { max-width: 520px; }
+.hero h1 { font-size: clamp(48px, 7.4vw, 78px); line-height: .98; margin-top: 30px; }
+.hero h1 em { font-style: normal; color: var(--copper); }
+.tag { margin-top: 28px; font-size: 12.5px; letter-spacing: .3em; color: var(--muted); }
+.watch { display: inline-flex; align-items: center; gap: 14px; margin-top: 42px; font-size: 11px; color: var(--fg); }
+.watch span.c { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--copper); display: grid; place-items: center; }
+.watch svg { width: 9px; height: 10px; margin-left: 2px; fill: var(--copper); }
+.scroll { position: absolute; left: 0; bottom: 36px; z-index: 2; display: flex; align-items: center; gap: 12px; font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: #cfc8c0; }
+.scroll .m { width: 14px; height: 26px; border: 1px solid #77706a; border-radius: 8px; position: relative; }
+.scroll .m::after { content: ""; position: absolute; left: 50%; top: 5px; width: 2px; height: 5px; background: var(--copper); transform: translateX(-50%); border-radius: 1px; }
+
+/* About */
+.about { background: var(--bg-2); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-block: 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.about-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.05fr) minmax(0, .62fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+.frame { position: relative; aspect-ratio: 1 / .78; max-width: 100%; }
+.frame::before { content: ""; position: absolute; inset: 14px -16px -14px 16px; border: 1px solid var(--line); border-radius: 12px; }
+.frame::after { content: ""; position: absolute; left: -20px; top: 34px; bottom: -30px; width: 36px; border: 1px solid var(--copper-soft); border-right: 0; border-radius: 12px 0 0 12px; opacity: .8; }
+.photo { position: absolute; inset: 0; border-radius: 12px; overflow: hidden; z-index: 1; background: #1a1a1a; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+.photo svg { width: 100%; height: 100%; display: block; }
+.about h2 { font-size: clamp(38px, 4.6vw, 48px); margin: 22px 0 18px; }
+.about p { margin: 0 0 24px; font-size: 12.5px; line-height: 1.9; color: #cfc8c0; max-width: 340px; }
+.stats { border-left: 1px solid var(--copper-soft); padding-left: clamp(20px, 3vw, 40px); display: grid; gap: 28px; }
+.stat { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: center; }
+.stat svg { width: 28px; height: 28px; stroke: var(--fg); fill: none; stroke-width: 1; }
+.stat b { display: block; font-family: var(--font-display); font-weight: 300; font-size: 24px; line-height: 1; }
+.stat small { display: block; font-size: 9px; color: var(--muted); margin-top: 6px; }
+
+/* Quote */
+.quote { position: relative; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); height: 160px; overflow: hidden; display: grid; place-items: center; text-align: center; background: linear-gradient(180deg, #3a3837, #151413); }
+.quote svg.m { position: absolute; inset: 0; width: 100%; height: 100%; }
+.quote .q { position: relative; z-index: 1; padding-inline: 24px; }
+.quote blockquote { margin: 0; font-family: var(--font-display); font-style: italic; font-size: clamp(17px, 2.3vw, 21px); line-height: 1.5; max-width: 480px; margin-inline: auto; }
+.quote blockquote::before, .quote blockquote::after { font-family: var(--font-display); color: var(--copper); font-size: 38px; line-height: 0; position: absolute; }
+.quote blockquote::before { content: "\201C"; margin-left: -40px; margin-top: -4px; }
+.quote blockquote::after { content: "\201D"; margin-left: 8px; margin-top: 30px; }
+.quote cite { display: inline-flex; align-items: center; gap: 12px; margin-top: 14px; font-style: normal; font-size: 11px; color: #cfc8c0; letter-spacing: .04em; }
+.quote cite::before, .quote cite::after { content: ""; width: 22px; height: 1px; background: #6c655e; }
+
+/* Expertise */
+.expertise { padding-block: 64px; }
+.exp-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 48px; align-items: center; }
+.expertise h2 { font-size: clamp(34px, 4vw, 40px); line-height: 1.12; margin: 18px 0 18px; }
+.expertise p { font-size: 12.5px; color: #cfc8c0; line-height: 1.8; margin: 0 0 24px; max-width: 320px; }
+.techs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px 14px; max-width: 460px; justify-self: end; width: 100%; }
+.tech { display: grid; justify-items: center; gap: 8px; font-size: 9.5px; color: #cfc8c0; }
+.tech i { width: 42px; height: 42px; border-radius: 10px; border: 1px solid #3a3430; background: linear-gradient(160deg, #1b1715, #0f0d0c); display: grid; place-items: center; font-style: normal; font-size: 13px; letter-spacing: 0; color: var(--fg); box-shadow: inset 0 0 0 1px rgba(255,255,255,.02); transition: border-color .25s; }
+.tech:hover i { border-color: var(--copper); }
+.tech svg { width: 22px; height: 22px; fill: none; stroke: var(--fg); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Journey */
+.journey { position: relative; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); background: var(--panel); border: 1px solid #1e1a17; border-radius: 6px; overflow: hidden; min-height: 280px; }
+.scene { position: relative; min-height: 240px; background-image: var(--journey-img, none); background-size: cover; background-position: center; }
+.scene svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.scene::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 60%, var(--panel) 100%); }
+.j-copy { padding: 36px clamp(24px, 4vw, 44px); position: relative; display: flex; flex-direction: column; justify-content: center; }
+.j-copy h2 { font-size: clamp(30px, 3.4vw, 34px); line-height: 1.1; margin: 20px 0 16px; }
+.j-copy p { font-size: 11.5px; line-height: 1.8; color: var(--muted); margin: 0 0 24px; max-width: 250px; }
+.pager { position: absolute; right: 22px; bottom: 14px; display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-style: italic; font-size: 13px; color: #cfc8c0; }
+.pager button { width: 20px; height: 20px; border-radius: 50%; border: 0; background: #2a2522; color: var(--fg); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.pager svg { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 1.4; }
+
+/* Connect */
+.connect { position: relative; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); margin-top: 28px; min-height: 230px; display: grid; place-items: center; text-align: center; overflow: hidden; background: linear-gradient(180deg, #2a2827, #0d0c0b); }
+.connect svg.m { position: absolute; inset: 0; width: 100%; height: 100%; }
+.connect .c { position: relative; z-index: 1; padding: 44px 24px; display: grid; justify-items: center; }
+.connect .eyebrow { margin-bottom: 14px; }
+.connect .eyebrow::before { content: ""; width: 0; }
+.connect h2 { font-size: clamp(30px, 4vw, 36px); }
+.connect p { margin: 8px 0 22px; font-size: 12px; color: #d9d2ca; }
+
+/* Footer */
+footer { padding-block: 0 28px; }
+footer .wrap { border-top: 1px solid #3a3430; padding-top: 26px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.f-left { display: flex; align-items: center; gap: 34px; flex-wrap: wrap; }
+.f-left svg { width: 40px; height: 22px; }
+.f-left small { font-size: 9px; color: var(--muted); }
+.f-right { display: flex; align-items: center; font-size: 10.5px; letter-spacing: .08em; }
+.f-right a { padding-inline: 22px; }
+.f-right a + a { border-left: 1px solid #3a3430; padding-right: 0; }
+.f-right a:hover { color: var(--copper); }
+
+@media (max-width: 880px) {
+  .nav ul { display: none; }
+  .portrait { width: 100%; opacity: .55; }
+  .hero::after { background: linear-gradient(90deg, var(--bg) 0%, rgba(10,9,8,.5) 60%, rgba(10,9,8,.2) 100%), linear-gradient(180deg, rgba(10,9,8,.55) 0%, transparent 22%, transparent 76%, var(--bg) 100%); }
+  .arc.a { left: 10%; }
+  .about-grid { grid-template-columns: minmax(0, 1fr); }
+  .frame { margin-left: 20px; }
+  .stats { border-left: 0; border-top: 1px solid var(--copper-soft); padding: 24px 0 0; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stat { grid-template-columns: 1fr; justify-items: start; gap: 8px; }
+  .exp-grid { grid-template-columns: minmax(0, 1fr); }
+  .techs { justify-self: start; }
+  .journey { grid-template-columns: minmax(0, 1fr); }
+  .scene::after { background: linear-gradient(180deg, transparent 60%, var(--panel) 100%); }
+  .pager { position: static; padding: 0 44px 22px; }
+  .quote blockquote::before { margin-left: -26px; }
+}
+@media (max-width: 480px) {
+  .techs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .stats { grid-template-columns: minmax(0, 1fr); }
+  .stat { grid-template-columns: 34px 1fr; justify-items: stretch; }
+  .f-left { gap: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="logo" viewBox="0 0 46 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2 3h19v6H9v12H2z"/><path d="M26 3c9 0 18 4 18 9s-9 9-18 9z"/><path d="M26 9h8"/></g></symbol>
+    <symbol id="arrow" viewBox="0 0 14 10"><path d="M0 5h12M8 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1"/></symbol>
+  </defs>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#home" aria-label="Dex World home" style="color:var(--fg)"><svg><use href="#logo"/></svg></a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a class="on" href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#journey">Journey</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="menu" aria-label="Menu"><i></i><i></i><i></i></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <!-- Set --portrait-img: url(...) on .portrait to use a real photo -->
+    <div class="portrait empty"></div>
+    <span class="arc a"></span><span class="arc b"></span>
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <div class="eyebrow">Dex World</div>
+        <h1>Dream.<br>Explore. <em>Xperate.</em></h1>
+        <div class="tag">A journey beyond limits.</div>
+        <a class="watch" href="#journey"><span class="c"><svg viewBox="0 0 9 10"><path d="M0 0l9 5-9 5z"/></svg></span>Watch My Journey</a>
+      </div>
+    </div>
+    <div class="wrap" style="position:absolute;left:0;right:0;bottom:0;height:0;padding-inline:max(16px, env(safe-area-inset-left, 0px));left:50%;transform:translateX(-50%);max-width:1180px"><div class="scroll"><span class="m"></span>Scroll down</div></div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="wrap about-grid">
+      <div class="frame">
+        <div class="photo">
+          <svg viewBox="0 0 400 312" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Traveler seated on a rock above a misty valley">
+            <defs>
+              <linearGradient id="skyA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e6e6e"/><stop offset=".6" stop-color="#bdbdbd"/><stop offset="1" stop-color="#8c8c8c"/></linearGradient>
+              <linearGradient id="fogA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8d8d8" stop-opacity=".0"/><stop offset="1" stop-color="#e6e6e6" stop-opacity=".9"/></linearGradient>
+            </defs>
+            <rect width="400" height="312" fill="url(#skyA)"/>
+            <path d="M0 150l60-30 50 22 70-40 60 34 60-30 100 50v156H0z" fill="#6a6a6a"/>
+            <path d="M0 175l70-25 60 25 80-30 90 30 100-20v157H0z" fill="#4e4e4e"/>
+            <rect y="170" width="400" height="80" fill="url(#fogA)"/>
+            <path d="M0 215c60-18 110-6 170 8s140 0 230-18v107H0z" fill="#dcdcdc" opacity=".75"/>
+            <path d="M0 312V250l70-14 70 10 60-8 80 14 120-8v68z" fill="#2a2a2a"/>
+            <path d="M40 312l30-52 60-18 90 10 80-14 100 74z" fill="#1c1c1c"/>
+            <g fill="#101010"><circle cx="130" cy="150" r="14"/><path d="M104 168c6-10 40-10 50 2l8 56-70 4z"/><rect x="92" y="170" width="22" height="46" rx="8" fill="#1d1d1d"/><path d="M96 236l76-4 8 18-88 6z"/></g>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow copper" style="color:var(--fg)">About me</div>
+        <h2>Deniz</h2>
+        <p>A lateral thinker with affinity to design thinking who his name Deniz – the translation means sea – makes all honor. Always chasing new challenges, exploring the unknown and pushing boundaries.</p>
+        <a class="btn" href="#journey">Discover More <svg><use href="#arrow"/></svg></a>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="11"/><path d="M14 3v22M3 14h22M18 10l-8 8M10 10l8 8" opacity=".6"/><path d="M14 6l3 8-3 8-3-8z"/></svg>
+          <div><b>5+</b><small>Years of Experience</small></div>
+        </div>
+        <div class="stat">
+          <svg viewBox="0 0 28 28"><path d="M9 8l-6 6 6 6M19 8l6 6-6 6M16 5l-4 18"/></svg>
+          <div><b>50+</b><small>Projects Completed</small></div>
+        </div>
+        <div class="stat">
+          <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="11"/><ellipse cx="14" cy="14" rx="5" ry="11"/><path d="M3 14h22M5 8h18M5 20h18"/></svg>
+          <div><b>100%</b><small>Passion</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote" aria-label="Quote">
+    <svg class="m" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 160V96l120-40 90 50 80-30 100 60 70-20v44z" fill="#2c2b2a"/>
+      <path d="M700 160l90-50 100-60 90 30 90-50 130 70v60z" fill="#4a4846"/>
+      <path d="M840 70l50-20 30 14-30 6z" fill="#cfcfcf" opacity=".8"/>
+      <path d="M0 160V120l80 10 100-10 140 20 160-6 140 10v16z" fill="#131211"/>
+      <path d="M700 160v-24l160-10 140 8 200-12v38z" fill="#0f0e0d"/>
+    </svg>
+    <div class="q">
+      <blockquote>When everything seems to be against you, remember that the airplane takes off against the wind, not with it.</blockquote>
+      <cite>Henry Ford</cite>
+    </div>
+  </section>
+
+  <section class="expertise" id="expertise">
+    <div class="wrap exp-grid">
+      <div>
+        <div class="eyebrow" style="color:var(--fg)">My expertise</div>
+        <h2>Turning Ideas<br>Into Reality</h2>
+        <p>With a strong foundation in modern technologies, I build scalable, user-focused and innovative solutions.</p>
+        <a class="btn" href="#expertise">Explore Skills <svg><use href="#arrow"/></svg></a>
+      </div>
+      <div class="techs" role="list">
+        <div class="tech" role="listitem"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></svg></i>React</div>
+        <div class="tech" role="listitem"><i>N<sup style="font-size:7px;margin-left:1px">&#8599;</sup></i>Next.js</div>
+        <div class="tech" role="listitem"><i><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 10h6M10 10v7M14.5 17c.5.5 1.2.7 2 .7 1 0 1.7-.5 1.7-1.2 0-1.7-3.6-.9-3.6-2.6 0-.7.6-1.2 1.6-1.2.7 0 1.3.2 1.8.6"/></svg></i>TypeScript</div>
+        <div class="tech" role="listitem"><i><svg viewBox="0 0 24 24"><path d="M12 2.5l8 4.5v10l-8 4.5-8-4.5V7z"/><path d="M9 15v-4.5M12 15v-4.5M15 10.5v4"/></svg></i>Node.js</div>
+        <div class="tech" role="listitem"><i><svg viewBox="0 0 24 24"><path d="M12 3c-3 0-4 1.2-4 2.8V8h5v1H6.5C4.8 9 4 10.4 4 12.3s.8 3.2 2.5 3.2H8v-2.2c0-1.6 1.2-2.8 2.8-2.8h3.4c1.3 0 2.3-1 2.3-2.3V5.8C16.5 4.2 15 3 12 3z"/><path d="M12 21c3 0 4-1.2 4-2.8V16h-5v-1h6.5c1.7 0 2.5-1.4 2.5-3.3s-.8-3.2-2.5-3.2H16v2.2c0 1.6-1.2 2.8-2.8 2.8H9.8c-1.3 0-2.3 1-2.3 2.3v2.2C7.5 19.800 9 21 12 21z"/></svg></i>Python</div>
+        <div class="tech" role="listitem"><i><svg viewBox="0 0 24 24"><path d="M12 2.5c3 3.500 4.500 7 4 11-.3 3-2 5.500-4 7-2-1.500-3.700-4-4-7-.5-4 1-7.500 4-11z" style="fill:#12301f;stroke:#4f9a6a"/><path d="M12 14v8" stroke="#4f9a6a"/></svg></i>MongoDB</div>
+        <div class="tech" role="listitem"><i><svg viewBox="0 0 24 24"><path d="M6 8c0-3 3-5 7-5s6 2 6 5c0 4-2 8-4 9-1 .5-2-.5-2-2V9"/><path d="M6 8c-1.500 0-2.500 1.500-2 4s2 5 3.500 5c1 0 1.500-1 1.500-2v-4"/><circle cx="15.500" cy="8" r=".7" fill="currentColor"/></svg></i>PostgreSQL</div>
+        <div class="tech" role="listitem"><i><span style="font-size:12px;font-weight:500;line-height:1;text-align:center">aws<svg viewBox="0 0 24 8" style="display:block;width:20px;height:7px;margin-top:1px;stroke:#d99a52"><path d="M2 3c6 4 14 4 20 0M19 2l3 1-1.500 2.500"/></svg></span></i>AWS</div>
+        <div class="tech" role="listitem"><i><svg viewBox="0 0 24 24" style="stroke:#6fa6d8"><path d="M2 12.500h19c0 3.500-3 7-9 7s-9-3.500-10-7z"/><path d="M5 9.500h3v3H5zM9 9.500h3v3H9zM13 9.500h3v3h-3zM9 6.500h3v3H9z"/></svg></i>Docker</div>
+        <div class="tech" role="listitem"><i><svg viewBox="0 0 24 24" style="stroke:#52a8df"><path d="M3 10c1.500-3.500 3.800-5 7-4.500 2 .3 3 2 4.500 3 1.300.9 3 1 4.500-.5"/><path d="M3 17c1.500-3.500 3.800-5 7-4.500 2 .3 3 2 4.500 3 1.300.9 3 1 4.500-.5"/></svg></i>Tailwind</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="journey" class="wrap" style="margin-bottom:0">
+    <div class="journey" id="gallery">
+      <!-- Set --journey-img: url(...) on .scene to use a real photo -->
+      <div class="scene">
+        <svg viewBox="0 0 700 280" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sunset over the sea seen from a ship's red deck">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a46"/><stop offset=".45" stop-color="#9a6a56"/><stop offset=".72" stop-color="#f0a468"/><stop offset="1" stop-color="#e07c3c"/></linearGradient>
+            <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e08a50"/><stop offset="1" stop-color="#2c2a30"/></linearGradient>
+            <radialGradient id="sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2d0"/><stop offset=".4" stop-color="#ffc27a" stop-opacity=".8"/><stop offset="1" stop-color="#ff9a50" stop-opacity="0"/></radialGradient>
+            <linearGradient id="deck" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a2f24"/><stop offset="1" stop-color="#4a1a16"/></linearGradient>
+          </defs>
+          <rect width="700" height="170" fill="url(#sky)"/>
+          <path d="M60 60c60-30 140-20 200-4s120 0 170-10 90 6 130 4" stroke="#2c2c34" stroke-width="22" fill="none" opacity=".5"/>
+          <circle cx="110" cy="150" r="70" fill="url(#sun)"/>
+          <path d="M0 170l70-8 80 6 90-10 60 8 120-6 90 4 190-2v40H0z" fill="#3b3438"/>
+          <rect y="172" width="700" height="108" fill="url(#sea)"/>
+          <path d="M96 176h30M90 190h50M84 204h64" stroke="#ffd29a" stroke-width="2" opacity=".6"/>
+          <path d="M0 100l-10 0 0 0L0 280h30z" fill="#1b1b1e"/>
+          <path d="M-20 90L130 240l-30 40H-20z" fill="#2a2a2a"/>
+          <path d="M120 246c80-40 260-70 380-76l100 110H70z" fill="url(#deck)"/>
+          <path d="M120 246c80-40 260-70 380-76" stroke="#c9503a" stroke-width="3" fill="none"/>
+          <path d="M330 220l-8-200 8-6 14 4 10 206z" fill="#b83a2a"/>
+          <path d="M296 120l130-30M300 80l110 20M322 20l-10 110" stroke="#9c2e22" stroke-width="3" fill="none"/>
+          <g fill="#c85a46" opacity=".55"><circle cx="260" cy="226" r="3"/><circle cx="300" cy="216" r="3"/><circle cx="340" cy="208" r="3"/><circle cx="380" cy="200" r="3"/><circle cx="420" cy="194" r="3"/><circle cx="280" cy="244" r="3"/><circle cx="330" cy="234" r="3"/><circle cx="380" cy="224" r="3"/><circle cx="440" cy="214" r="3"/></g>
+          <path d="M20 230q30-10 60 0t60 0" stroke="#e8e0d0" stroke-width="5" fill="none" opacity=".8"/>
+        </svg>
+      </div>
+      <div class="j-copy">
+        <div class="eyebrow" style="color:var(--fg)">My journey</div>
+        <h2>Exploring the World Through My Lens</h2>
+        <p>From breathtaking landscapes to captivating moments — photography has always been my escape and inspiration.</p>
+        <div><a class="btn" href="#gallery">View Gallery <svg><use href="#arrow"/></svg></a></div>
+      </div>
+      <div class="pager"><span>01</span>
+        <button aria-label="Previous"><svg viewBox="0 0 9 9"><path d="M7 4.500H1.500M4 2L1.500 4.500 4 7"/></svg></button>
+        <button aria-label="Next"><svg viewBox="0 0 9 9"><path d="M2 4.500h5.500M5 2l2.500 2.500L5 7"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="connect" id="contact">
+    <svg class="m" viewBox="0 0 1200 230" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <path d="M0 230V150l130-40 110 40 120-60 140 80 80-30v90z" fill="#2f2d2c"/>
+      <path d="M380 230l140-110 120-70 90 40 100-70 120 80 130 40 120-20v110z" fill="#4b4947"/>
+      <path d="M600 60l30-14 30 20-30 6z" fill="#d6d2cc" opacity=".7"/>
+      <path d="M0 230v-50c120-20 260-6 400 10s300 6 420-8 260-8 380 6v42z" fill="#8c8a88" opacity=".35"/>
+      <path d="M0 230v-24c180-14 320 4 520 6s440-14 680-4v22z" fill="#0d0c0b"/>
+    </svg>
+    <div class="c">
+      <div class="eyebrow" style="color:var(--fg)">Let's connect</div>
+      <h2>Have a project in mind?</h2>
+      <p>Let's turn your ideas into something extraordinary.</p>
+      <a class="btn" href="#contact">Get in Touch <svg><use href="#arrow"/></svg></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-left">
+      <a href="#home" aria-label="Back to top" style="color:var(--fg)"><svg><use href="#logo"/></svg></a>
+      <small>&copy; 2023. All Rights Reserved. / Web Design by Marketing Originals.</small>
+    </div>
+    <div class="f-right"><a href="#contact">LinkedIn</a><a href="#contact">Instagram</a></div>
+  </div>
+</footer>
+</body>
+</html>
